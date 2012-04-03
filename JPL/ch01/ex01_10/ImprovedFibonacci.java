@@ -14,6 +14,7 @@ class ImprovedFibonacci {
     int p = 0;
     fibPairs[p++] = new Pair(lo, false);
     for (int i = 2; i <= MAX_INDEX; ++i) {
+      if (p >= FIBPAIRS_SIZE) break;
       fibPairs[p++] = new Pair(hi, (hi % 2 == 0)); 
       hi = hi + lo;
       lo = hi - lo;
