@@ -65,6 +65,10 @@ class Vehicle {
     this.owner = newOwner;
   }
   
+  long getID() {
+    return idNum;
+  }
+  
   public void printFields() {
     String owner = this.owner;
     if (owner == null) {

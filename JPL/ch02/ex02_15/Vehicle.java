@@ -28,7 +28,11 @@ class Vehicle {
   
   /** 今まで使われた識別番号の最大値を返す */
   public static long maxID() {
-    return nextID;
+    if (nextID == 0) {
+      return 0;
+    } else {
+      return nextID - 1;
+    }
   }
   
   Vehicle() {

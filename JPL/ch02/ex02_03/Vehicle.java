@@ -64,4 +64,8 @@ class Vehicle {
   void changeOwner(String newOwner) {
     this.owner = newOwner;
   }
+  
+  long getID() {
+    return idNum;
+  }
 }

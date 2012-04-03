@@ -8,8 +8,8 @@ class Vehicle {
   
   private static final double FULL_DEGREE = 360.0;
   private static long nextID = 0; // 全体の識別子
-  static final int TRUN_LEFT = 0;
-  static final int TRUN_RIGHT = 1;
+  static final int TURN_LEFT = 0;
+  static final int TURN_RIGHT = 1;
   
   {
     idNum = nextID++;
@@ -30,7 +30,11 @@ class Vehicle {
   
   /** 今まで使われた識別番号の最大値を返す */
   public static long maxID() {
-    return nextID;
+    if (nextID == 0) {
+      return 0;
+    } else {
+      return nextID - 1;
+    }
   }
   
   Vehicle() {
@@ -103,10 +107,10 @@ class Vehicle {
   
   void turn(int degree) {
     switch(degree) {
-    case TRUN_LEFT:
+    case TURN_LEFT:
       turn(-90.0);
       break;
-    case TRUN_RIGHT:
+    case TURN_RIGHT:
       turn(90.0);
       break;
     default :

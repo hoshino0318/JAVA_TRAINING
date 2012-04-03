@@ -82,6 +82,10 @@ class Vehicle {
     this.owner = newOwner;
   }
   
+  long getID() {
+    return idNum;
+  }
+  
   public static void main(String[] args) {
     /* 3 台の乗り物を作成 */
     Vehicle v1 = new Vehicle(10, 30, "Alice");
