@@ -8,6 +8,5 @@ class StringDemo {
     String job = "Programmer";
     
     System.out.println("Name = " + myName + " (" + job + ")");
-    
   }
 }
