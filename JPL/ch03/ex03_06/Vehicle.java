@@ -148,6 +148,5 @@ class Vehicle {
     
     v1.start();
     v2.start();
-       
   }  
 }
