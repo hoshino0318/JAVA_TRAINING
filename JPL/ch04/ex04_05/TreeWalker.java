@@ -1,8 +1,12 @@
 package ch04.ex04_05;
 
-abstract class TreeWalker {
+class TreeWalker<E, T> {
   Strategy strategy;
-  TreeNode root;
+  E root;
   
-  abstract boolean search(Object target);
+  /** ダミー */
+  boolean search(T target) {
+    // Strategy オブジェクトに応じて、深さ優先や幅優先を切り替える
+    return true;
+  }
 }
