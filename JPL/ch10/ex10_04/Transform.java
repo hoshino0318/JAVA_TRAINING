@@ -3,8 +3,8 @@ package ch10.ex10_04;
 class Transform {
   public static String str2JavaString(String source) {
     String transformedStr = "";
-    int index = 0;
-    //for (int i = 0; i < source.length(); ++i) {
+    
+    int index = 0;    
     while (index < source.length()) {
       char ch = source.charAt(index);
       
