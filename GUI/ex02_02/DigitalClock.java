@@ -13,13 +13,19 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   private DateFormat sdf;
   private TimeZone timeZone;
   private Thread thread;
-  private Font clockFont = new Font("Arial", Font.BOLD, 40);
+  private Font clockFont;
+  private Color fontColor;
+  private Color clockBackColor;
 
   DigitalClock(int width, int height) {
     super("DigitalClock");
     this.width = width; this.height = height;
+    this.clockFont = new Font("Arial", Font.BOLD, 40);
+    this.fontColor = Color.BLACK;
+    this.clockBackColor = Color.WHITE;
     setSize(width, height);
     setLocationRelativeTo(null);
+    setBackground(clockBackColor);
 
     /* close window */
     addWindowListener(new WindowAdapter() {
@@ -52,17 +58,20 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   public void paint(Graphics g) {
     Image img = createImage(getWidth(), getHeight());
     Graphics2D buffer = (Graphics2D)img.getGraphics();
-    buffer.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
-        RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    buffer.setFont(clockFont);
 
     Calendar calendar = Calendar.getInstance();
     String time_str = sdf.format(calendar.getTime());
     int x = (getWidth() / 2) - 80;
     int y = getHeight() / 2;
-
+    
+    buffer.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
+        RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    buffer.setFont(clockFont);
+    buffer.setColor(fontColor);
     buffer.drawString(time_str, x, y);
         
+    setBackground(clockBackColor);
+    
     g.drawImage(img, 0, 0, this);
   }
 
@@ -89,6 +98,34 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   
   private void setClockFont(String name, int style, int size) {
     clockFont = new Font(name, style, size);
+  }
+  
+  private void setFontColor(String fontColorName) {
+    if (fontColorName.equals("White")) {
+      fontColor = Color.WHITE;
+    } else if (fontColorName.equals("Black")) {
+      fontColor = Color.BLACK;          
+    } else if (fontColorName.equals("Blue")){
+      fontColor = Color.BLUE;
+    } else if (fontColorName.equals("Green")) {
+      fontColor = Color.GREEN;
+    } else {
+      fontColor = Color.RED;
+    }
+  }
+  
+  private void setBackColor(String colorName) {
+    if (colorName.equals("White")) {
+      clockBackColor = Color.WHITE;
+    } else if (colorName.equals("Black")) {
+      clockBackColor = Color.BLACK;          
+    } else if (colorName.equals("Blue")){
+      clockBackColor = Color.BLUE;
+    } else if (colorName.equals("Green")) {
+      clockBackColor = Color.GREEN;
+    } else {
+      clockBackColor = Color.RED;
+    }
   }
 
   class PropertyDialog extends Dialog implements ActionListener, ItemListener {
@@ -211,10 +248,12 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
         setClockFont(clockFont.getFontName(), clockFont.getStyle(), fontSize);
       } else if (source == fontColorChoice) {
         System.out.println("font color choice");
-        
+        String fontColorName = fontColorChoice.getSelectedItem();
+        setFontColor(fontColorName);
       } else if (source == clockBackColorChoice) {
         System.out.println("clock back color choice");
-        
+        String backColorName = clockBackColorChoice.getSelectedItem();
+        setBackColor(backColorName);
       } else {
         // this never occurs
         throw new InternalError();
