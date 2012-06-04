@@ -17,14 +17,16 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   private Color fontColor;
   private Color clockBackColor;
 
-  DigitalClock(int width, int height) {
+  //DigitalClock(int width, int height) {
+  DigitalClock() {
     super("DigitalClock");
-    this.width = width; this.height = height;
+    //this.width = width; this.height = height;    
     this.clockFont = new Font("Arial", Font.BOLD, 40);
     this.fontColor = Color.BLACK;
     this.clockBackColor = Color.WHITE;
-    setSize(width, height);
-    setLocationRelativeTo(null);
+    //setSize(width, height);
+    setResizable(false);
+    setLocationRelativeTo(null);    
     setBackground(clockBackColor);
 
     /* close window */
@@ -50,6 +52,8 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     MenuItem propMenu = new MenuItem("Properties");
     menu.add(propMenu);
 
+    doLayout();
+    pack();
     setVisible(true);
     thread = new Thread(this);
     thread.start();
@@ -57,22 +61,42 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
 
   public void paint(Graphics g) {
     Image img = createImage(getWidth(), getHeight());
-    Graphics2D buffer = (Graphics2D)img.getGraphics();
-
+    Graphics2D buffer = (Graphics2D)img.getGraphics();    
     Calendar calendar = Calendar.getInstance();
     String time_str = sdf.format(calendar.getTime());
-    int x = (getWidth() / 2) - 80;
-    int y = getHeight() / 2;
+    //FontMetrics metrics = buffer.getFontMetrics(clockFont);
+    buffer.setFont(clockFont);
+    FontMetrics metrics = buffer.getFontMetrics();    
+    Insets insets = getInsets();
+    int strWidth = metrics.stringWidth(time_str);
+    int strHeight = metrics.getHeight();
+    width = strWidth + 20;
+    height = strHeight + insets.top;
+    //this.
+    //height = strHeight + 20;
+    setSize(width, height);
+    int x = (width / 2) - (strWidth / 2) + insets.left;
+    int y = (height / 2) - (strHeight / 2) + insets.top;
+    System.out.println("insets.top: " + insets.top);
+    System.out.println("height: " + height + ", strHeight: " + strHeight);
+    //int y = 60;
+    //regulateClockSize(buffer, time_str);
+    //int x = (getWidth() / 2) - 80;
+    //int x = getWidth() / 2;
+    //int x = 0;
+    //int y = getHeight() / 2 + 10;
+    //int y = getHeight() - 10;
+    //int y = 60;
     
     buffer.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
         RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    buffer.setFont(clockFont);
+    
     buffer.setColor(fontColor);
-    buffer.drawString(time_str, x, y);
+    buffer.drawString(time_str, x, y);    
         
     setBackground(clockBackColor);
     
-    g.drawImage(img, 0, 0, this);
+    g.drawImage(img, insets.left, insets.top, this);
   }
 
   public void run() {
@@ -94,6 +118,14 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     } else {
       // nothing to do
     }
+  }
+  
+  private void regulateClockSize(Graphics g, String str) {
+    FontMetrics metrics = g.getFontMetrics(clockFont);
+    int width  = metrics.stringWidth(str);
+    int height = metrics.getHeight();
+    System.out.println(height);
+    setSize(width + 10, height + 20);
   }
   
   private void setClockFont(String name, int style, int size) {
@@ -262,6 +294,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   }
 
   public static void main(String[] args) {
-    new DigitalClock(400, 300);
+    //new DigitalClock(400, 300);
+    new DigitalClock();
   }
 }
