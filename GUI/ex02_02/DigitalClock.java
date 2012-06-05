@@ -17,15 +17,16 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   private Font clockFont;
   private Color fontColor;
   private Color clockBackColor;
-  
+
   private static final String[] fontSizes = {"10", "20", "40", "60", "100", "150", "200", "500"};
   private static final String[] colorsStr;
-  
+
+  /* setting for colors */
   static {
     Class<Color> c = Color.class;
     Field[] fileds = c.getFields();
     Set<String> colorStrSet = new TreeSet<String>();
-    for (Field filed : fileds) {      
+    for (Field filed : fileds) {
       if (filed.getDeclaringClass() == Color.class) {
         if (Character.isUpperCase(filed.getName().charAt(0))) {
           colorStrSet.add(filed.getName().toUpperCase());
@@ -39,15 +40,15 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     }
   }
 
-  DigitalClock() {    
+  DigitalClock() {
     super("DigitalClock");
     setResizable(false);
-    setLocationRelativeTo(null);    
+    setLocationRelativeTo(null);
     setBackground(clockBackColor);
     clockFont = new Font("Arial", Font.BOLD, 60);
     fontColor = Color.BLACK;
     clockBackColor = Color.WHITE;
-    
+
     /* close window */
     addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
@@ -71,8 +72,6 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     MenuItem propMenu = new MenuItem("Properties");
     menu.add(propMenu);
 
-    doLayout();
-    pack();
     setVisible(true);
     thread = new Thread(this);
     thread.start();
@@ -80,32 +79,30 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
 
   public void paint(Graphics g) {
     Image img = createImage(getWidth(), getHeight());
-    Graphics2D buffer = (Graphics2D)img.getGraphics();    
-    
+    Graphics2D buffer = (Graphics2D)img.getGraphics();
+
     Calendar calendar = Calendar.getInstance();
     String time_str = sdf.format(calendar.getTime());
-    
+
     buffer.setFont(clockFont);
     FontMetrics metrics = buffer.getFontMetrics();
     Insets insets = getInsets();
     int strWidth = metrics.stringWidth(time_str);
     int strHeight = metrics.getDescent() + metrics.getAscent();
-    int width = strWidth + 20;
+    int width = strWidth + insets.left + insets.right;
     int height = strHeight + insets.top;
     setSize(width, height);
-    
-    int x = (width / 2) - (strWidth / 2) + insets.left;
+
+    int x = 0;
     int y = metrics.getAscent();
-    System.out.println("insets.top: " + insets.top);
-    System.out.println("height: " + height + ", strHeight: " + strHeight + ", y: " + y);
-    
-    buffer.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
+
+    buffer.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
         RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    
+
     buffer.setColor(fontColor);
-    buffer.drawString(time_str, x, y);            
+    buffer.drawString(time_str, x, y);
     setBackground(clockBackColor);
-    
+
     g.drawImage(img, insets.left, insets.top, this);
   }
 
@@ -128,28 +125,28 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
       // nothing to do
     }
   }
-  
+
   private void setClockFont(String name, int style, int size) {
     clockFont = new Font(name, style, size);
   }
-  
+
   private void setFontColor(String fontColorName) {
     fontColor = getColorInstance(fontColorName);
   }
-  
+
   private void setBackColor(String colorName) {
     clockBackColor = getColorInstance(colorName);
   }
-  
+
   private Color getColorInstance(String name) {
     Color ret = null;
-    
+
     for (String colorName : colorsStr) {
       if (colorName.equals(name)) {
         Class<Color> colorClass = Color.class;
         try {
           Field filed = colorClass.getField(colorName);
-          ret = (Color)filed.get(Color.WHITE);          
+          ret = (Color)filed.get(Color.WHITE);
         } catch (NoSuchFieldException e) {
           e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -157,7 +154,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
         }
       }
     }
-    
+
     return ret;
   }
 
@@ -166,11 +163,11 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     private Choice fontSizeChoice;
     private Choice fontColorChoice;
     private Choice clockBackColorChoice;
-    
+
     private String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
     private Font propertyFont = new Font("Arial", Font.PLAIN, 20);
-    
+
     PropertyDialog(Frame owner, String title, int width, int height) {
       super(owner, title, true);
       setSize(width, height);
@@ -186,7 +183,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
 
       setLayout(new GridLayout(6, 1));
       Panel pTitle = new Panel();
-      Panel pFont = new Panel();      
+      Panel pFont = new Panel();
       Panel pFontSize = new Panel();
       Panel pFontColor = new Panel();
       Panel pClockBackColor = new Panel();
@@ -197,13 +194,12 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
       add(pFontColor);
       add(pClockBackColor);
       add(pOKButton);
-      
-      pTitle.setLayout(null);
+
+      pTitle.setLayout(new FlowLayout());
       Label titleLabel = new Label(title);
-      titleLabel.setBounds(170, 20, 150, 100);
       titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
       pTitle.add(titleLabel);
-      
+
       pFont.setLayout(new FlowLayout());
       Label fontLabel = new Label("Font");
       fontLabel.setFont(propertyFont);
@@ -214,7 +210,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
       }
       fontChoice.addItemListener(this);
       pFont.add(fontChoice);
-      
+
       pFontSize.setLayout(new FlowLayout());
       Label fontSizeLabel = new Label("Font Size");
       fontSizeLabel.setFont(propertyFont);
@@ -224,8 +220,8 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
         fontSizeChoice.add(fontSize);
       }
       fontSizeChoice.addItemListener(this);
-      pFontSize.add(fontSizeChoice);      
-      
+      pFontSize.add(fontSizeChoice);
+
       pFontColor.setLayout(new FlowLayout());
       Label fontColorLabel = new Label("Font Color");
       fontColorLabel.setFont(propertyFont);
@@ -234,9 +230,9 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
       for (String fontColor : colorsStr) {
         fontColorChoice.add(fontColor);
       }
-      fontColorChoice.addItemListener(this);      
+      fontColorChoice.addItemListener(this);
       pFontColor.add(fontColorChoice);
-      
+
       pClockBackColor.setLayout(new FlowLayout());
       Label clockBackColorLabel = new Label("Clock Back Color");
       clockBackColorLabel.setFont(propertyFont);
@@ -247,7 +243,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
       }
       clockBackColorChoice.addItemListener(this);
       pClockBackColor.add(clockBackColorChoice);
-      
+
       fontChoice.select(clockFont.getName());
       fontSizeChoice.select(String.valueOf(clockFont.getSize()));
       fontColorChoice.select("BLACK");
@@ -264,15 +260,15 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     public void actionPerformed(ActionEvent e) {
       String actionCommand =  e.getActionCommand();
 
-      if (actionCommand.equals("OK")) {       
+      if (actionCommand.equals("OK")) {
         setVisible(false);
       }
     }
-    
+
     public void itemStateChanged(ItemEvent e) {
       Object source = e.getSource();
-      
-      if (source == fontChoice) {        
+
+      if (source == fontChoice) {
         String fontName = fontChoice.getSelectedItem();
         setClockFont(fontName, clockFont.getStyle(), clockFont.getSize());
       } else if (source == fontSizeChoice) {
