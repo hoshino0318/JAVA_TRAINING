@@ -111,10 +111,14 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     while (true){
       repaint();
       try {
-        Thread.sleep(1000);
+        Thread.sleep(250);
       } catch (InterruptedException e) {
       }
     }
+  }
+
+  public void update(Graphics g) {
+    paint(g);
   }
 
   public void actionPerformed(ActionEvent e) {
