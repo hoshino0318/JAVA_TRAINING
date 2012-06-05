@@ -42,6 +42,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
 
   DigitalClock() {
     super("DigitalClock");
+    setSize(100, 100);
     setResizable(false);
     setLocationRelativeTo(null);
     setBackground(clockBackColor);
@@ -110,7 +111,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     while (true){
       repaint();
       try {
-        thread.sleep(500);
+        thread.sleep(250);
       } catch (InterruptedException e) {
       }
     }
