@@ -1,15 +1,10 @@
 package ex03_03;
 
 import java.awt.event.*;
-import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.PopupMenu;
 import java.awt.Menu;
 import java.awt.MenuItem;
-import java.lang.reflect.Field;
-import java.util.EventObject;
-import java.util.Set;
-import java.util.TreeSet;
 
 class PropertyPopupMenu extends PopupMenu implements ActionListener {
   private Menu fontMenu;

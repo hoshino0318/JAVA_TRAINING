@@ -6,10 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.awt.Point;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.TimeZone;
-import java.lang.reflect.Field;
 
 class DigitalClock extends Window implements Runnable, MouseMotionListener {
   private DateFormat sdf;
