@@ -89,6 +89,8 @@ class DigitalClock extends Window implements Runnable, MouseMotionListener {
     int height = strHeight + insets.top;
     setSize(width, height);
 
+    ajustWindowLocation(getLocation());
+
     int x = 0;
     int y = metrics.getAscent();
 
@@ -139,11 +141,27 @@ class DigitalClock extends Window implements Runnable, MouseMotionListener {
     clockFont = new Font(name, style, size);
   }
 
+  /** set a window location in a screen */
+  private void ajustWindowLocation(Point newLocation) {
+    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+
+    if (newLocation.x < 0)
+      newLocation.x = 0;
+    if (newLocation.y < 0)
+      newLocation.y = 0;
+    if (newLocation.x + getSize().width > screen.width)
+       newLocation.x = screen.width - getSize().width;
+    if (newLocation.y + getSize().height > screen.height)
+      newLocation.y = screen.height - getSize().height;
+
+    setLocation(newLocation);
+  }
+
   @Override
   public void mouseMoved(MouseEvent e) {}
   @Override
   public void mouseDragged(MouseEvent e) {
-    if (e.getButton() == MouseEvent.BUTTON1) {
+    if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
       int dx = e.getXOnScreen() - clockPosition.x;
       int dy = e.getYOnScreen() - clockPosition.y;
 
@@ -152,23 +170,11 @@ class DigitalClock extends Window implements Runnable, MouseMotionListener {
       Point newLocation = getLocation();
       newLocation.translate(dx, dy);
 
-      /* Window must be inside of a screen */
-      Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-      if (newLocation.x < 0) {
-        newLocation.x = 0;
-      } else if (newLocation.y < 0) {
-        newLocation.y = 0;
-      } else if (newLocation.x + getSize().width > screen.width) {
-        newLocation.x = screen.width - getSize().width;
-      } else if (newLocation.y + getSize().height > screen.height) {
-        newLocation.y = screen.height - getSize().height;
-      }
-
-      setLocation(newLocation);
+      ajustWindowLocation(newLocation);
     }
   }
 
-  /* create digital clock */
+  /** create digital clock */
   public static void main(String[] args) {
     new DigitalClock();
   }

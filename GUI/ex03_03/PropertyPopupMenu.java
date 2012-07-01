@@ -19,7 +19,7 @@ class PropertyPopupMenu extends PopupMenu implements ActionListener {
   private MenuItem[] backColorSubMenus;
 
   private static final String fontSet[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-  private static final String[] fontSizes = {"40", "60", "100", "150", "200", "300", "500"};
+  private static final String[] fontSizes = {"40", "60", "100", "150", "200", "300"};
   private static final String[] colorStrs = ColorUtil.getColorStrs();
 
   PropertyPopupMenu() {
