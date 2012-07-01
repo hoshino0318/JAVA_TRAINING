@@ -45,9 +45,7 @@ class DigitalClock extends Window implements Runnable, MouseMotionListener {
       public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {
           System.out.println("mouse pressed");
-          if (clockPosition == null) {
-            clockPosition = e.getLocationOnScreen();
-          }
+          clockPosition = e.getLocationOnScreen();
         }
       }
       @Override
@@ -162,6 +160,9 @@ class DigitalClock extends Window implements Runnable, MouseMotionListener {
   @Override
   public void mouseDragged(MouseEvent e) {
     if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+      if (clockPosition == null)
+        clockPosition = e.getLocationOnScreen();
+
       int dx = e.getXOnScreen() - clockPosition.x;
       int dy = e.getYOnScreen() - clockPosition.y;
 
