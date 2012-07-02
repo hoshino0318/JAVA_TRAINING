@@ -1,4 +1,4 @@
-package ex02_02;
+package ex01_02;
 
 import java.awt.*;
 import java.awt.event.*;

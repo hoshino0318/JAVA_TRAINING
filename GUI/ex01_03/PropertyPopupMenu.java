@@ -1,4 +1,4 @@
-package ex03_03;
+package ex01_03;
 
 import java.awt.event.*;
 import java.awt.GraphicsEnvironment;
