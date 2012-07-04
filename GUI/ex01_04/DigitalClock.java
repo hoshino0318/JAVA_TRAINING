@@ -11,20 +11,14 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   private DateFormat sdf;
   private TimeZone timeZone;
   private Thread thread;
-  Font clockFont;
-  Color fontColor;
-  Color clockBackColor;
-  
+  private Property property;
+
   private PropertyDialog propertyDialog;
 
   DigitalClock() {
     super("DigitalClock");
     setResizable(false);
-    setLocationRelativeTo(null);
-    setBackground(clockBackColor);
-    clockFont = new Font("Arial", Font.BOLD, 60);
-    fontColor = Color.BLACK;
-    clockBackColor = Color.WHITE;
+    setLocationRelativeTo(null);    
 
     /* close window */
     addWindowListener(new WindowAdapter() {
@@ -40,19 +34,19 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
 
     /* add a MenuBar & Menu */
     MenuBar menuBar = new MenuBar();
-    setMenuBar(menuBar);
-
     Menu menu = new Menu("Menu");
+    setMenuBar(menuBar);
     menu.addActionListener(this);
     menuBar.add(menu);
-
     MenuItem propMenu = new MenuItem("Properties");
     menu.add(propMenu);
     
-    /* create property dialog */
+    /* create a properties and a properties dialog */
+    property = new Property();
     propertyDialog = new PropertyDialog(this, "Properties");
     propertyDialog.init();
 
+    setBackground(property.getBackColor());
     setVisible(true);    
     
     thread = new Thread(this);
@@ -66,7 +60,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     Calendar calendar = Calendar.getInstance();
     String time_str = sdf.format(calendar.getTime());
 
-    buffer.setFont(clockFont);
+    buffer.setFont(property.getFont());
     FontMetrics metrics = buffer.getFontMetrics();
     Insets insets = getInsets();
     int strWidth = metrics.stringWidth(time_str);
@@ -81,9 +75,9 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     buffer.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
         RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-    buffer.setColor(fontColor);
+    buffer.setColor(property.getFontColor());
     buffer.drawString(time_str, x, y);
-    setBackground(clockBackColor);
+    setBackground(property.getBackColor());
 
     g.drawImage(img, insets.left, insets.top, this);
   }
@@ -92,8 +86,8 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     while (true){
       repaint();
       try {
-        /* 250 msec 間隔で再描画 */
-        Thread.sleep(250);
+        /* 500 msec 間隔で再描画 */
+        Thread.sleep(500);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -116,27 +110,30 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   }
   
   void changeClockFont(String fontName) {
-    setClockFont(fontName, clockFont.getStyle(), clockFont.getSize());
+    setClockFont(fontName, property.getFont().getStyle(), property.getFont().getSize());
   }
 
   void changeClockFontSize(int fontSize) {
-    setClockFont(clockFont.getFontName(), clockFont.getStyle(), fontSize);
+    setClockFont(property.getFont().getFontName(), property.getFont().getStyle(), fontSize);
   }
 
   void changeFontColor(String fontColorName) {
-    fontColor = ColorUtil.getColorInstance(fontColorName);
+    property.setFontColor(ColorUtil.getColorInstance(fontColorName));
   }
 
   void changeBackColor(String backColorName) {
-    clockBackColor = ColorUtil.getColorInstance(backColorName);
+    property.setBackColor(ColorUtil.getColorInstance(backColorName));
+  }
+  
+  void restoreProperty(Property property) {
+    this.property = property;
+  }
+  
+  Property getCurrentProperty() {
+    return new Property(property);
   }
 
   private void setClockFont(String name, int style, int size) {
-    clockFont = new Font(name, style, size);
-  }
-
-  /* create digital clock */
-  public static void main(String[] args) {
-    new DigitalClock();
+    property.setFont(new Font(name, style, size));
   }
 }

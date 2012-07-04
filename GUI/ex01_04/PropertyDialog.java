@@ -19,13 +19,11 @@ class PropertyDialog extends Dialog implements ActionListener, ItemListener {
   private List backColorList;
   
   private GridBagLayout layout;
-  GridBagConstraints constraints;
+  private GridBagConstraints constraints;
   
-  private static final String[] fontSizes = {"40", "60", "100", "150", "200", "300"};
-  private static final String[] colorStrs = ColorUtil.getColorStrs();
-  private String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-
-  private Font propertyFont = new Font("Arial", Font.PLAIN, 20);
+  private Property savedPropery;
+  
+  private Font dialogFont = new Font("Arial", Font.PLAIN, 20);
 
   PropertyDialog(Frame owner, String title) {
     super(owner, title, true);
@@ -52,22 +50,22 @@ class PropertyDialog extends Dialog implements ActionListener, ItemListener {
     backColorLabel = new Label("Back color");
 
     fontList = new List(4, false);
-    for (String font : fonts) {
+    for (String font : Property.fonts) {
       fontList.add(font);
     }
     
     fontSizeList = new List(3, false);
-    for (String fontSize : fontSizes) {
+    for (String fontSize : Property.fontSizes) {
       fontSizeList.add(fontSize);
     }
     
     fontColorList = new List(3, false);
-    for (String fontColor : colorStrs) {
+    for (String fontColor : Property.colorStrs) {
       fontColorList.add(fontColor);
     }
     
     backColorList = new List(3, false);
-    for (String backColor : colorStrs) {
+    for (String backColor : Property.colorStrs) {
       backColorList.add(backColor);
     }
     
@@ -78,10 +76,10 @@ class PropertyDialog extends Dialog implements ActionListener, ItemListener {
   void init() {
     /* label setting */
     titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
-    fontLabel.setFont(propertyFont);
-    fontSizeLabel.setFont(propertyFont);
-    fontColorLabel.setFont(propertyFont);
-    backColorLabel.setFont(propertyFont);    
+    fontLabel.setFont(dialogFont);
+    fontSizeLabel.setFont(dialogFont);
+    fontColorLabel.setFont(dialogFont);
+    backColorLabel.setFont(dialogFont);
     
     /* constraints common setting */
     constraints.insets = new Insets(5, 10, 5, 10);    
@@ -122,11 +120,32 @@ class PropertyDialog extends Dialog implements ActionListener, ItemListener {
     buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
     buttonPanel.add(okButton);
     buttonPanel.add(cancelButton);
+    
+    
+    /* set up listeners */
+    fontList.addItemListener(this);
+    fontSizeList.addItemListener(this);
+    fontColorList.addItemListener(this);
+    backColorList.addItemListener(this);
+    okButton.addActionListener(this);
+    cancelButton.addActionListener(this);
   }
   
   @Override
   public void setVisible(boolean b) {
-    ajustLocation();
+    if (b) {
+      ajustLocation();
+      DigitalClock d = (DigitalClock)getParent();
+      savedPropery = d.getCurrentProperty();
+      fontList.select(savedPropery.fontIndex());
+      fontList.makeVisible(savedPropery.fontIndex());
+      fontSizeList.select(savedPropery.fontSizeIndex());
+      fontSizeList.makeVisible(savedPropery.fontSizeIndex());
+      fontColorList.select(savedPropery.fontColorIndex());
+      fontColorList.makeVisible(savedPropery.fontColorIndex());
+      backColorList.select(savedPropery.backColorIndex());
+      backColorList.makeVisible(savedPropery.backColorIndex());
+    }    
     
     super.setVisible(b);
   }
@@ -151,6 +170,10 @@ class PropertyDialog extends Dialog implements ActionListener, ItemListener {
     Object source = e.getSource();
 
     if (source == okButton) {
+      setVisible(false);
+    } else if (source == cancelButton) {
+      DigitalClock d = (DigitalClock)getParent();
+      d.restoreProperty(savedPropery);
       setVisible(false);
     }
   }
