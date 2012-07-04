@@ -52,8 +52,8 @@ class ColorUtil {
 
     return ret;
   }
-  
-  /** Color インスタンスから文字列を返す */ 
+
+  /** Color インスタンスから文字列を返す */
   static String getStrFromColor(Color c) {
     String ret = null;
     for (int i = 0; i < colorStrs.length; ++i) {

@@ -12,13 +12,14 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   private TimeZone timeZone;
   private Thread thread;
   private Property property;
+  private MenuItem propertyMenu;
 
   private PropertyDialog propertyDialog;
 
   DigitalClock() {
     super("DigitalClock");
     setResizable(false);
-    setLocationRelativeTo(null);    
+    setLocationRelativeTo(null);
 
     /* close window */
     addWindowListener(new WindowAdapter() {
@@ -38,17 +39,18 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     setMenuBar(menuBar);
     menu.addActionListener(this);
     menuBar.add(menu);
-    MenuItem propMenu = new MenuItem("Properties");
-    menu.add(propMenu);
-    
+    propertyMenu = new MenuItem("Properties");
+    propertyMenu.addActionListener(this);
+    menu.add(propertyMenu);
+
     /* create a properties and a properties dialog */
     property = new Property();
     propertyDialog = new PropertyDialog(this, "Properties");
     propertyDialog.init();
 
     setBackground(property.getBackColor());
-    setVisible(true);    
-    
+    setVisible(true);
+
     thread = new Thread(this);
     thread.start();
   }
@@ -99,16 +101,15 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   }
 
   public void actionPerformed(ActionEvent e) {
-    String actionCommand = e.getActionCommand();
+    Object source = e.getSource();
 
-    if (actionCommand.equals("Properties")) {
-      //new PropertyDialog(this, actionCommand, 500, 400);
+    if (source == propertyMenu) {
       propertyDialog.setVisible(true);
     } else {
       // nothing to do
     }
   }
-  
+
   void changeClockFont(String fontName) {
     setClockFont(fontName, property.getFont().getStyle(), property.getFont().getSize());
   }
@@ -124,11 +125,11 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   void changeBackColor(String backColorName) {
     property.setBackColor(ColorUtil.getColorInstance(backColorName));
   }
-  
+
   void restoreProperty(Property property) {
     this.property = property;
   }
-  
+
   Property getCurrentProperty() {
     return new Property(property);
   }
