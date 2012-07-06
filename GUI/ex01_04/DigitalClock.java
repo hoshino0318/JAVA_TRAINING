@@ -2,10 +2,12 @@ package ex01_04;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.prefs.*;
 
 class DigitalClock extends Frame implements ActionListener, Runnable {
   private DateFormat sdf;
@@ -15,6 +17,11 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   private MenuItem propertyMenu;
 
   private PropertyDialog propertyDialog;
+  
+  private Preferences prefs;
+  
+  static final String PREFS_PROPERTY_KEY = "hoshinoPropery";
+  static final String PREFS_LOCATION_KEY = "hoshinoLocation";
 
   DigitalClock() {
     super("DigitalClock");
@@ -24,7 +31,8 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     /* close window */
     addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-       System.exit(0);
+        saveProperty();
+        System.exit(0);
       }
     });
 
@@ -44,7 +52,29 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     menu.add(propertyMenu);
 
     /* create a properties and a properties dialog */
-    property = new Property();
+    
+    /* get a preference */
+    prefs = Preferences.userNodeForPackage(getClass());
+    try {
+      Object obj = PrefObj.getObject(prefs, PREFS_PROPERTY_KEY);
+      if (obj != null) {
+        property = (Property)obj;
+      } else {
+        property = new Property();
+      }      
+      obj = PrefObj.getObject(prefs, PREFS_LOCATION_KEY);
+      if (obj != null) {
+        setLocation((Point)obj);
+      } else {
+        setLocationRelativeTo(null);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (BackingStoreException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
     propertyDialog = new PropertyDialog(this, "Properties");
     propertyDialog.init();
 
@@ -132,6 +162,19 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
 
   Property getCurrentProperty() {
     return new Property(property);
+  }
+  
+  void saveProperty() {
+    try {
+      PrefObj.putObject(prefs, PREFS_PROPERTY_KEY, property);
+      PrefObj.putObject(prefs, PREFS_LOCATION_KEY, getLocation());
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (BackingStoreException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   private void setClockFont(String name, int style, int size) {
