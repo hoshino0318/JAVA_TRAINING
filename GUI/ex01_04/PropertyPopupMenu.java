@@ -54,12 +54,13 @@ class PropertyPopupMenu extends PopupMenu implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     Object eventObject = e.getSource();
-
-    if (eventObject == exitMenu)
-      System.exit(0);
-
     DigitalClock parent = (DigitalClock)getParent();
 
+    if (eventObject == exitMenu) {
+      parent.saveProperty();
+      System.exit(0);
+    }
+    
     /* change font */
     for (MenuItem fontSubMenu : fontSubMenus) {
       if (eventObject == fontSubMenu) {

@@ -15,6 +15,7 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
   private Thread thread;
   private Property property;
   private MenuItem propertyMenu;
+  private MenuItem exitMenu;
   
   private PropertyDialog propertyDialog;
   private PropertyPopupMenu popupMenu;
@@ -50,8 +51,11 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
     menu.addActionListener(this);
     menuBar.add(menu);
     propertyMenu = new MenuItem("Properties");
+    exitMenu = new MenuItem("Exit");
     propertyMenu.addActionListener(this);
+    exitMenu.addActionListener(this);
     menu.add(propertyMenu);
+    menu.add(exitMenu);
 
     /* get a preference */
     prefs = Preferences.userNodeForPackage(getClass());
@@ -166,6 +170,9 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
 
     if (source == propertyMenu) {
       propertyDialog.setVisible(true);
+    } else if (source == exitMenu) {
+      saveProperty();
+      System.exit(0);
     } else {
       // nothing to do
     }
@@ -208,22 +215,6 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
     }
   }
   
-  /** set a window location in a screen */
-  private void ajustWindowLocation(Point newLocation) {
-    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-
-    if (newLocation.x < 0)
-      newLocation.x = 0;
-    if (newLocation.y < 0)
-      newLocation.y = 0;
-    if (newLocation.x + getSize().width > screen.width)
-       newLocation.x = screen.width - getSize().width;
-    if (newLocation.y + getSize().height > screen.height)
-      newLocation.y = screen.height - getSize().height;
-
-    setLocation(newLocation);
-  }
-  
   @Override
   public void mouseMoved(MouseEvent e) {}
   @Override
@@ -240,7 +231,6 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
       Point newLocation = getLocation();
       newLocation.translate(dx, dy);
 
-      //ajustWindowLocation(newLocation);
       setLocation(newLocation);
     }
   }
