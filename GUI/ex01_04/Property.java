@@ -10,7 +10,7 @@ class Property implements Serializable {
 
   static final String[] fontSizes = {"40", "60", "100", "150", "200", "300"};
   static final String[] colorStrs = ColorUtil.getColorStrs();
-  static final String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+  static final String[] fontSet = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
   Property() {
     font = new Font("Arial", Font.BOLD, 60);
@@ -49,7 +49,7 @@ class Property implements Serializable {
   }
 
   int fontIndex() {
-    return getIndex(font.getName(), fonts);
+    return getIndex(font.getName(), fontSet);
   }
 
   int fontSizeIndex() {

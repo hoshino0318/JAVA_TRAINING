@@ -9,15 +9,17 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.prefs.*;
 
-class DigitalClock extends Frame implements ActionListener, Runnable {
+class DigitalClock extends Frame implements ActionListener, MouseMotionListener, Runnable {
   private DateFormat sdf;
   private TimeZone timeZone;
   private Thread thread;
   private Property property;
   private MenuItem propertyMenu;
-
-  private PropertyDialog propertyDialog;
   
+  private PropertyDialog propertyDialog;
+  private PropertyPopupMenu popupMenu;
+  
+  private Point clockPosition;
   private Preferences prefs;
   
   static final String PREFS_PROPERTY_KEY = "hoshinoPropery";
@@ -51,8 +53,6 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     propertyMenu.addActionListener(this);
     menu.add(propertyMenu);
 
-    /* create a properties and a properties dialog */
-    
     /* get a preference */
     prefs = Preferences.userNodeForPackage(getClass());
     try {
@@ -77,7 +77,38 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
     }
     propertyDialog = new PropertyDialog(this, "Properties");
     propertyDialog.init();
-
+    
+    /* set a pop up menu */
+    popupMenu = new PropertyPopupMenu();
+    popupMenu.init();
+    add(popupMenu);
+    
+    /* add a mouse click event */
+    addMouseListener(new MouseAdapter() {
+      public void mouseClicked(MouseEvent e) {
+        /* right click event */
+        if (e.getButton() == MouseEvent.BUTTON3) {
+          popupMenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+      }
+      @Override
+      public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+          System.out.println("mouse pressed");
+          clockPosition = e.getLocationOnScreen();
+        }
+      }
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+          System.out.println("mouse released");
+          clockPosition = null;
+        }
+      }      
+    });
+    
+    addMouseMotionListener(this);
+        
     setBackground(property.getBackColor());
     setVisible(true);
 
@@ -174,6 +205,43 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
+    }
+  }
+  
+  /** set a window location in a screen */
+  private void ajustWindowLocation(Point newLocation) {
+    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+
+    if (newLocation.x < 0)
+      newLocation.x = 0;
+    if (newLocation.y < 0)
+      newLocation.y = 0;
+    if (newLocation.x + getSize().width > screen.width)
+       newLocation.x = screen.width - getSize().width;
+    if (newLocation.y + getSize().height > screen.height)
+      newLocation.y = screen.height - getSize().height;
+
+    setLocation(newLocation);
+  }
+  
+  @Override
+  public void mouseMoved(MouseEvent e) {}
+  @Override
+  public void mouseDragged(MouseEvent e) {
+    if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+      if (clockPosition == null)
+        clockPosition = e.getLocationOnScreen();
+
+      int dx = e.getXOnScreen() - clockPosition.x;
+      int dy = e.getYOnScreen() - clockPosition.y;
+
+      clockPosition = e.getLocationOnScreen();
+
+      Point newLocation = getLocation();
+      newLocation.translate(dx, dy);
+
+      //ajustWindowLocation(newLocation);
+      setLocation(newLocation);
     }
   }
 

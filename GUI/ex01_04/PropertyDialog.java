@@ -50,7 +50,7 @@ class PropertyDialog extends Dialog implements ActionListener, ItemListener {
     backColorLabel = new Label("Back color");
 
     fontList = new List(4, false);
-    for (String font : Property.fonts) {
+    for (String font : Property.fontSet) {
       fontList.add(font);
     }
 
