@@ -63,7 +63,7 @@ class Property implements Serializable {
   int backColorIndex() {
     return getIndex(ColorUtil.getStrFromColor(backColor), colorStrs);
   }
-   
+
   private int getIndex(String key, String[] targets) {
     int index = -1;
     for (int i = 0; i < targets.length; ++i) {
@@ -74,24 +74,24 @@ class Property implements Serializable {
     }
     return index;
   }
-  
+
   static byte[] property2Bytes(Property p) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    
+
     try {
-      ObjectOutputStream oos = new ObjectOutputStream(baos);    
-      oos.writeObject(p);    
+      ObjectOutputStream oos = new ObjectOutputStream(baos);
+      oos.writeObject(p);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    
+
     return baos.toByteArray();
   }
-  
+
   static Property bytes2Property(byte[] raw) {
     ByteArrayInputStream bais = new ByteArrayInputStream(raw);
     Property p = null;
-    
+
     try {
       ObjectInputStream ois = new ObjectInputStream(bais);
       p = (Property)ois.readObject();
@@ -100,7 +100,7 @@ class Property implements Serializable {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
-    
+
     return p;
-  }  
+  }
 }

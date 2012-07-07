@@ -30,7 +30,7 @@ class PrefObj
     return pieces;
   }
 
-  static private void writePieces(Preferences prefs, String key, byte pieces[][]) 
+  static private void writePieces(Preferences prefs, String key, byte pieces[][])
       throws BackingStoreException {
     Preferences node = prefs.node(key);
     node.clear();
@@ -82,7 +82,7 @@ class PrefObj
 
   static public Object getObject(Preferences prefs, String key)
       throws IOException, BackingStoreException, ClassNotFoundException {
-    byte pieces[][] = readPieces(prefs, key);    
+    byte pieces[][] = readPieces(prefs, key);
     if (pieces.length == 0) {
       return null;
     }

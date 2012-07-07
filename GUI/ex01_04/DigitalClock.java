@@ -16,13 +16,13 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
   private Property property;
   private MenuItem propertyMenu;
   private MenuItem exitMenu;
-  
+
   private PropertyDialog propertyDialog;
   private PropertyPopupMenu popupMenu;
-  
+
   private Point clockPosition;
   private Preferences prefs;
-  
+
   static final String PREFS_PROPERTY_KEY = "hoshinoPropery";
   static final String PREFS_LOCATION_KEY = "hoshinoLocation";
 
@@ -65,7 +65,7 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
         property = (Property)obj;
       } else {
         property = new Property();
-      }      
+      }
       obj = PrefObj.getObject(prefs, PREFS_LOCATION_KEY);
       if (obj != null) {
         setLocation((Point)obj);
@@ -81,12 +81,12 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
     }
     propertyDialog = new PropertyDialog(this, "Properties");
     propertyDialog.init();
-    
+
     /* set a pop up menu */
     popupMenu = new PropertyPopupMenu();
     popupMenu.init();
     add(popupMenu);
-    
+
     /* add a mouse click event */
     addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
@@ -108,11 +108,11 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
           System.out.println("mouse released");
           clockPosition = null;
         }
-      }      
+      }
     });
-    
+
     addMouseMotionListener(this);
-        
+
     setBackground(property.getBackColor());
     setVisible(true);
 
@@ -201,7 +201,7 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
   Property getCurrentProperty() {
     return new Property(property);
   }
-  
+
   void saveProperty() {
     try {
       PrefObj.putObject(prefs, PREFS_PROPERTY_KEY, property);
@@ -214,7 +214,7 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
       e.printStackTrace();
     }
   }
-  
+
   @Override
   public void mouseMoved(MouseEvent e) {}
   @Override

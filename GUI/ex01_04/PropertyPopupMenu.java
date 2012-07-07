@@ -60,7 +60,7 @@ class PropertyPopupMenu extends PopupMenu implements ActionListener {
       parent.saveProperty();
       System.exit(0);
     }
-    
+
     /* change font */
     for (MenuItem fontSubMenu : fontSubMenus) {
       if (eventObject == fontSubMenu) {
