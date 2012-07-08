@@ -10,15 +10,15 @@ public class WorkSwitchTest {
   @Test
   public void testIsWorkingOnFRI() {
     Week week = Week.FRI;
-    
+
     assertFalse(WorkSwitch.isWorkingOn(week));
   }
 
   @Test
   public void testIsWorkingOnWED() {
     Week week = Week.WED;
-    
+
     assertTrue(WorkSwitch.isWorkingOn(week));
   }
-  
+
 }

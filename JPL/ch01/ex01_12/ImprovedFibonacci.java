@@ -22,9 +22,9 @@ class ImprovedFibonacci {
       lo = hi - lo;
       p++;
     }
-    
+
     for (int i = 0; i < p; ++i) {
       System.out.println("Fibonacci(" + (i+1) + ") = " + fibStrings[i]);
     }
-  }  
+  }
 }

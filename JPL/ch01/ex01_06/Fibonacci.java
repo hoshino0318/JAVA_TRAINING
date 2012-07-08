@@ -3,7 +3,7 @@ package ch01.ex01_06;
 class Fibonacci {
   static final int MAX = 50;
   static final String title = "Fibonacci ";
-  
+
   /** 値が MAX 未満のフィボナッチ数列を表示する */
   public static void main(String[] args) {
     int lo = 1;

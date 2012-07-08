@@ -11,16 +11,16 @@ public class TransformTest {
   public void test1Str2JavaString() {
     String source = "\\\"\"";
     String expected = "\\\\\\\"\\\"";
-    
+
     assertEquals(expected, Transform.str2JavaString(source));
   }
-  
+
   @Test
   public void test2Str2JavaString() {
     String source = "\\\\\\\\";
     String expected = "\\\\\\\\\\\\\\\\";
-    
+
     assertEquals(expected, Transform.str2JavaString(source));
   }
-  
+
 }

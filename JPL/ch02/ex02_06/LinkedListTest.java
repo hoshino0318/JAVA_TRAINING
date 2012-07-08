@@ -15,14 +15,14 @@ public class LinkedListTest {
   @Test
   public void testGetNextNode() {
     LinkedList llist = new LinkedList(0);
-    
+
     assertEquals(llist.getNextNode(), null);
   }
-  
+
   @Test
   public void testGetItem() {
     LinkedList llist = new LinkedList(100);
-    
+
     assertEquals(llist.getItem(), 100);
-  }  
+  }
 }

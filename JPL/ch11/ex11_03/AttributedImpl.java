@@ -6,7 +6,7 @@ import java.util.Iterator;
 class AttributedImpl<T> implements Attributed<T>, Iterable<Attr<T>> {
   protected Map<String, Attr<T>> attrTable =
       new HashMap<String, Attr<T>>();
-  
+
   @Override
   public void add(Attr<T> newAttr) {
     attrTable.put(newAttr.getName(), newAttr);
@@ -26,7 +26,7 @@ class AttributedImpl<T> implements Attributed<T>, Iterable<Attr<T>> {
   public Iterator<Attr<T>> attrs() {
     return attrTable.values().iterator();
   }
-  
+
   @Override
   public Iterator<Attr<T>> iterator() {
     return attrs();

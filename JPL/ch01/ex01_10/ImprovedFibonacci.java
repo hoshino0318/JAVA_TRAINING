@@ -15,20 +15,20 @@ class ImprovedFibonacci {
     fibPairs[p++] = new Pair(lo, false);
     for (int i = 2; i <= MAX_INDEX; ++i) {
       if (p >= FIBPAIRS_SIZE) break;
-      fibPairs[p++] = new Pair(hi, (hi % 2 == 0)); 
+      fibPairs[p++] = new Pair(hi, (hi % 2 == 0));
       hi = hi + lo;
       lo = hi - lo;
     }
-    
+
     for (int i = 0; i < p; ++i) {
       String mark;
-      if (fibPairs[i].isEven) 
+      if (fibPairs[i].isEven)
         mark = " *";
-      else 
+      else
         mark = "";
       System.out.println((i+1) + ": " + fibPairs[i].value + mark);
     }
-  }  
+  }
 }
 
 class Pair {

@@ -1,7 +1,7 @@
 package ch01.ex01_14;
 
 class Walkman {
-  public static final int MAX_MUSIC_NUM = 1000;  
+  public static final int MAX_MUSIC_NUM = 1000;
   private String[] musicSet; // 音楽セット
   private int nowPlayingIndex; /* 現在再生中の Music を表す(-1 - MAX_MUSIC_NUM-1)
                                 * -1 で停止を表す*/
@@ -17,7 +17,7 @@ class Walkman {
       return false;
     } else if (nowPlayingIndex == index) { // 指定した音楽が再生中
       return false;
-    }    
+    }
     return true;
   }
 
@@ -34,7 +34,7 @@ class Walkman {
   }
 
   /** index で指定した曲を音楽セットから削除する
-   *  削除した音楽を返す */  
+   *  削除した音楽を返す */
   public String removeMusic(int index) {
     if ( !canRemoveMusic(index) ) {
       return null;
@@ -48,7 +48,7 @@ class Walkman {
   }
 
   /** music で指定した曲を音楽セットから削除する
-   *  削除した音楽を返す */  
+   *  削除した音楽を返す */
   public String removeMusic(String music) {
     int index = -1;
     for (int i = 0; i < musicSet.length; ++i) {
@@ -56,9 +56,9 @@ class Walkman {
         index = i;
         break;
       }
-    }    
+    }
     if (index == -1) return null;
-    
+
     return removeMusic(index);
   }
 
@@ -70,11 +70,11 @@ class Walkman {
     return musicSet[index];
   }
 
-  /** 音楽セットを返す */  
+  /** 音楽セットを返す */
   public String[] getMusicSet() {
     return musicSet;
   }
-  
+
   /** index で指定した音楽を再生する */
   public void playMusic(int index) {
     if (index < 0 || index >= musicSet.length) {

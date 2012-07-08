@@ -7,12 +7,12 @@ import org.junit.Test;
 
 public class PointTest {
   Point p1, p2;
-    
+
   @Before
   public void setUp() throws Exception {
     p1 = new Point();
     p2 = new Point();
-    
+
     double x = 1.0, y = 2.0;
     p2.move(x, y);
   }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 class SimpleLookup implements SubLookup {
   private List<String> names;
   private List<Object> values;
-  
+
   SimpleLookup() {
     names = new ArrayList<String>();
     values = new ArrayList<Object>();
@@ -16,9 +16,9 @@ class SimpleLookup implements SubLookup {
   public Object find(String name) {
     int index = names.indexOf(name);
     if (index == -1) {
-      return null; // 見つからなかった   
+      return null; // 見つからなかった
     }
-    
+
     return values.get(index);
   }
 
@@ -34,8 +34,8 @@ class SimpleLookup implements SubLookup {
     if (index == -1) {
       return null; // 削除対象が見つからなかった
     }
-    
-    names.remove(index);    
+
+    names.remove(index);
     return values.remove(index);
   }
 }

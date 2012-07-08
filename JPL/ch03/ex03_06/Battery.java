@@ -12,7 +12,7 @@ public class Battery extends EnergySource {
   boolean empty() {
     if (source > 0)
       return false;
-    
+
     System.out.println("バッテリーは空です");
     return true;
   }

@@ -7,20 +7,20 @@ public enum Signaler {
     Color getColor() {
       return Color.GREEN;
     }
-  },    
-    
+  },
+
   YLW {
     Color getColor() {
       return Color.YELLOW;
     }
   },
-  
+
   RED {
     Color getColor() {
       return Color.RED;
     }
   };
-  
+
   abstract Color getColor();
-  
+
 }

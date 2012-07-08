@@ -14,13 +14,13 @@ class Prime {
         for (int j = i * 2; j <= n; j += i) isPrime[j] = false;
       }
     }
-    
+
     for (int i = 0; i < p; ++i) {
       System.out.print(prime[i] + " ");
     }
     System.out.println();
   }
-  
+
   public static void main(String[] args) {
     int n = 100;
     sieve(n);

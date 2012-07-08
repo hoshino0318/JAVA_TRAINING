@@ -4,9 +4,9 @@ import java.awt.Color;
 
 public enum Signaler {
   GRN, YLW, RED;
-  
+
   Color color;
-  
+
   Signaler() {
     String name = this.name();
     if (name.equals("GRN")) {
@@ -17,7 +17,7 @@ public enum Signaler {
       color = Color.RED;
     }
   }
-  
+
   Color getColor() {
     return color;
   }

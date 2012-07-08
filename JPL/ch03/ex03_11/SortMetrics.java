@@ -4,17 +4,17 @@ final class SortMetrics implements Cloneable {
   public long probeCnt,   // 単純なデータの値調査
               compareCnt, // 2 つの要素の比較
               swapCnt;    // 2 つの要素の交換
-  
+
   public void init() {
     probeCnt = swapCnt = compareCnt = 0;
   }
-  
+
   public String toString() {
-    return probeCnt + " probes " + 
+    return probeCnt + " probes " +
         compareCnt + " compares " +
         swapCnt + " swaps";
   }
-  
+
   /** このクラスは，clone をサポートしている*/
   public SortMetrics clone() {
     try {

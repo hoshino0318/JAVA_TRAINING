@@ -7,12 +7,12 @@ public class StringLinkedList implements LinkedList<String> {
   public StringLinkedList(String item) {
     this(item, null);
   }
-  
+
   public StringLinkedList(String item, LinkedList<String> nextNode) {
     this.item = item;
     this.nextNode = nextNode;
   }
-  
+
   @Override
   public String getItem() {
     return item;
@@ -32,17 +32,17 @@ public class StringLinkedList implements LinkedList<String> {
   public int getListLength() {
     if (nextNode == null)
       return 1;
-    return 1 + nextNode.getListLength();    
+    return 1 + nextNode.getListLength();
   }
-  
+
   public String toString() {
-    String ret = "";    
+    String ret = "";
     ret += item;
     if (nextNode != null) {
       ret += " => ";
       ret += nextNode.toString();
     }
-    
+
     return ret;
   }
 }

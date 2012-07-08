@@ -2,7 +2,7 @@ package ch06.ex06_03;
 
 class MyVerbose implements Verbose {
   Level level;
-  
+
   MyVerbose(Level level) {
     this.level = level;
   }

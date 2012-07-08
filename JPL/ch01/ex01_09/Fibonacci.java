@@ -17,7 +17,7 @@ class Fibonacci {
       lo = hi - lo;  /* 新しい lo は，(合計 - 古い lo)
                         すなわち，古い hi */
     }
-    
+
     for (int i = 0; i < p; ++i) {
       System.out.println("Fibonacci(" + (i + 1) + ") = " + fibArray[i]);
     }

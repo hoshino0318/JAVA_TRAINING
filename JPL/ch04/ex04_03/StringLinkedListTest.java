@@ -25,13 +25,13 @@ public class StringLinkedListTest {
     String expected = "A";
     assertEquals(expected, sLinkedListA.getItem());
   }
-  
+
   @Test
   public void testGetItemB() {
     String expected = "B";
     assertEquals(expected, sLinkedListA.next().getItem());
   }
-  
+
   @Test
   public void testGetListLength() {
     int expected = 3;

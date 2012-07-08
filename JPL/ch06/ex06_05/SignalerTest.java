@@ -16,21 +16,21 @@ public class SignalerTest {
   @Test
   public void testGRN() {
     Signaler grn = Signaler.GRN;
-    
+
     assertEquals(Color.GREEN, grn.getColor());
   }
-  
+
   @Test
   public void testYLW() {
     Signaler ylw = Signaler.YLW;
-    
+
     assertEquals(Color.YELLOW, ylw.getColor());
   }
-  
+
   @Test
   public void testRED() {
     Signaler red = Signaler.RED;
-    
+
     assertEquals(Color.RED, red.getColor());
   }
 

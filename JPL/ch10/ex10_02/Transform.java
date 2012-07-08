@@ -3,10 +3,10 @@ package ch10.ex10_02;
 class Transform {
   public static String str2JavaString(String source) {
     String transformedStr = "";
-    
+
     for (int i = 0; i < source.length(); ++i) {
       char ch = source.charAt(i);
-      
+
       switch (ch) {
       case '\n':
         transformedStr += "\\n";
@@ -37,10 +37,10 @@ class Transform {
         break;
       }
     }
-    
+
     return transformedStr;
   }
-  
+
   public static void main(String[] args) {
     System.out.println(str2JavaString("hoge\""));
   }

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class MyUtilitiesTest {
   private MyUtilities utility;
-    
+
   @Before
   public void setUp() throws Exception {
     utility = new MyUtilities();

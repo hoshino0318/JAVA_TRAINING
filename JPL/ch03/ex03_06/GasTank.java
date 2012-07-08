@@ -10,9 +10,9 @@ public class GasTank extends EnergySource {
 
   @Override
   boolean empty() {
-    if (source > 0) 
+    if (source > 0)
       return false;
-    
+
     System.out.println("ガスタンクは空です");
     return true;
   }

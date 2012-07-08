@@ -22,7 +22,7 @@ class MyUtilities {
         ; // 無視 : データの読み込みは成功しているか，あるいは
           // BadDataSetExceptoin をスローしようとしている
       }
-    }        
+    }
   }
 
   /** ダミーメソッド */

@@ -2,7 +2,7 @@ package ch04.ex04_02;
 
 class SortString implements SortHarness<String> {
   private String[] values;
-  
+
   public SortString(String[] values) {
     this.values = values;
   }
@@ -22,7 +22,7 @@ class SortString implements SortHarness<String> {
   /** values[i] が values[j] より文字列が長い場合は true を返す
    * それ以外は false を返す */
   public boolean compare(int i, int j) {
-    if (values[i].length() > values[j].length()) 
+    if (values[i].length() > values[j].length())
       return true;
     return false;
   }

@@ -6,9 +6,9 @@ class InfinityTest {
     System.out.println("-: " + (Float.POSITIVE_INFINITY - Float.POSITIVE_INFINITY));
     System.out.println("*: " + (Float.POSITIVE_INFINITY * Float.POSITIVE_INFINITY));
     System.out.println("/: " + (Float.POSITIVE_INFINITY / Float.POSITIVE_INFINITY));
-    
+
     System.out.println();
-    
+
     System.out.println("+: " + (Float.POSITIVE_INFINITY + Float.NEGATIVE_INFINITY));
     System.out.println("-: " + (Float.POSITIVE_INFINITY - Float.NEGATIVE_INFINITY));
     System.out.println("*: " + (Float.POSITIVE_INFINITY * Float.NEGATIVE_INFINITY));

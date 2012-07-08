@@ -15,24 +15,24 @@ public class LinkedListTest {
   @Test
   public void testGetNextNode() {
     LinkedList llist = new LinkedList(0);
-    
+
     assertEquals(llist.getNextNode(), null);
   }
-  
+
   @Test
   public void testGetItem() {
     LinkedList llist = new LinkedList(100);
-    
+
     assertEquals(llist.getItem(), 100);
   }
-  
+
   @Test
-  public void testToString() {    
+  public void testToString() {
     LinkedList node1 = new LinkedList(100);
     LinkedList node2 = new LinkedList(0);
     node1.setNextNode(node2);
     String expected  = "100 => 0";
-    
+
     assertEquals(node1.toString(), expected);
   }
 }
