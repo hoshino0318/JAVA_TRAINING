@@ -7,13 +7,13 @@ class ClassContents {
     try {
       Class<?> c = Class.forName(args[0]);
       System.out.println(c);
-      printAnotations(c.getAnnotations());
+      printAnnotations(c.getAnnotations());
     } catch (ClassNotFoundException e) {
       System.out.println("unknown class: " + args[0]);
     }
   }
 
-  private static void printAnotations(Annotation[] annos) {
+  private static void printAnnotations(Annotation[] annos) {
     for (Annotation a : annos) {
       String decl = a.toString();
       System.out.print(" ");
