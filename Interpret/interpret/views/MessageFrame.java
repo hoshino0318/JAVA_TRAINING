@@ -18,6 +18,7 @@ class MessageFrame extends JFrame implements ActionListener {
 
   private JLabel title;
   private JTextArea msgArea;
+  private JScrollPane msgScrollPane;
   private JButton clearButton;
 
   private GridBagLayout layout;
@@ -25,7 +26,7 @@ class MessageFrame extends JFrame implements ActionListener {
 
   MessageFrame() {
     super("Message");
-    setSize(500, 600);
+    setSize(800, 600);
     setResizable(false);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -35,7 +36,7 @@ class MessageFrame extends JFrame implements ActionListener {
     constraints = new GridBagConstraints();
 
     /* コンポーネントの生成 */
-    title = new JLabel("メッセージ");
+    title = new JLabel("message");
     title.setFont(new Font("Arial", Font.BOLD, 20));
     clearButton = new JButton("clear");
     msgArea = new JTextArea();
@@ -45,7 +46,8 @@ class MessageFrame extends JFrame implements ActionListener {
     msgArea.setBorder(BorderFactory.createCompoundBorder(border,
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
     msgArea.setEditable(false);  // Read only
-    msgArea.setPreferredSize(new Dimension(400, 500));
+    msgScrollPane = new JScrollPane(msgArea);
+    msgScrollPane.setPreferredSize(new Dimension(700, 500));
 
     JTextAreaStream stream = new JTextAreaStream(msgArea);
     PrintStream pStream = new PrintStream(stream, true); // true は AutoFlush の設定
@@ -59,7 +61,7 @@ class MessageFrame extends JFrame implements ActionListener {
     addComp(title, 0, 0, 1, 1);
     constraints.anchor = GridBagConstraints.EAST;
     addComp(clearButton, 1, 0, 1, 1);
-    addComp(msgArea, 0, 1, 2, 9);
+    addComp(msgScrollPane, 0, 1, 2, 9);
 
     System.out.println("message test");
 

@@ -2,10 +2,12 @@
 
 package interpret.main;
 
+import interpret.controllers.*;
 import interpret.views.*;
 
 class Main {
   public static void main(String[] args) {
-    new MainFrame();
+    ClassController classController = new ClassController();
+    new MainFrame(classController);
   }
 }

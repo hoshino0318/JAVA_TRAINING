@@ -5,6 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import interpret.controllers.*;
+
 public class MainFrame extends JFrame implements ActionListener {
   private static final long serialVersionUID = -4570424264389438080L;
 
@@ -23,8 +25,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
   private static final Font commonFont = new Font("Arial", Font.BOLD, 20);
 
-  public MainFrame(){
+  private ClassController classController;
+
+  public MainFrame(ClassController classController){
     super("MainFrame");
+    this.classController = classController;
     setSize(new Dimension(1000, 700));
     setLocationRelativeTo(null);
     setResizable(false);
@@ -39,19 +44,19 @@ public class MainFrame extends JFrame implements ActionListener {
     title = new JLabel("Interpret");
     title.setFont(new Font("Arial", Font.BOLD, 30));
 
-    searchLabel = new JLabel("クラス");
+    searchLabel = new JLabel("class");
     searchLabel.setFont(commonFont);
     searchBox = new JTextField();
     searchBox.setPreferredSize(new Dimension(200, 40));
-    searchButton = new JButton("検索");
+    searchButton = new JButton("search");
 
-    constLabel = new JLabel("コンストラクタ一覧");
+    constLabel = new JLabel("constructors");
     constLabel.setFont(commonFont);
     constList = new JList();
     constList.setPreferredSize(new Dimension(300, 400));
     constList.setBorder(new EtchedBorder(EtchedBorder.RAISED));
 
-    objectLabel = new JLabel("オブジェクト一覧");
+    objectLabel = new JLabel("objects");
     objectLabel.setFont(commonFont);
     objectList = new JList();
     objectList.setPreferredSize(new Dimension(300, 300));
@@ -96,7 +101,7 @@ public class MainFrame extends JFrame implements ActionListener {
     Object source = e.getSource();
 
     if (source == searchButton) {
-      System.out.println(searchBox.getText());
+      classController.searchButton(searchBox.getText());
     }
   }
 }
