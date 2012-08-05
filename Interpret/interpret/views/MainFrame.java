@@ -12,7 +12,6 @@ public class MainFrame extends JFrame {
   private JTextField searchBox; // クラス検索用
   private JButton searchButton; // クラス検索用
   private JLabel constLabel;    // コンストラクタ用
-  //private JTextArea constArea;  // コンストラクタ用
   private JList constList;      // コンストラクタ用
 
   private JLabel objectLabel;   // オブジェクト一覧用
@@ -56,10 +55,6 @@ public class MainFrame extends JFrame {
     objectList = new JList();
     objectList.setPreferredSize(new Dimension(300, 300));
     objectList.setBorder(new EtchedBorder(EtchedBorder.RAISED));
-
-    //constArea = new JTextArea();
-    //constArea.setBorder(new EtchedBorder(EtchedBorder.RAISED));
-    //constArea.setPreferredSize(new Dimension(800, 500));
 
     /* 共通設定 */
     constraints.insets = new Insets(5, 5, 5, 5);

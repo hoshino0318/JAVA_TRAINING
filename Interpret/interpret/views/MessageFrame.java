@@ -35,7 +35,9 @@ class MessageFrame extends JFrame {
     msgArea.setPreferredSize(new Dimension(400, 550));
     msgArea.setBorder(new EtchedBorder(EtchedBorder.RAISED));
     JTextAreaStream stream = new JTextAreaStream(msgArea);
-    System.setOut(new PrintStream(stream, true));    // true は AutoFlush の設定
+    PrintStream pStream = new PrintStream(stream, true); // true は AutoFlush の設定
+    System.setOut(pStream);
+    System.setErr(pStream);
 
     setLayout(new BorderLayout());
 
