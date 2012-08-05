@@ -1,9 +1,11 @@
 /* main.java */
 
-package main;
+package interpret.main;
+
+import interpret.views.*;
 
 class Main {
   public static void main(String[] args) {
-    System.out.println("Hello, interpret");
+    new MainFrame();
   }
 }
