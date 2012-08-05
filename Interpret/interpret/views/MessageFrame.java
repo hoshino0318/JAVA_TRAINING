@@ -5,45 +5,49 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import java.awt.*;
+
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
+import javax.swing.border.EtchedBorder;
 
 /**
  * 標準出力を表示するためのクラス */
 class MessageFrame extends JFrame {
 
-  JTextArea msgArea;
+  private static final long serialVersionUID = -3941456441208116678L;
+
+  private JLabel title;
+  private JTextArea msgArea;
 
   MessageFrame() {
     super("Message");
-    setSize(500, 800);
+    setSize(500, 600);
+    setResizable(false);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    title = new JLabel("メッセージ");
+    title.setFont(new Font("Arial", Font.BOLD, 20));
     msgArea = new JTextArea();
     msgArea.setEditable(false);  // ReadOnly に
+    msgArea.setPreferredSize(new Dimension(400, 550));
+    msgArea.setBorder(new EtchedBorder(EtchedBorder.RAISED));
     JTextAreaStream stream = new JTextAreaStream(msgArea);
     System.setOut(new PrintStream(stream, true));    // true は AutoFlush の設定
 
-    add(msgArea);
+    setLayout(new BorderLayout());
 
-    //JFrame frame = new JFrame();
-    //frame.getContentPane().add(area);
-    //frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    //frame.setLocationRelativeTo(null);
-//  frame.setSize(50,100);
-//    frame.setVisible(true);
+    add("North", title);
+    add("South", msgArea);
 
-    //System.out.println("あああ");
-    //System.out.println("いいい");
-    //System.out.println("ううう");
+    System.out.println("message test");
 
     setVisible(true);
   }
 
   public class JTextAreaStream extends OutputStream {
-
     private JTextArea _area;
     private ByteArrayOutputStream _buf;
 
@@ -59,7 +63,6 @@ class MessageFrame extends JFrame {
 
     @Override
     public void flush() throws IOException {
-
       // Swing のイベントスレッドにのせる
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
