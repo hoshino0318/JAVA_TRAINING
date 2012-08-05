@@ -1,10 +1,11 @@
 package interpret.views;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener {
   private static final long serialVersionUID = -4570424264389438080L;
 
   private JLabel title; //タイトル
@@ -76,6 +77,8 @@ public class MainFrame extends JFrame {
 
     new MessageFrame();
 
+    searchButton.addActionListener(this);
+
     setVisible(true);
   }
 
@@ -86,5 +89,14 @@ public class MainFrame extends JFrame {
     constraints.gridwidth = width;
     layout.setConstraints(com, constraints);
     add(com);
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    Object source = e.getSource();
+
+    if (source == searchButton) {
+      System.out.println(searchBox.getText());
+    }
   }
 }
