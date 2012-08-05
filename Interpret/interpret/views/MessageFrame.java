@@ -17,16 +17,20 @@ class MessageFrame extends JFrame implements ActionListener {
   private static final long serialVersionUID = -3941456441208116678L;
 
   private JLabel title;
-  private JTextArea msgArea;
-  private JScrollPane msgScrollPane;
-  private JButton clearButton;
+  private JTextArea outArea; // standard output
+  private JTextArea errArea; // error output
+  private JScrollPane outScrollPane; // standard output
+  private JScrollPane errScrollPane; // error output
+  private JButton oClearButton;
+  private JButton eClearButton;
+  private JButton aClearButton; // all clear button
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
 
   MessageFrame() {
     super("Message");
-    setSize(800, 600);
+    setSize(800, 800);
     setResizable(false);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -38,21 +42,32 @@ class MessageFrame extends JFrame implements ActionListener {
     /* コンポーネントの生成 */
     title = new JLabel("message");
     title.setFont(new Font("Arial", Font.BOLD, 20));
-    clearButton = new JButton("clear");
-    msgArea = new JTextArea();
-    msgArea.setLineWrap(true);
+    oClearButton = new JButton("output clear");
+    eClearButton = new JButton("error clear");
+    aClearButton = new JButton("all clear");
+    outArea = new JTextArea();
+    outArea.setLineWrap(true);
+    errArea = new JTextArea();
+    outArea.setLineWrap(true);
     /* 枠線の設定 (中に空の枠線を設定する) */
     Border border = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
-    msgArea.setBorder(BorderFactory.createCompoundBorder(border,
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-    msgArea.setEditable(false);  // Read only
-    msgScrollPane = new JScrollPane(msgArea);
-    msgScrollPane.setPreferredSize(new Dimension(700, 500));
+    outArea.setBorder(BorderFactory.createCompoundBorder(border,
+        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    errArea.setBorder(BorderFactory.createCompoundBorder(border,
+        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    outArea.setEditable(false);  // Read only
+    errArea.setEditable(false);  // Read only
+    outScrollPane = new JScrollPane(outArea);
+    errScrollPane = new JScrollPane(errArea);
+    outScrollPane.setPreferredSize(new Dimension(750, 400));
+    errScrollPane.setPreferredSize(new Dimension(750, 200));
 
-    JTextAreaStream stream = new JTextAreaStream(msgArea);
-    PrintStream pStream = new PrintStream(stream, true); // true は AutoFlush の設定
-    System.setOut(pStream);
-    System.setErr(pStream);
+    JTextAreaStream outStream = new JTextAreaStream(outArea);
+    JTextAreaStream errStream = new JTextAreaStream(errArea);
+    PrintStream outPStream = new PrintStream(outStream, true); // AutoFlush
+    PrintStream errPStream = new PrintStream(errStream, true); // AutoFlush
+    System.setOut(outPStream);
+    System.setErr(errPStream);
 
     /* コンポーネントの追加 */
     constraints.insets = new Insets(5, 5, 5, 5);
@@ -60,12 +75,17 @@ class MessageFrame extends JFrame implements ActionListener {
     constraints.anchor = GridBagConstraints.WEST;
     addComp(title, 0, 0, 1, 1);
     constraints.anchor = GridBagConstraints.EAST;
-    addComp(clearButton, 1, 0, 1, 1);
-    addComp(msgScrollPane, 0, 1, 2, 9);
+    addComp(oClearButton, 1, 0, 1, 1);
+    addComp(outScrollPane, 0, 1, 2, 6);
+    addComp(eClearButton, 1, 7, 1, 1);
+    addComp(errScrollPane, 0, 8, 2, 1);
+    addComp(aClearButton, 1, 9, 1, 1);
 
     System.out.println("message test");
 
-    clearButton.addActionListener(this);
+    oClearButton.addActionListener(this);
+    eClearButton.addActionListener(this);
+    aClearButton.addActionListener(this);
 
     setVisible(true);
   }
@@ -109,8 +129,13 @@ class MessageFrame extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     Object source = e.getSource();
 
-    if (source == clearButton) {
-      msgArea.setText("");
+    if (source == oClearButton) {
+      outArea.setText("");
+    } else if (source == eClearButton) {
+      errArea.setText("");
+    } else if (source == aClearButton) {
+      outArea.setText("");
+      errArea.setText("");
     }
   }
 

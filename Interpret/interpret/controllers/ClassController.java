@@ -10,9 +10,9 @@ public class ClassController {
     }
 
     if (cls != null) {
-      System.out.println(cls.getCanonicalName());
+      System.out.println(cls.getCanonicalName() + " is Found!!");
     } else {
-      System.out.println("No such type: " + text);
+      System.err.println("No such type: " + text);
     }
   }
 }
