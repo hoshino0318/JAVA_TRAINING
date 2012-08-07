@@ -69,7 +69,7 @@ public class MainFrame extends JFrame implements ActionListener {
     searchLabel = new JLabel("class");
     searchLabel.setFont(commonFont);
     searchBox = new JTextField();
-    searchBox.setPreferredSize(new Dimension(300, 40));
+    searchBox.setPreferredSize(new Dimension(370, 40));
     searchBtn = new JButton("search");
 
     /* コンストラクタ一覧表示用 */
@@ -81,7 +81,7 @@ public class MainFrame extends JFrame implements ActionListener {
     constList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     constScroll = new JScrollPane();
     constScroll.getViewport().setView(constList);
-    constScroll.setPreferredSize(new Dimension(400, 300));
+    constScroll.setPreferredSize(new Dimension(500, 300));
     selectConstBtn = new JButton("select");
 
     /* オブジェクト一覧表示用 */
@@ -105,11 +105,11 @@ public class MainFrame extends JFrame implements ActionListener {
     objectNameLabel = new JLabel("object name");
     objectNameLabel.setFont(new Font("Arial", Font.BOLD, 15));
     objectNameText = new JTextField();
-    objectNameText.setPreferredSize(new Dimension(300, 40));
+    objectNameText.setPreferredSize(new Dimension(400, 40));
     paramConstLabel = new JLabel("constructor");
     paramConstLabel.setFont(new Font("Arial", Font.BOLD, 15));
     paramTextFiled = new JTextField();
-    paramTextFiled.setPreferredSize(new Dimension(350, 40));
+    paramTextFiled.setPreferredSize(new Dimension(400, 40));
 
     /* オブジェクト用 */
     objectBtn = new JButton("object detail");
@@ -123,48 +123,49 @@ public class MainFrame extends JFrame implements ActionListener {
 
     /* タイトルの表示 */
     constraints.anchor = GridBagConstraints.NORTHWEST;
-    addComp(title, 0, 0, 3, 1);
+    addComp(title, 0, 0, 1, 1);
 
     /* 検索ボックス表示 */
     constraints.anchor = GridBagConstraints.WEST;
-    addComp(searchLabel, 0, 1, 3, 1);
-    constraints.anchor = GridBagConstraints.CENTER;
-    addComp(searchBox, 0, 2, 4, 1);
-    addComp(searchBtn, 4, 2, 1,1);
+    addComp(searchLabel, 0, 1, 1, 1);
+    constraints.anchor = GridBagConstraints.WEST;
+    addComp(searchBox, 0, 2, 2, 1);
+    constraints.anchor = GridBagConstraints.EAST;
+    addComp(searchBtn, 3, 2, 1, 1);
 
     /* コンストラクタ一覧表示 */
     constraints.anchor = GridBagConstraints.WEST;
-    addComp(constLabel, 0, 3, 3, 1);
+    addComp(constLabel, 0, 3, 1, 1);
     constraints.anchor = GridBagConstraints.EAST;
-    addComp(constClearBtn, 4, 3, 1, 1);
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(constScroll, 0, 4, 5, 8);
-    constraints.anchor = GridBagConstraints.EAST;
-    addComp(selectConstBtn, 4, 12, 1, 1);
+    addComp(constClearBtn, 3, 3, 1, 1);
+    constraints.anchor = GridBagConstraints.NORTHWEST;
+    addComp(constScroll, 0, 4, 4, 8);
+    constraints.anchor = GridBagConstraints.SOUTHEAST;
+    addComp(selectConstBtn, 3, 11, 1, 1);
+
+    /* 右矢印 */
+    addComp(rightArrow, 5, 9, 1, 1);
 
     /* オブジェクト一覧表示 */
     constraints.anchor = GridBagConstraints.WEST;
-    addComp(objectLabel, 7, 1, 1, 1);
+    addComp(objectLabel, 6, 1, 2, 1);
     constraints.anchor = GridBagConstraints.EAST;
-    addComp(objectBtn, 9, 1, 1, 1);
-    addComp(objectClearBtn, 10, 1, 1, 1);
+    addComp(objectBtn, 8, 1, 1, 1);
+    addComp(objectClearBtn, 9, 1, 1, 1);
     constraints.anchor = GridBagConstraints.WEST;
-    addComp(objectScroll, 7, 2, 4, 3);
-
-    /* 右矢印 */
-    addComp(rightArrow, 6, 9, 1, 1);
+    addComp(objectScroll, 6, 2, 4, 3);
 
     /* パラメータ表示 */
     constraints.anchor = GridBagConstraints.WEST;
-    addComp(paramLabel, 7, 6, 2, 1);
-    addComp(objectNameLabel, 7, 7, 2, 1);
-    addComp(objectNameText, 7, 8, 4, 1);
-    addComp(paramConstLabel, 7, 9, 4, 1);
-    addComp(paramTextFiled, 7, 10, 4, 1);
+    addComp(paramLabel, 6, 6, 1, 1);
+    addComp(objectNameLabel, 6, 7, 2, 1);
+    addComp(objectNameText, 6, 8, 4, 1);
+    addComp(paramConstLabel, 6, 9, 4, 1);
+    addComp(paramTextFiled, 6, 10, 4, 1);
 
     /* オブジェクト生成用 */
     constraints.anchor = GridBagConstraints.EAST;
-    addComp(createObjectBtn, 9, 12, 1, 1);
+    addComp(createObjectBtn, 9, 11, 1, 1);
 
     /* メッセージウィンドウ */
     new MessageFrame();
