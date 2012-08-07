@@ -59,8 +59,8 @@ class MessageFrame extends JFrame implements ActionListener {
     errArea.setEditable(false);  // Read only
     outScrollPane = new JScrollPane(outArea);
     errScrollPane = new JScrollPane(errArea);
-    outScrollPane.setPreferredSize(new Dimension(750, 400));
-    errScrollPane.setPreferredSize(new Dimension(750, 200));
+    outScrollPane.setPreferredSize(new Dimension(700, 400));
+    errScrollPane.setPreferredSize(new Dimension(700, 200));
 
     JTextAreaStream outStream = new JTextAreaStream(outArea);
     JTextAreaStream errStream = new JTextAreaStream(errArea);
@@ -81,8 +81,7 @@ class MessageFrame extends JFrame implements ActionListener {
     addComp(errScrollPane, 0, 8, 2, 1);
     addComp(aClearButton, 1, 9, 1, 1);
 
-    System.out.println("message test");
-
+    /* ボタンのリスナーを登録 */
     oClearButton.addActionListener(this);
     eClearButton.addActionListener(this);
     aClearButton.addActionListener(this);
