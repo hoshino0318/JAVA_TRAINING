@@ -5,7 +5,6 @@ import java.lang.reflect.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 import interpret.controllers.*;
 
@@ -42,6 +41,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
   private JButton createObjectBtn; // オブジェクト生成ボタン
 
+  private MethodDialog methodDialog;
+
   private GridBagLayout layout;
   private GridBagConstraints constraints;
 
@@ -51,7 +52,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
   public MainFrame(){
     super("MainFrame");
-    classController = new ClassController(this);
+    methodDialog = new MethodDialog(this, null);
+    classController = new ClassController(this, methodDialog);
     setSize(new Dimension(1000, 700));
     setLocationRelativeTo(null);
     setResizable(false);
@@ -78,7 +80,6 @@ public class MainFrame extends JFrame implements ActionListener {
     constLabel.setFont(commonFont);
     constClearBtn = new JButton("clear");
     constructors = new DefaultListModel();
-    constructors.addElement("list test");
     constList = new JList(constructors);
     constList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     constScroll = new JScrollPane();
@@ -91,7 +92,6 @@ public class MainFrame extends JFrame implements ActionListener {
     objectLabel.setFont(commonFont);
     objectClearBtn = new JButton("clear");
     objects = new DefaultListModel();
-    objects.addElement("object1");
     objectList = new JList(objects);
     objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     objectScroll = new JScrollPane();
@@ -102,7 +102,7 @@ public class MainFrame extends JFrame implements ActionListener {
     rightArrow = new JLabel("→");
     rightArrow.setFont(new Font("Arial", Font.BOLD, 25));
 
-    /* パラメータ表示用 */
+    /* パラメータ表示 */
     paramLabel = new JLabel("parameter");
     paramLabel.setFont(commonFont);
     objectNameLabel = new JLabel("object name");
@@ -164,7 +164,7 @@ public class MainFrame extends JFrame implements ActionListener {
     addComp(paramLabel, 7, 6, 2, 1);
     addComp(objectNameLabel, 7, 7, 2, 1);
     addComp(objectNameText, 7, 8, 4, 1);
-    addComp(paramConstLabel, 7, 9, 2, 1);
+    addComp(paramConstLabel, 7, 9, 4, 1);
     addComp(paramTextFiled, 7, 10, 4, 1);
 
     /* オブジェクト生成用 */
@@ -200,8 +200,11 @@ public class MainFrame extends JFrame implements ActionListener {
     Object source = e.getSource();
 
     if (source == searchBtn) { // 検索ボタン
-      classController.searchButton(searchBox.getText());
+      constructors.clear();
+      constList.ensureIndexIsVisible(constructors.getSize() - 1);
+      classController.constClearButton();
 
+      classController.searchButton(searchBox.getText());
       searchBox.setText(""); // 検索ボックスをクリアする
     } else if (source == constClearBtn) { // コンストラクタクリアボタン
       constructors.clear();
@@ -219,7 +222,11 @@ public class MainFrame extends JFrame implements ActionListener {
       objectList.ensureIndexIsVisible(objects.getSize() - 1);
       classController.objectClearButton();
     } else if (source == methodBtn) { // メソッド呼び出しボタン
-
+      if (objectList.isSelectionEmpty()) {
+        System.out.println("オブジェクトを選択してください");
+      } else {
+        classController.methodButton();
+      }
     } else if (source == fieldBtn) { // フィールド呼び出しボタン
 
     } else if (source == createObjectBtn) { // オブジェクト生成ボタン
@@ -239,12 +246,12 @@ public class MainFrame extends JFrame implements ActionListener {
     }
   }
 
-  public void addObject() {
-
-  }
-
   public void printConstLabel(String constName) {
     paramConstLabel.setText(constName);
+  }
+
+  public String getSelectedObject() {
+    return (String)objectList.getSelectedValue();
   }
 
   public String getObjectName() {

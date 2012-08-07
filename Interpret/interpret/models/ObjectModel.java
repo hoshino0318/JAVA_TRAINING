@@ -17,7 +17,7 @@ public class ObjectModel {
     return objects.get(key);
   }
 
-  public boolean isEntried(String key) {
+  public boolean containsObject(String key) {
     return objects.containsKey(key);
   }
 
