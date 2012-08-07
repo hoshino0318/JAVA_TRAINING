@@ -245,4 +245,13 @@ public class ObjectDialog extends JDialog implements ActionListener {
   public void setClassController(ClassController classController) {
     this.classController = classController;
   }
+
+  public void allClear() {
+    methods.clear();
+    methodList.ensureIndexIsVisible(methods.getSize() - 1);
+    fields.clear();
+    fieldList.ensureIndexIsVisible(fields.getSize() - 1);
+    methodNameLabel.setText("method name");
+    fieldNameLabel.setText("field name");
+  }
 }

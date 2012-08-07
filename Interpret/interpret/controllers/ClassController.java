@@ -34,20 +34,25 @@ public class ClassController {
       e.printStackTrace();
     }
 
-    if (cls != null) {
-      Constructor<?>[] cons = cls.getConstructors();
-      constModel.saveConstructors(cons);
-      mainFrame.printConstructorList(cons);
-    } else {
+    if (cls == null) {
       System.err.println("No such type: \"" + text + "\"");
     }
+
+    Constructor<?>[] cons = cls.getConstructors();
+    for (Constructor<?> con : cons) {
+      String constName = con.toString();
+      constName = simplifyName(constName);
+      constModel.saveConstructor(constName, con);
+      mainFrame.printConstructor(constName);
+    }
+
   }
 
   public void selectButton(String constName) {
     Constructor<?> con = constModel.getConstructor(constName);
     if (con == null) return;
 
-    mainFrame.printConstLabel(con.toString());
+    mainFrame.printConstLabel(simplifyName(con.toString()));
   }
 
   public boolean createButton() {
@@ -115,6 +120,7 @@ public class ClassController {
   public void objectButton() {
     methodModel.clearMethods();
     fieldModel.clearFields();
+    objectDialog.allClear();
 
     String objName = mainFrame.getSelectedObject();
     Object obj = objectModel.getObject(objName);
@@ -126,7 +132,6 @@ public class ClassController {
 
     Class<?> cls = obj.getClass();
     Method[] methods = cls.getMethods();
-    //Field[] fields = cls.getFields();
     Field[] fields = cls.getDeclaredFields();
 
     ObjectPair[] methodPairs = new ObjectPair[methods.length];
@@ -280,6 +285,8 @@ public class ClassController {
 
       if (objectModel.containsObject(param)) { // オブジェクトが存在する場合はそれを利用する
         objects[i] = objectModel.getObject(param);
+      } else if (getObject(param) != null) {
+        objects[i] = getObject(param);
       } else if (typeName.equals("byte")) {
         objects[i] = Byte.valueOf(param);
       } else if (typeName.equals("short")) {
@@ -302,8 +309,6 @@ public class ClassController {
         objects[i] = Boolean.valueOf(param);
       } else if (typeName.equals("java.lang.String")) {
         objects[i] = param;
-      } else if (getObject(param) != null) {
-        objects[i] = getObject(param);
       } else {
         return null;
       }

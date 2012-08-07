@@ -10,10 +10,8 @@ public class ConstructorModel {
     constructors = new HashMap<String, Constructor<?> >();
   }
 
-  public void saveConstructors(Constructor<?>[] cons) {
-    for (Constructor<?> con : cons) {
-      constructors.put(con.toString(), con);
-    }
+  public void saveConstructor(String key, Constructor<?> con) {
+    constructors.put(key, con);
   }
 
   public Constructor<?> getConstructor(String key) {

@@ -1,7 +1,5 @@
 package interpret.views;
 
-import java.lang.reflect.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -210,7 +208,6 @@ public class MainFrame extends JFrame implements ActionListener {
       if (constList.isSelectionEmpty()) {
         System.out.println("コンストラクタを選択してください");
       } else {
-        System.out.println(constList.getSelectedValue());
         classController.selectButton((String)constList.getSelectedValue());
       }
     } else if (source == objectClearBtn) { // オブジェクトクリアボタン
@@ -233,11 +230,9 @@ public class MainFrame extends JFrame implements ActionListener {
     }
   }
 
-  public void printConstructorList (Constructor<?>[] cons) {
-    for (Constructor<?> con : cons) {
-      constructors.addElement(con.toString());
-      constList.ensureIndexIsVisible(constructors.getSize() - 1);
-    }
+  public void printConstructor (String constName) {
+    constructors.addElement(constName);
+    constList.ensureIndexIsVisible(constructors.getSize() - 1);
   }
 
   public void printConstLabel(String constName) {
