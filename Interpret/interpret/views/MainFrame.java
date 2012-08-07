@@ -19,14 +19,17 @@ public class MainFrame extends JFrame implements ActionListener {
   private JLabel constLabel;    // コンストラクタ用
   private JButton constClearBtn;  // コンストラクタ用
   private JList constList;      // コンストラクタ用
-  private DefaultListModel dlModel; //コンストラクタ用
+  private DefaultListModel constructors; //コンストラクタ用
   private JScrollPane constScroll; // コンストラクタ用
   private JButton selectConstBtn; // コンストラクタ用
 
   private JLabel rightArrow;
 
   private JLabel objectLabel; // オブジェクト一覧用
+  private JButton objectClearBtn; // オブジェクト一覧用
   private JList  objectList;  // オブジェクト一覧用
+  private DefaultListModel objects; // オブジェクト一覧用
+  private JScrollPane objectScroll; // オブジェクト一覧用
 
   private JLabel paramLabel;          // パラメータ用
   private JLabel objectNameLabel;     // パラメータ用
@@ -71,9 +74,9 @@ public class MainFrame extends JFrame implements ActionListener {
     constLabel = new JLabel("constructors");
     constLabel.setFont(commonFont);
     constClearBtn = new JButton("clear");
-    dlModel = new DefaultListModel();
-    dlModel.addElement("list test");
-    constList = new JList(dlModel);
+    constructors = new DefaultListModel();
+    constructors.addElement("list test");
+    constList = new JList(constructors);
     constList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     constScroll = new JScrollPane();
     constScroll.getViewport().setView(constList);
@@ -99,9 +102,14 @@ public class MainFrame extends JFrame implements ActionListener {
     /* オブジェクト一覧表示用 */
     objectLabel = new JLabel("objects");
     objectLabel.setFont(commonFont);
-    objectList = new JList();
-    objectList.setPreferredSize(new Dimension(300, 200));
-    objectList.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+    objectClearBtn = new JButton("clear");
+    objects = new DefaultListModel();
+    objects.addElement("object1");
+    objectList = new JList(objects);
+    objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    objectScroll = new JScrollPane();
+    objectScroll.getViewport().setView(objectList);
+    objectScroll.setPreferredSize(new Dimension(300, 200));
 
     /* オブジェクト生成用 */
     createObjectBtn = new JButton("create");
@@ -113,12 +121,14 @@ public class MainFrame extends JFrame implements ActionListener {
     /* タイトルの表示 */
     constraints.anchor = GridBagConstraints.NORTHWEST;
     addComp(title, 0, 0, 3, 1);
+
     /* 検索ボックス表示 */
     constraints.anchor = GridBagConstraints.WEST;
     addComp(searchLabel, 0, 1, 3, 1);
     constraints.anchor = GridBagConstraints.CENTER;
     addComp(searchBox, 0, 2, 4, 1);
     addComp(searchBtn, 4, 2, 1,1);
+
     /* コンストラクタ一覧表示 */
     constraints.anchor = GridBagConstraints.WEST;
     addComp(constLabel, 0, 3, 3, 1);
@@ -143,17 +153,22 @@ public class MainFrame extends JFrame implements ActionListener {
     /* オブジェクト一覧表示 */
     constraints.anchor = GridBagConstraints.WEST;
     addComp(objectLabel, 7, 1, 3, 1);
-    addComp(objectList, 7, 2, 3, 3);
+    addComp(objectClearBtn, 9, 1, 1, 1);
+    addComp(objectScroll, 7, 2, 3, 3);
 
     /* オブジェクト生成用 */
     constraints.anchor = GridBagConstraints.EAST;
     addComp(createObjectBtn, 9, 12, 1, 1);
 
+    /* メッセージウィンドウ */
     new MessageFrame();
 
+    /* リスナーの登録 */
     searchBtn.addActionListener(this);
     constClearBtn.addActionListener(this);
     selectConstBtn.addActionListener(this);
+    objectClearBtn.addActionListener(this);
+    createObjectBtn.addActionListener(this);
 
     setVisible(true);
   }
@@ -176,9 +191,9 @@ public class MainFrame extends JFrame implements ActionListener {
 
       searchBox.setText(""); // 検索ボックスをクリアする
     } else if (source == constClearBtn) { // コンストラクタクリアボタン
-      dlModel.clear();
-      constList.ensureIndexIsVisible(dlModel.getSize() - 1);
-      classController.constClear();
+      constructors.clear();
+      constList.ensureIndexIsVisible(constructors.getSize() - 1);
+      classController.constClearButton();
     } else if (source == selectConstBtn) { // コンストラクタ選択ボタン
       if (constList.isSelectionEmpty()) {
         System.out.println("コンストラクタを選択してください");
@@ -186,20 +201,45 @@ public class MainFrame extends JFrame implements ActionListener {
         System.out.println(constList.getSelectedValue());
         classController.selectButton((String)constList.getSelectedValue());
       }
+    } else if (source == objectClearBtn) { // オブジェクトクリアボタン
+      objects.clear();
+      objectList.ensureIndexIsVisible(objects.getSize() - 1);
+      classController.objectClearButton();
     } else if (source == createObjectBtn) { // オブジェクト生成ボタン
-
+      if (classController.createButton()) {
+        String objName = objectNameText.getText();
+        objects.addElement(objName);
+        objectList.ensureIndexIsVisible(objects.getSize() - 1);
+        System.out.println("オブジェクト \"" + objName + "\" を生成しました");
+      }
     }
   }
 
   public void printConstructorList (Constructor<?>[] cons) {
     for (Constructor<?> con : cons) {
-      dlModel.addElement(con.toString());
-      constList.ensureIndexIsVisible(dlModel.getSize() - 1);
+      constructors.addElement(con.toString());
+      constList.ensureIndexIsVisible(constructors.getSize() - 1);
     }
+  }
+
+  public void addObject() {
+
   }
 
   public void printConstLabel(String constName) {
     paramConstLabel.setText(constName);
+  }
+
+  public String getObjectName() {
+    return objectNameText.getText();
+  }
+
+  public String getConstName() {
+    return paramConstLabel.getText();
+  }
+
+  public String getParamName() {
+    return paramTextFiled.getText();
   }
 
   class MyMouseListener extends MouseAdapter implements MouseListener {
