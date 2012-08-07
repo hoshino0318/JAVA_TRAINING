@@ -2,7 +2,6 @@
 
 package interpret.main;
 
-import interpret.controllers.*;
 import interpret.views.*;
 
 class Main {

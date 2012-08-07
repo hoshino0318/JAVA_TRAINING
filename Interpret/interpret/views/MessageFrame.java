@@ -21,9 +21,9 @@ class MessageFrame extends JFrame implements ActionListener {
   private JTextArea errArea; // error output
   private JScrollPane outScrollPane; // standard output
   private JScrollPane errScrollPane; // error output
-  private JButton oClearButton;
-  private JButton eClearButton;
-  private JButton aClearButton; // all clear button
+  private JButton oClearBtn;
+  private JButton eClearBtn;
+  private JButton aClearBtn; // all clear button
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
@@ -42,9 +42,9 @@ class MessageFrame extends JFrame implements ActionListener {
     /* コンポーネントの生成 */
     title = new JLabel("message");
     title.setFont(new Font("Arial", Font.BOLD, 20));
-    oClearButton = new JButton("output clear");
-    eClearButton = new JButton("error clear");
-    aClearButton = new JButton("all clear");
+    oClearBtn = new JButton("message clear");
+    eClearBtn = new JButton("error clear");
+    aClearBtn = new JButton("all clear");
     outArea = new JTextArea();
     outArea.setLineWrap(true);
     errArea = new JTextArea();
@@ -75,16 +75,16 @@ class MessageFrame extends JFrame implements ActionListener {
     constraints.anchor = GridBagConstraints.WEST;
     addComp(title, 0, 0, 1, 1);
     constraints.anchor = GridBagConstraints.EAST;
-    addComp(oClearButton, 1, 0, 1, 1);
+    addComp(oClearBtn, 1, 0, 1, 1);
     addComp(outScrollPane, 0, 1, 2, 6);
-    addComp(eClearButton, 1, 7, 1, 1);
+    addComp(eClearBtn, 1, 7, 1, 1);
     addComp(errScrollPane, 0, 8, 2, 1);
-    addComp(aClearButton, 1, 9, 1, 1);
+    addComp(aClearBtn, 1, 9, 1, 1);
 
     /* ボタンのリスナーを登録 */
-    oClearButton.addActionListener(this);
-    eClearButton.addActionListener(this);
-    aClearButton.addActionListener(this);
+    oClearBtn.addActionListener(this);
+    eClearBtn.addActionListener(this);
+    aClearBtn.addActionListener(this);
 
     setVisible(true);
   }
@@ -128,11 +128,11 @@ class MessageFrame extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     Object source = e.getSource();
 
-    if (source == oClearButton) {
+    if (source == oClearBtn) {
       outArea.setText("");
-    } else if (source == eClearButton) {
+    } else if (source == eClearBtn) {
       errArea.setText("");
-    } else if (source == aClearButton) {
+    } else if (source == aClearBtn) {
       outArea.setText("");
       errArea.setText("");
     }
