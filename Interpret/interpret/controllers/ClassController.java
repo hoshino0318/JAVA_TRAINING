@@ -8,15 +8,15 @@ import interpret.models.*;
 
 public class ClassController {
   private MainFrame mainFrame;
-  private MethodDialog methodDialog;
+  private ObjectDialog objectDialog;
   private ConstructorModel constModel;
   private ObjectModel objectModel;
   private MethodModel methodModel;
 
-  public ClassController(MainFrame mainFrame, MethodDialog methodDialog) {
+  public ClassController(MainFrame mainFrame, ObjectDialog objectDialog) {
     this.mainFrame = mainFrame;
-    this.methodDialog = methodDialog;
-    methodDialog.setClassController(this);
+    this.objectDialog = objectDialog;
+    objectDialog.setClassController(this);
     constModel = new ConstructorModel();
     objectModel = new ObjectModel();
     methodModel = new MethodModel();
@@ -127,20 +127,25 @@ public class ClassController {
     Arrays.sort(methodPairs);
 
     for (MethodPair mPair : methodPairs) {
-      methodDialog.printMethod(mPair.methodName);
+      objectDialog.printMethod(mPair.methodName);
       methodModel.saveMethods(mPair.methodName, mPair.method);
     }
 
-    methodDialog.setTitleLabel(objName);
-    methodDialog.setVisible(true);
+    objectDialog.setTitleLabel(objName);
+    objectDialog.setVisible(true);
   }
 
   public boolean methodCallButton() {
-    String objName = methodDialog.getTitleLabel();
-    String methodName = methodDialog.getMethodName();
+    String objName = objectDialog.getTitleLabel();
+    String methodName = objectDialog.getMethodName();
     Object obj = objectModel.getObject(objName);
     Method method = methodModel.getMethod(methodName);
-    String params = methodDialog.getParams();
+    String params = objectDialog.getParams();
+    
+    if (method == null) {
+      System.out.println("メソッド: " + methodName + " は存在しません");
+      return false;
+    }
 
     if (!methodInvoke(obj, method, params)) {
       System.out.println("メソッド呼び出しに失敗しました");

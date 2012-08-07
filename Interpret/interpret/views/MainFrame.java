@@ -41,7 +41,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
   private JButton createObjectBtn; // オブジェクト生成ボタン
 
-  private MethodDialog methodDialog;
+  private ObjectDialog methodDialog;
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
@@ -52,7 +52,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
   public MainFrame(){
     super("MainFrame");
-    methodDialog = new MethodDialog(this, null);
+    methodDialog = new ObjectDialog(this, null);
     classController = new ClassController(this, methodDialog);
     setSize(new Dimension(1000, 700));
     setLocationRelativeTo(null);

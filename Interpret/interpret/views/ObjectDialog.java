@@ -6,7 +6,7 @@ import javax.swing.*;
 
 import interpret.controllers.*;
 
-public class MethodDialog extends JDialog implements ActionListener {
+public class ObjectDialog extends JDialog implements ActionListener {
 
   private static final long serialVersionUID = -6197444475660229365L;
   private JLabel title;
@@ -29,7 +29,7 @@ public class MethodDialog extends JDialog implements ActionListener {
   private GridBagLayout layout;
   private GridBagConstraints constraints;
 
-  public MethodDialog(MainFrame frame, ClassController classController) {
+  public ObjectDialog(MainFrame frame, ClassController classController) {
     super(frame, true);
     setTitle("Method Dialog");
     setSize(800, 500);
