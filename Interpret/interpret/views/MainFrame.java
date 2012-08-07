@@ -31,6 +31,9 @@ public class MainFrame extends JFrame implements ActionListener {
   private DefaultListModel objects; // オブジェクト一覧用
   private JScrollPane objectScroll; // オブジェクト一覧用
 
+  private JButton methodBtn; // メソッド呼び出し用
+  private JButton fieldBtn;  // フィールド呼び出し用
+
   private JLabel paramLabel;          // パラメータ用
   private JLabel objectNameLabel;     // パラメータ用
   private JTextField objectNameText;  // パラメータ用
@@ -67,7 +70,7 @@ public class MainFrame extends JFrame implements ActionListener {
     searchLabel = new JLabel("class");
     searchLabel.setFont(commonFont);
     searchBox = new JTextField();
-    searchBox.setPreferredSize(new Dimension(200, 40));
+    searchBox.setPreferredSize(new Dimension(300, 40));
     searchBtn = new JButton("search");
 
     /* コンストラクタ一覧表示用 */
@@ -80,24 +83,8 @@ public class MainFrame extends JFrame implements ActionListener {
     constList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     constScroll = new JScrollPane();
     constScroll.getViewport().setView(constList);
-    constScroll.setPreferredSize(new Dimension(300, 300));
+    constScroll.setPreferredSize(new Dimension(400, 300));
     selectConstBtn = new JButton("select");
-
-    /* 右矢印 */
-    rightArrow = new JLabel("→");
-    rightArrow.setFont(new Font("Arial", Font.BOLD, 25));
-
-    /* パラメータ表示用 */
-    paramLabel = new JLabel("parameter");
-    paramLabel.setFont(commonFont);
-    objectNameLabel = new JLabel("object name");
-    objectNameLabel.setFont(new Font("Arial", Font.BOLD, 15));
-    objectNameText = new JTextField();
-    objectNameText.setPreferredSize(new Dimension(200, 30));
-    paramConstLabel = new JLabel("constructor");
-    paramConstLabel.setFont(new Font("Arial", Font.BOLD, 15));
-    paramTextFiled = new JTextField();
-    paramTextFiled.setPreferredSize(new Dimension(250, 30));
 
     /* オブジェクト一覧表示用 */
     objectLabel = new JLabel("objects");
@@ -109,14 +96,34 @@ public class MainFrame extends JFrame implements ActionListener {
     objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     objectScroll = new JScrollPane();
     objectScroll.getViewport().setView(objectList);
-    objectScroll.setPreferredSize(new Dimension(300, 200));
+    objectScroll.setPreferredSize(new Dimension(400, 200));
+
+    /* 右矢印 */
+    rightArrow = new JLabel("→");
+    rightArrow.setFont(new Font("Arial", Font.BOLD, 25));
+
+    /* パラメータ表示用 */
+    paramLabel = new JLabel("parameter");
+    paramLabel.setFont(commonFont);
+    objectNameLabel = new JLabel("object name");
+    objectNameLabel.setFont(new Font("Arial", Font.BOLD, 15));
+    objectNameText = new JTextField();
+    objectNameText.setPreferredSize(new Dimension(300, 40));
+    paramConstLabel = new JLabel("constructor");
+    paramConstLabel.setFont(new Font("Arial", Font.BOLD, 15));
+    paramTextFiled = new JTextField();
+    paramTextFiled.setPreferredSize(new Dimension(350, 40));
+
+    /* メソッド，フィールド表示用 */
+    methodBtn = new JButton("methods");
+    fieldBtn = new JButton("fields");
 
     /* オブジェクト生成用 */
     createObjectBtn = new JButton("create");
 
     /* 共通設定 */
     constraints.insets = new Insets(5, 5, 5, 5);
-    //constraints.gridwidth = GridBagConstraints.REMAINDER;
+    constraints.gridwidth = GridBagConstraints.REMAINDER;
 
     /* タイトルの表示 */
     constraints.anchor = GridBagConstraints.NORTHWEST;
@@ -139,6 +146,16 @@ public class MainFrame extends JFrame implements ActionListener {
     constraints.anchor = GridBagConstraints.EAST;
     addComp(selectConstBtn, 4, 12, 1, 1);
 
+    /* オブジェクト一覧表示 */
+    constraints.anchor = GridBagConstraints.WEST;
+    addComp(objectLabel, 7, 1, 1, 1);
+    //constraints.anchor = GridBagConstraints.EAST;
+    addComp(methodBtn, 8, 1, 1, 1);
+    addComp(fieldBtn, 9, 1, 1, 1);
+    addComp(objectClearBtn, 10, 1, 1, 1);
+    constraints.anchor = GridBagConstraints.WEST;
+    addComp(objectScroll, 7, 2, 4, 3);
+
     /* 右矢印 */
     addComp(rightArrow, 6, 9, 1, 1);
 
@@ -146,15 +163,9 @@ public class MainFrame extends JFrame implements ActionListener {
     constraints.anchor = GridBagConstraints.WEST;
     addComp(paramLabel, 7, 6, 2, 1);
     addComp(objectNameLabel, 7, 7, 2, 1);
-    addComp(objectNameText, 7, 8, 2, 1);
+    addComp(objectNameText, 7, 8, 4, 1);
     addComp(paramConstLabel, 7, 9, 2, 1);
-    addComp(paramTextFiled, 7, 10, 2, 1);
-
-    /* オブジェクト一覧表示 */
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(objectLabel, 7, 1, 3, 1);
-    addComp(objectClearBtn, 9, 1, 1, 1);
-    addComp(objectScroll, 7, 2, 3, 3);
+    addComp(paramTextFiled, 7, 10, 4, 1);
 
     /* オブジェクト生成用 */
     constraints.anchor = GridBagConstraints.EAST;
@@ -167,6 +178,8 @@ public class MainFrame extends JFrame implements ActionListener {
     searchBtn.addActionListener(this);
     constClearBtn.addActionListener(this);
     selectConstBtn.addActionListener(this);
+    methodBtn.addActionListener(this);
+    fieldBtn.addActionListener(this);
     objectClearBtn.addActionListener(this);
     createObjectBtn.addActionListener(this);
 
@@ -205,6 +218,10 @@ public class MainFrame extends JFrame implements ActionListener {
       objects.clear();
       objectList.ensureIndexIsVisible(objects.getSize() - 1);
       classController.objectClearButton();
+    } else if (source == methodBtn) { // メソッド呼び出しボタン
+
+    } else if (source == fieldBtn) { // フィールド呼び出しボタン
+
     } else if (source == createObjectBtn) { // オブジェクト生成ボタン
       if (classController.createButton()) {
         String objName = objectNameText.getText();

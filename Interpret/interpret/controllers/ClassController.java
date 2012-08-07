@@ -28,6 +28,8 @@ public class ClassController {
 
     if (cls != null) {
       System.out.println(cls.getCanonicalName() + " is Found!!");
+      System.out.println(cls.getSimpleName());
+      System.out.println(cls.getName());
       Constructor<?>[] cons = cls.getConstructors();
       constModel.saveConstructors(cons);
       mainFrame.printConstructorList(cons);
@@ -84,11 +86,11 @@ public class ClassController {
     return false;
   }
 
-  private boolean createObject(String objName, Constructor<?> con, String params) {
-   Type[] paramTypes = con.getGenericParameterTypes();
+  private boolean createObject(String objName, Constructor<?> con, String paramStr) {
+   Type[] types = con.getGenericParameterTypes();
 
    /* デフォルトコンストラクタの場合 */
-   if (paramTypes.length == 0) {
+   if (types.length == 0) {
      try {
        Object obj = con.newInstance();
        objectModel.saveObject(objName, obj);
@@ -103,6 +105,12 @@ public class ClassController {
        e.printStackTrace();
        return false;
      }
+   }
+
+   String[] params = csvParse(paramStr);
+   if (types.length != params.length) {
+     System.out.println("引数の数が一致しません");
+     return false;
    }
 
     return true;

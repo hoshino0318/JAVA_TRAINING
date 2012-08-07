@@ -11,7 +11,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 /**
- * 標準出力を表示するためのクラス */
+ * 標準出力を GUI 表示するためのクラス */
 class MessageFrame extends JFrame implements ActionListener {
 
   private static final long serialVersionUID = -3941456441208116678L;
