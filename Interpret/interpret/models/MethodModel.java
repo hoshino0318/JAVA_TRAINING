@@ -11,7 +11,7 @@ public class MethodModel {
     methods = new HashMap<String, Method>();
   }
 
-  public void saveMethods(String methodName, Method method) {
+  public void saveMethod(String methodName, Method method) {
     methods.put(methodName, method);
   }
 

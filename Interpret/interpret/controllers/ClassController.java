@@ -12,6 +12,7 @@ public class ClassController {
   private ConstructorModel constModel;
   private ObjectModel objectModel;
   private MethodModel methodModel;
+  private FieldModel fieldModel;
 
   public ClassController(MainFrame mainFrame, ObjectDialog objectDialog) {
     this.mainFrame = mainFrame;
@@ -20,6 +21,7 @@ public class ClassController {
     constModel = new ConstructorModel();
     objectModel = new ObjectModel();
     methodModel = new MethodModel();
+    fieldModel = new FieldModel();
   }
 
   public void searchButton(String text) {
@@ -76,6 +78,14 @@ public class ClassController {
     constModel.clearConstructors();
   }
 
+  public void methodClear() {
+    methodModel.clearMethods();
+  }
+
+  public void fieldClear() {
+    fieldModel.clearFields();
+  }
+
   private boolean createObject(String objName, Constructor<?> con, String paramStr) {
    String[] params = csvParse(paramStr);
    Object[] pObjs = createParams(con.getGenericParameterTypes(), params);
@@ -102,8 +112,9 @@ public class ClassController {
    return true;
   }
 
-  public void methodButton() {
+  public void objectButton() {
     methodModel.clearMethods();
+    fieldModel.clearFields();
 
     String objName = mainFrame.getSelectedObject();
     Object obj = objectModel.getObject(objName);
@@ -115,24 +126,63 @@ public class ClassController {
 
     Class<?> cls = obj.getClass();
     Method[] methods = cls.getMethods();
+    //Field[] fields = cls.getFields();
+    Field[] fields = cls.getDeclaredFields();
 
-    MethodPair[] methodPairs = new MethodPair[methods.length];
-
+    ObjectPair[] methodPairs = new ObjectPair[methods.length];
     for (int i = 0; i < methods.length; ++i) {
       Method method = methods[i];
-      String simpleMethodName = simplifyMethodName(method.toString());
-      methodPairs[i] = new MethodPair(simpleMethodName, method);
+      String simpleMethodName = simplifyName(method.toString());
+      methodPairs[i] = new ObjectPair(simpleMethodName, method);
+    }
+
+    ObjectPair[] fieldPairs = new ObjectPair[fields.length];
+    for (int i = 0; i < fields.length; ++i) {
+      Field field = fields[i];
+      String fieldName = field.toString();
+      fieldName = simplifyName(fieldName);
+      fieldPairs[i] = new ObjectPair(fieldName, field);
     }
 
     Arrays.sort(methodPairs);
+    Arrays.sort(fieldPairs);
 
-    for (MethodPair mPair : methodPairs) {
-      objectDialog.printMethod(mPair.methodName);
-      methodModel.saveMethods(mPair.methodName, mPair.method);
+    for (ObjectPair mPair : methodPairs) {
+      objectDialog.printMethod(mPair.key);
+      methodModel.saveMethod(mPair.key, (Method)mPair.obj);
+    }
+
+    for (ObjectPair fPair : fieldPairs) {
+      objectDialog.printField(fPair.key);
+      fieldModel.saveField(fPair.key, (Field)fPair.obj);
     }
 
     objectDialog.setTitleLabel(objName);
     objectDialog.setVisible(true);
+  }
+
+  public void fieldSelectButton() {
+    String objName = objectDialog.getTitleLabel();
+    Object obj = objectModel.getObject(objName);
+    String fieldName = objectDialog.getFieldName();
+    Field field = fieldModel.getField(fieldName);
+
+    if (field == null) {
+      System.out.println("フィールドが見つかりません");
+      return;
+    }
+
+    field.setAccessible(true);
+    try {
+      Object tmp = field.get(obj);
+      if (tmp == null)
+        objectDialog.setFieldArea("null");
+      else
+        objectDialog.setFieldArea(tmp.toString());
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+      return;
+    }
   }
 
   public boolean methodCallButton() {
@@ -141,17 +191,51 @@ public class ClassController {
     Object obj = objectModel.getObject(objName);
     Method method = methodModel.getMethod(methodName);
     String params = objectDialog.getParams();
-    
+
     if (method == null) {
       System.out.println("メソッド: " + methodName + " は存在しません");
       return false;
     }
 
+    method.setAccessible(true);
     if (!methodInvoke(obj, method, params)) {
       System.out.println("メソッド呼び出しに失敗しました");
       return false;
     }
 
+    return true;
+  }
+
+  public boolean fieldSetButton() {
+    String objName = objectDialog.getTitleLabel();
+    Object obj = objectModel.getObject(objName);
+    String fieldName = objectDialog.getFieldName();
+    Field field = fieldModel.getField(fieldName);
+
+    if (field == null) {
+      System.out.println("フィールドが見つかりません");
+      return false;
+    }
+
+    String paramStr = objectDialog.getFieArea();
+    String[] params = csvParse(paramStr);
+
+    Object[] pObjs = createParams(new Type[]{field.getGenericType()}, params);
+
+    if (pObjs == null) {
+      System.out.println("パラメータが不正です");
+      return false;
+    }
+
+    field.setAccessible(true);
+    System.out.println("フィールドを設定します");
+    try {
+      field.set(obj, pObjs[0]);
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+      return false;
+    }
+    System.out.println("フィールドを設定しました！！");
     return true;
   }
 
@@ -166,7 +250,8 @@ public class ClassController {
 
     try {
       Object output = method.invoke(onThis, pObjs);
-      System.out.println(output.toString()); // 可能であれば文字列に変換して出力する
+      if (output != null)
+        System.out.println(output.toString()); // 可能であれば文字列に変換して出力する
     } catch (IllegalAccessException e) {
       e.printStackTrace();
       return false;
@@ -275,11 +360,11 @@ public class ClassController {
     return obj;
   }
 
-  /* メソッド名を簡約化する */
-  private String simplifyMethodName(String methodName) {
+  /* 名前を簡約化する */
+  private String simplifyName(String name) {
     String str = "";
 
-    String[] tmpAry = methodName.split(" "); // 修飾子と分ける
+    String[] tmpAry = name.split(" "); // 修飾子と分ける
 
     for (int i = 0; i < tmpAry.length; ++i) {
       if (tmpAry[i].indexOf('.') != -1) { // . を含むものを簡約化する
@@ -295,7 +380,7 @@ public class ClassController {
           String params = str.substring(parenIndex + 1, eParenIndex);
           String[] paramAry = params.split(",");
           for (int j = 0; j < paramAry.length; ++j) {
-            paramAry[j] = simplifyMethodName(paramAry[j]);
+            paramAry[j] = simplifyName(paramAry[j]);
           }
           StringBuffer buf = new StringBuffer();
           for (String s : paramAry) {
@@ -332,18 +417,18 @@ public class ClassController {
     return true;
   }
 
-  class MethodPair implements Comparable<MethodPair> {
-    String methodName;
-    Method method;
+  class ObjectPair implements Comparable<ObjectPair> {
+    String key;
+    Object obj;
 
-    MethodPair(String methodName, Method method) {
-      this.methodName = methodName;
-      this.method = method;
+    ObjectPair(String key, Object obj) {
+      this.key = key;
+      this.obj = obj;
     }
 
     @Override
-    public int compareTo(MethodPair other) {
-        return methodName.compareTo(other.methodName);
+    public int compareTo(ObjectPair other) {
+        return key.compareTo(other.key);
     }
   }
 }

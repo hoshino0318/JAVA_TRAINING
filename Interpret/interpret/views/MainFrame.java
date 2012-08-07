@@ -30,8 +30,7 @@ public class MainFrame extends JFrame implements ActionListener {
   private DefaultListModel objects; // オブジェクト一覧用
   private JScrollPane objectScroll; // オブジェクト一覧用
 
-  private JButton methodBtn; // メソッド呼び出し用
-  private JButton fieldBtn;  // フィールド呼び出し用
+  private JButton objectBtn; // オブジェクト
 
   private JLabel paramLabel;          // パラメータ用
   private JLabel objectNameLabel;     // パラメータ用
@@ -114,9 +113,8 @@ public class MainFrame extends JFrame implements ActionListener {
     paramTextFiled = new JTextField();
     paramTextFiled.setPreferredSize(new Dimension(350, 40));
 
-    /* メソッド，フィールド表示用 */
-    methodBtn = new JButton("methods");
-    fieldBtn = new JButton("fields");
+    /* オブジェクト用 */
+    objectBtn = new JButton("object detail");
 
     /* オブジェクト生成用 */
     createObjectBtn = new JButton("create");
@@ -149,9 +147,8 @@ public class MainFrame extends JFrame implements ActionListener {
     /* オブジェクト一覧表示 */
     constraints.anchor = GridBagConstraints.WEST;
     addComp(objectLabel, 7, 1, 1, 1);
-    //constraints.anchor = GridBagConstraints.EAST;
-    addComp(methodBtn, 8, 1, 1, 1);
-    addComp(fieldBtn, 9, 1, 1, 1);
+    constraints.anchor = GridBagConstraints.EAST;
+    addComp(objectBtn, 9, 1, 1, 1);
     addComp(objectClearBtn, 10, 1, 1, 1);
     constraints.anchor = GridBagConstraints.WEST;
     addComp(objectScroll, 7, 2, 4, 3);
@@ -178,8 +175,7 @@ public class MainFrame extends JFrame implements ActionListener {
     searchBtn.addActionListener(this);
     constClearBtn.addActionListener(this);
     selectConstBtn.addActionListener(this);
-    methodBtn.addActionListener(this);
-    fieldBtn.addActionListener(this);
+    objectBtn.addActionListener(this);
     objectClearBtn.addActionListener(this);
     createObjectBtn.addActionListener(this);
 
@@ -221,14 +217,12 @@ public class MainFrame extends JFrame implements ActionListener {
       objects.clear();
       objectList.ensureIndexIsVisible(objects.getSize() - 1);
       classController.objectClearButton();
-    } else if (source == methodBtn) { // メソッド呼び出しボタン
+    } else if (source == objectBtn) { // オブジェクト呼び出しボタン
       if (objectList.isSelectionEmpty()) {
         System.out.println("オブジェクトを選択してください");
       } else {
-        classController.methodButton();
+        classController.objectButton();
       }
-    } else if (source == fieldBtn) { // フィールド呼び出しボタン
-
     } else if (source == createObjectBtn) { // オブジェクト生成ボタン
       if (classController.createButton()) {
         String objName = objectNameText.getText();
