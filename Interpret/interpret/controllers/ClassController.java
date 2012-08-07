@@ -233,14 +233,15 @@ public class ClassController {
     }
 
     field.setAccessible(true);
-    System.out.println("フィールドを設定します");
+    //System.out.println("フィールドを設定します");
     try {
       field.set(obj, pObjs[0]);
+      System.out.println("フィールドを設定しました");
     } catch (IllegalAccessException e) {
       e.printStackTrace();
       return false;
     }
-    System.out.println("フィールドを設定しました！！");
+
     return true;
   }
 
