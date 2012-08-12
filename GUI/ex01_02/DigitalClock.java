@@ -11,6 +11,7 @@ import java.util.TimeZone;
 import java.lang.reflect.Field;
 
 class DigitalClock extends Frame implements ActionListener, Runnable {
+  private static final long serialVersionUID = -4294527006494077786L;
   private DateFormat sdf;
   private TimeZone timeZone;
   private Thread thread;
@@ -164,6 +165,7 @@ class DigitalClock extends Frame implements ActionListener, Runnable {
   }
 
   class PropertyDialog extends Dialog implements ActionListener, ItemListener {
+    private static final long serialVersionUID = -4085122964739792826L;
     private Choice fontChoice;
     private Choice fontSizeChoice;
     private Choice fontColorChoice;

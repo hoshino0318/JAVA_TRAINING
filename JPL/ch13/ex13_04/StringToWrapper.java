@@ -101,6 +101,8 @@ class StringToWrapper {
    * 入力行が不正であることを示す例外
    */
   class IllegalInputLine extends Exception {
+    private static final long serialVersionUID = 7987052759937808412L;
+
     IllegalInputLine(String msg) {
       super(msg);
     }

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.*;
 
 class Property implements Serializable {
+  private static final long serialVersionUID = 1214825939367271438L;
   private Font font;
   private Color fontColor;
   private Color backColor;

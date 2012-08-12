@@ -1,12 +1,12 @@
 package ex01_04;
 
 import java.awt.event.*;
-import java.awt.GraphicsEnvironment;
 import java.awt.PopupMenu;
 import java.awt.Menu;
 import java.awt.MenuItem;
 
 class PropertyPopupMenu extends PopupMenu implements ActionListener {
+  private static final long serialVersionUID = 8420006620920841847L;
   private Menu fontMenu;
   private Menu fontSizeMenu;
   private Menu fontColorMenu;

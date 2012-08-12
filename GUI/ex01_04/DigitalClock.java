@@ -10,6 +10,7 @@ import java.util.TimeZone;
 import java.util.prefs.*;
 
 class DigitalClock extends Frame implements ActionListener, MouseMotionListener, Runnable {
+  private static final long serialVersionUID = 4542901146589932527L;
   private DateFormat sdf;
   private TimeZone timeZone;
   private Thread thread;

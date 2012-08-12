@@ -8,15 +8,13 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 class DigitalClock extends Frame implements Runnable {
-  private int width;
-  private int height;
+  private static final long serialVersionUID = -6187735690601361227L;
   private DateFormat sdf;
   private TimeZone timeZone;
   private Thread thread;
 
   DigitalClock(int width, int height) {
     super("DitalClock");
-    this.width = width; this.height = height;
     setSize(width, height);
     setLocationRelativeTo(null);
 
@@ -47,7 +45,7 @@ class DigitalClock extends Frame implements Runnable {
     while (true){
       repaint();
       try {
-        thread.sleep(500);
+        Thread.sleep(500);
       } catch (InterruptedException e) {
       }
     }

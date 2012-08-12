@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.util.TimeZone;
 
 class DigitalClock extends Window implements Runnable, MouseMotionListener {
+  private static final long serialVersionUID = 4521378598720343232L;
   private DateFormat sdf;
   private TimeZone timeZone;
   private Thread thread;

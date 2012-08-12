@@ -3,6 +3,8 @@ package ch01.ex01_16;
 import java.io.IOException;
 
 class BadDataSetException extends Exception {
+  private static final long serialVersionUID = -683953985031682156L;
+
   private String setName;
   private IOException error;
 

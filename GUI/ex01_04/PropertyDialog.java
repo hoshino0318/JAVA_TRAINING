@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 class PropertyDialog extends Dialog implements ActionListener, ItemListener {
+  private static final long serialVersionUID = 7585449544789035381L;
   private Label titleLabel;
   private Label fontLabel;
   private Label fontSizeLabel;

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class LinkedListTest {
-  private LinkedList likedList;
 
   @Before
   public void setUp() throws Exception {

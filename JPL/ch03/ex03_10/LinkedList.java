@@ -33,6 +33,7 @@ class LinkedList<T> implements Cloneable {
     }
   }
 
+  @Override
   public String toString() {
     String ret = "";
 
@@ -45,6 +46,8 @@ class LinkedList<T> implements Cloneable {
     return ret;
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
   public LinkedList<T> clone() {
     try {
       return (LinkedList<T>) super.clone();

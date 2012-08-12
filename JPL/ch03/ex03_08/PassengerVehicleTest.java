@@ -20,17 +20,17 @@ public class PassengerVehicleTest {
 
   @Test (expected = IllegalArgumentException.class)
   public void testConstructorThrowException1() {
-    PassengerVehicle pV1 = new PassengerVehicle("Bob", 1, 5);
+    new PassengerVehicle("Bob", 1, 5);
   }
 
   @Test (expected = IllegalArgumentException.class)
   public void testConstructorThrowException2() {
-    PassengerVehicle pV1 = new PassengerVehicle("Bob", -1, 1);
+    new PassengerVehicle("Bob", -1, 1);
   }
 
   @Test (expected = IllegalArgumentException.class)
   public void testConstructorThrowException3() {
-    PassengerVehicle pV1 = new PassengerVehicle("Bob", 1, -1);
+    new PassengerVehicle("Bob", 1, -1);
   }
 
   @Test

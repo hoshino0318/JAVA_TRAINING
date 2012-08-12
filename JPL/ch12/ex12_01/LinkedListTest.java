@@ -1,8 +1,6 @@
 package ch12.ex12_01;
 
 import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
 
 public class LinkedListTest {

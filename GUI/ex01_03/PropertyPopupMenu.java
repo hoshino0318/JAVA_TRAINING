@@ -7,6 +7,7 @@ import java.awt.Menu;
 import java.awt.MenuItem;
 
 class PropertyPopupMenu extends PopupMenu implements ActionListener {
+  private static final long serialVersionUID = -4702595175694349518L;
   private Menu fontMenu;
   private Menu fontSizeMenu;
   private Menu fontColorMenu;

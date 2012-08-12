@@ -48,7 +48,6 @@ public class VehicleTest {
 
   @Test
   public void testId2() {
-    Vehicle vehicle2 = new Vehicle();
     Vehicle vehicle3 = new Vehicle();
 
     assertEquals(vehicle3.getID(), 2);

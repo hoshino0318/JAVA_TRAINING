@@ -5,7 +5,7 @@ import static java.lang.System.err;
 
 class SimpleClassDesc {
   public static void main(String[] args) {
-    Class type = null;
+    Class<?> type = null;
 
     if (args.length == 0) {
       usage();
@@ -21,7 +21,7 @@ class SimpleClassDesc {
 
     out.print("class " + type.getSimpleName());
 
-    Class superclass = type.getSuperclass();
+    Class<?> superclass = type.getSuperclass();
     if (superclass != null) {
       out.println(" extends " +
           superclass.getCanonicalName());

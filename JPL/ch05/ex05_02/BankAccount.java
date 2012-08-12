@@ -17,6 +17,7 @@ class BankAccount {
   public void deposit(long amount) {
     balance += amount;
     lastAct = new Action("deposit", amount);
+    System.out.println(balance);
     history.add(lastAct);
   }
 

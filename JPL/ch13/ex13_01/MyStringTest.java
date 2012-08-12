@@ -1,8 +1,6 @@
 package ch13.ex13_01;
 
 import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
 
 public class MyStringTest {

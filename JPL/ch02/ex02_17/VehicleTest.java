@@ -49,9 +49,6 @@ public class VehicleTest {
 
   @Test
   public void testMaxID() {
-    Vehicle vehicle2 = new Vehicle();
-    Vehicle vehicle3 = new Vehicle();
-
     assertEquals(Vehicle.maxID(), 2);
   }
 

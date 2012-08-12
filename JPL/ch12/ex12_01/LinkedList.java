@@ -60,6 +60,7 @@ class LinkedList<E> implements Cloneable {
     return ret;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public LinkedList<E> clone() {
     try {
