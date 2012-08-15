@@ -3,8 +3,8 @@ package ch19.ex19_01;
 /**
  * An <code>LinkedList</code> object defines an list,
  * which has an item and a next lisk node.
- * The item is an arbitrary <code>Object</code>. 
- * 
+ * The item is an arbitrary <code>Object</code>.
+ *
  * @version 1.0
  * @author Tatsuya Hoshino
  * @since 1.0
@@ -12,7 +12,7 @@ package ch19.ex19_01;
 class LinkedList {
   /** The item. */
   private Object item;
-  /** 
+  /**
    * The next list node.
    * If the next node is <code>null</code>, this node is last. */
   private LinkedList nextNode;
@@ -46,11 +46,11 @@ class LinkedList {
     return nextNode;
   }
 
-  /** 
+  /**
    * Sets the next node of this list node. Changes the
    * next node returned by calls to {@link #getNextNode}}.
    * @param nextNode The next node for the list node.
-   * @see #getNextNode() 
+   * @see #getNextNode()
    */
   void setNextNode(LinkedList nextNode) {
     this.nextNode = nextNode;
@@ -58,7 +58,7 @@ class LinkedList {
 
   /**
    * Returns the total length of the linked list node.
-   * @return The total list length. 
+   * @return The total list length.
    */
   int getListLength() {
     int length = 1;
