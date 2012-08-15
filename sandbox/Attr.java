@@ -2,7 +2,7 @@
 /**
  * An <code>Attr</code> object defines an attribute as a
  * name/value pair, where the name is <code>String</code>
- * and the value an arbitrary <code>>Object</code>.
+ * and the value an arbitrary <code>Object</code>.
  *
  * @version 1.1
  * @author Earth
