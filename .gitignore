@@ -4,6 +4,7 @@ bin/*.class
 bin/**/*.class
 
 doc/*.*
+doc/**/
 doc/**/*.*
 doc/package-list
 !doc/.gitkeep
