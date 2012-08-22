@@ -29,6 +29,7 @@ class DigitalClock extends Frame implements ActionListener, MouseMotionListener,
 
   DigitalClock() {
     super("DigitalClock");
+    setSize(300, 300);
     setResizable(false);
     setLocationRelativeTo(null);
 
