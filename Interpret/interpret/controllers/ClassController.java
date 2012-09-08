@@ -1,7 +1,11 @@
 package interpret.controllers;
 
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import interpret.views.*;
 import interpret.models.*;
@@ -128,19 +132,31 @@ public class ClassController {
     }
 
     Class<?> cls = obj.getClass();
-    Method[] methods = cls.getMethods();
-    Field[] fields = cls.getDeclaredFields();
 
-    ObjectPair[] methodPairs = new ObjectPair[methods.length];
-    for (int i = 0; i < methods.length; ++i) {
-      Method method = methods[i];
+    List<Method> methodsA = Arrays.asList(cls.getMethods());
+    List<Method> methodsB = Arrays.asList(cls.getDeclaredMethods());
+    List<Method> methods = new ArrayList<Method>();
+    methods.addAll(methodsA);
+    methods.addAll(methodsB);
+    methods = toUniqueList(methods);
+    Method[] methodAry = methods.toArray(new Method[]{});
+    ObjectPair[] methodPairs = new ObjectPair[methodAry.length];
+    for (int i = 0; i < methodAry.length; ++i) {
+      Method method = methodAry[i];
       String simpleMethodName = simplifyName(method.toString());
       methodPairs[i] = new ObjectPair(simpleMethodName, method);
     }
 
-    ObjectPair[] fieldPairs = new ObjectPair[fields.length];
-    for (int i = 0; i < fields.length; ++i) {
-      Field field = fields[i];
+    List<Field> fieldsA = Arrays.asList(cls.getFields());
+    List<Field> fieldsB = Arrays.asList(cls.getDeclaredFields());
+    List<Field> fields = new ArrayList<Field>();
+    fields.addAll(fieldsA);
+    fields.addAll(fieldsB);
+    fields = toUniqueList(fields);
+    Field[] fieldAry = fields.toArray(new Field[]{});
+    ObjectPair[] fieldPairs = new ObjectPair[fieldAry.length];
+    for (int i = 0; i < fieldAry.length; ++i) {
+      Field field = fieldAry[i];
       String fieldName = field.toString();
       fieldName = simplifyName(fieldName);
       fieldPairs[i] = new ObjectPair(fieldName, field);
@@ -426,6 +442,14 @@ public class ClassController {
     } else {
       e.printStackTrace();
     }
+  }
+
+  private static <T> List<T> toUniqueList(List<T> list) {
+    Set<T> uniqueSet = new HashSet<T>();
+    uniqueSet.addAll(list);
+    List<T> uniqueList = new ArrayList<T>();
+    uniqueList.addAll(uniqueSet);
+    return uniqueList;
   }
 
   class ObjectPair implements Comparable<ObjectPair> {
