@@ -32,7 +32,6 @@ public class MainFrame extends JFrame implements ActionListener {
   private JScrollPane objectScroll; // オブジェクト一覧用
   private JPanel objectPanel;       // オブジェクト一覧用
 
-  private JLabel paramLabel;          // パラメータ用
   private JLabel objectNameLabel;     // パラメータ用
   private JTextField objectNameText;  // パラメータ用
   private JLabel paramConstLabel;     // パラメータ用
@@ -41,7 +40,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
   private JButton createObjectBtn; // オブジェクト生成ボタン
 
-  private ObjectDialog methodDialog;
+  private ObjectDialog objectDialog;
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
@@ -52,8 +51,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
   public MainFrame(){
     super("MainFrame");
-    methodDialog = new ObjectDialog(this, null);
-    classController = new ClassController(this, methodDialog);
+    objectDialog = new ObjectDialog(this, null);
+    classController = new ClassController(this, objectDialog);
     setSize(new Dimension(1000, 700));
     setLocationRelativeTo(null);
     setResizable(false);
@@ -142,8 +141,6 @@ public class MainFrame extends JFrame implements ActionListener {
     objectPanel.add(objectScroll);
 
     /* パラメータ表示 */
-    paramLabel = new JLabel("parameter");
-    paramLabel.setFont(commonFont);
     objectNameLabel = new JLabel("Object name");
     objectNameLabel.setFont(new Font("Arial", Font.BOLD, 15));
     objectNameText = new JTextField();
