@@ -31,11 +31,9 @@ public class ClassController {
     try {
       cls = Class.forName(text);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    if (cls == null) {
+      printException(e);
       System.err.println("No such type: \"" + text + "\"");
+      return;
     }
 
     Constructor<?>[] cons = cls.getConstructors();
@@ -45,7 +43,6 @@ public class ClassController {
       constModel.saveConstructor(constName, con);
       mainFrame.printConstructor(constName);
     }
-
   }
 
   public void selectButton(String constName) {
@@ -104,13 +101,13 @@ public class ClassController {
      Object obj = con.newInstance(pObjs);
      objectModel.saveObject(objName, obj);
    } catch (IllegalAccessException e) {
-     e.printStackTrace();
+     printException(e);
      return false;
    } catch (InstantiationException e) {
-     e.printStackTrace();
+     printException(e);
      return false;
    } catch (InvocationTargetException e) {
-     e.printStackTrace();
+     printException(e);
      return false;
    }
 
@@ -185,7 +182,7 @@ public class ClassController {
       else
         objectDialog.setFieldArea(tmp.toString());
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return;
     }
   }
@@ -238,7 +235,7 @@ public class ClassController {
       field.set(obj, pObjs[0]);
       System.out.println("フィールドを設定しました");
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return false;
     }
 
@@ -259,10 +256,10 @@ public class ClassController {
       if (output != null)
         System.out.println(output.toString()); // 可能であれば文字列に変換して出力する
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return false;
     } catch (InvocationTargetException e) {
-      e.printStackTrace();
+      printException(e);
       return false;
     }
 
@@ -342,7 +339,7 @@ public class ClassController {
     try {
       cls = Class.forName(className);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      printException(e);
       return null;
     }
 
@@ -351,7 +348,7 @@ public class ClassController {
     try {
       field = cls.getField(fieldName);
     } catch (NoSuchFieldException e) {
-      e.printStackTrace();
+      printException(e);
       return null;
     }
 
@@ -359,7 +356,7 @@ public class ClassController {
     try {
       obj = field.get(null);
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return null;
     }
 
@@ -421,6 +418,14 @@ public class ClassController {
         return false;
     }
     return true;
+  }
+
+  private static void printException(Exception e) {
+    if (e.getCause() != null) {
+      e.getCause().printStackTrace();
+    } else {
+      e.printStackTrace();
+    }
   }
 
   class ObjectPair implements Comparable<ObjectPair> {
