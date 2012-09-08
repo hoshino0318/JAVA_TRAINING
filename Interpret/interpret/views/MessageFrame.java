@@ -40,7 +40,7 @@ class MessageFrame extends JFrame implements ActionListener {
     constraints = new GridBagConstraints();
 
     /* コンポーネントの生成 */
-    title = new JLabel("message");
+    title = new JLabel("Message");
     title.setFont(new Font("Arial", Font.BOLD, 20));
     oClearBtn = new JButton("message clear");
     eClearBtn = new JButton("error clear");
