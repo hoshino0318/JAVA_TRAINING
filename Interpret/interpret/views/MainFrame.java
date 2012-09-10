@@ -244,8 +244,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
     /* リスナーの登録 */
     searchBtn.addActionListener(this);
-    //checkAryBox.addActionListener(this);
     checkAryBox.addItemListener(this);
+    aryCreateBtn.addActionListener(this);
     constClearBtn.addActionListener(this);
     selectConstBtn.addActionListener(this);
     objectBtn.addActionListener(this);
@@ -307,7 +307,14 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
       } else {
         classController.objectButton();
       }
-    } else if (source == createObjectBtn) { // オブジェクト生成ボタン
+    } else if (source == aryCreateBtn) { // 配列生成ボタン
+      if (classController.createAryButton()) {
+        String aryName = aryNameField.getText();
+        objects.addElement(aryName);
+        objectList.ensureIndexIsVisible(objects.getSize() - 1);
+        System.out.println("配列 \"" + aryName + "\" を生成しました");
+      }
+    }else if (source == createObjectBtn) { // オブジェクト生成ボタン
       if (classController.createButton()) {
         String objName = objectNameText.getText();
         objects.addElement(objName);
@@ -344,6 +351,18 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
   public void setClassLabel(String className) {
     classLabel.setText(className);
+  }
+
+  public String getClassLabel() {
+    return classLabel.getText();
+  }
+
+  public String getAryObjName() {
+    return aryNameField.getText();
+  }
+
+  public String getAryNumStr() {
+    return aryNumField.getText();
   }
 
   public void printConstructor (String constName) {

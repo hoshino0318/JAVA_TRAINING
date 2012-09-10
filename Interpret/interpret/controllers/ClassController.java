@@ -58,6 +58,50 @@ public class ClassController {
     mainFrame.printConstLabel(simplifyName(con.toString()));
   }
 
+  public boolean createAryButton() {
+    String clsName = mainFrame.getClassLabel();
+    String objName = mainFrame.getAryObjName();
+    String aryNumStr = mainFrame.getAryNumStr();
+
+    if (isEmptyString(clsName)) {
+      System.out.println("クラス名を選択してください");
+      return false;
+    } else if (isEmptyString(objName)) {
+      System.out.println("オブジェクト名を入力してください");
+      return false;
+    } else if (objectModel.containsObject(objName)) {
+      System.out.println("同名のオブジェクトが既に存在します");
+      return false;
+    }
+
+    int aryNum = 0;
+    try {
+      aryNum = Integer.parseInt(aryNumStr);
+    } catch (NumberFormatException e) {
+      printException(e);
+      System.out.println("整数値を入力してください: " + aryNumStr);
+      return false;
+    }
+
+    if (aryNum <= 0 || aryNum >= 1000) {
+      System.out.println("1 以上 1000 未満の整数値を入力してください");
+      return false;
+    }
+
+    Class<?> cls = null;
+    try {
+      cls = Class.forName(clsName);
+    } catch (ClassNotFoundException e) {
+      System.out.println("クラス " + clsName + " が見つかりません");
+      return false;
+    }
+
+    Object array = Array.newInstance(cls, aryNum);
+    objectModel.saveObject(objName, array);
+
+    return true;
+  }
+
   public boolean createButton() {
     String objName = mainFrame.getObjectName();
     String constName = mainFrame.getConstName();
