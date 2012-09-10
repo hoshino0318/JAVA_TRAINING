@@ -40,10 +40,9 @@ public class ObjectDialog extends JDialog implements ActionListener {
   private GridBagLayout layout;
   private GridBagConstraints constraints;
 
-  public ObjectDialog(MainFrame frame, ClassController classController) {
-    //super(frame, true);
+  public ObjectDialog(MainFrame frame) {
     super(frame, false);
-    setTitle("Method Dialog");
+    setTitle("Object Dialog");
     setSize(1000, 800);
     setResizable(false);
     setLocationRelativeTo(null);
@@ -195,15 +194,6 @@ public class ObjectDialog extends JDialog implements ActionListener {
     }
   }
 
-  private void addComp(Component com, int x, int y, int width, int height) {
-    constraints.gridx = x;
-    constraints.gridy = y;
-    constraints.gridwidth = width;
-    constraints.gridheight = height;
-    layout.setConstraints(com, constraints);
-    add(com);
-  }
-
   public void setTitleLabel(String titleName) {
     title.setText(titleName);
   }
@@ -254,4 +244,14 @@ public class ObjectDialog extends JDialog implements ActionListener {
     methodNameLabel.setText("method name");
     fieldNameLabel.setText("field name");
   }
+
+  private void addComp(Component com, int x, int y, int width, int height) {
+    constraints.gridx = x;
+    constraints.gridy = y;
+    constraints.gridwidth  = width;
+    constraints.gridheight = height;
+    layout.setConstraints(com, constraints);
+    add(com);
+  }
+
 }

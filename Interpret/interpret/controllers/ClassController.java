@@ -13,15 +13,18 @@ import interpret.models.*;
 public class ClassController {
   private MainFrame mainFrame;
   private ObjectDialog objectDialog;
+  private ArrayDialog arrayDialog;
   private ConstructorModel constModel;
   private ObjectModel objectModel;
   private MethodModel methodModel;
   private FieldModel fieldModel;
 
-  public ClassController(MainFrame mainFrame, ObjectDialog objectDialog) {
+  public ClassController(MainFrame mainFrame, ObjectDialog objectDialog, ArrayDialog arrayDialog) {
     this.mainFrame = mainFrame;
     this.objectDialog = objectDialog;
+    this.arrayDialog = arrayDialog;
     objectDialog.setClassController(this);
+    arrayDialog.setClassController(this);
     constModel = new ConstructorModel();
     objectModel = new ObjectModel();
     methodModel = new MethodModel();
@@ -223,6 +226,29 @@ public class ClassController {
 
     objectDialog.setTitleLabel(objName);
     objectDialog.setVisible(true);
+  }
+
+  public void arrayButton() {
+    String objName = mainFrame.getSelectedObject();
+    Object obj = objectModel.getObject(objName);
+
+    if (obj == null) {
+      System.out.println("オブジェクトが見つかりません");
+      return;
+    } else if (!obj.getClass().isArray()) {
+      System.out.println("配列オブジェクトを選択してください");
+      return;
+    }
+
+    int length = Array.getLength(obj);
+    Class<?> cls = obj.getClass();
+
+    //TODO
+
+    arrayDialog.setObjTitle(objName);
+    arrayDialog.setAryNum("[" + String.valueOf(length) + "]");
+    arrayDialog.setClassNameLabel(cls.getCanonicalName());
+    arrayDialog.setVisible(true);
   }
 
   public void fieldSelectButton() {

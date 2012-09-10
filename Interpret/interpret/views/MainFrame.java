@@ -34,6 +34,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
   private JLabel rightArrow;
 
   private JButton objectBtn;        // オブジェクト一覧用
+  private JButton arrayBtn;         // オブジェクト一覧用
   private JButton objectClearBtn;   // オブジェクト一覧用
   private JList  objectList;        // オブジェクト一覧用
   private DefaultListModel objects; // オブジェクト一覧用
@@ -49,6 +50,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
   private JButton createObjectBtn; // オブジェクト生成ボタン
 
   private ObjectDialog objectDialog;
+  private ArrayDialog arrayDialog;
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
@@ -59,8 +61,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
   public MainFrame(){
     super("MainFrame");
-    objectDialog = new ObjectDialog(this, null);
-    classController = new ClassController(this, objectDialog);
+    objectDialog = new ObjectDialog(this);
+    arrayDialog = new ArrayDialog(this);
+    classController = new ClassController(this, objectDialog, arrayDialog);
     setSize(new Dimension(1000, 700));
     setLocationRelativeTo(null);
     setResizable(false);
@@ -161,6 +164,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
     /* オブジェクト一覧表示用 */
     objectBtn = new JButton("object detail");
+    arrayBtn = new JButton("array detail");
     objectClearBtn = new JButton("clear");
     objects = new DefaultListModel();
     objectList = new JList(objects);
@@ -176,10 +180,13 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     objectPanel.setBorder(new TitledBorder(new EtchedBorder(), "Object",
                                            TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, commonFont));
     objectConstraints.anchor = GridBagConstraints.WEST;
-    setConstraints(objectBtn, objectLayout, objectConstraints, 0, 0, GridBagConstraints.RELATIVE, 1);
+    setConstraints(objectBtn, objectLayout, objectConstraints, 0, 0, 1, 1);
     objectPanel.add(objectBtn);
+    objectConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(arrayBtn, objectLayout, objectConstraints, 1, 0, 1, 1);
+    objectPanel.add(arrayBtn);
     objectConstraints.anchor = GridBagConstraints.EAST;
-    setConstraints(objectClearBtn, objectLayout, objectConstraints, 4, 0, GridBagConstraints.REMAINDER, 1);
+    setConstraints(objectClearBtn, objectLayout, objectConstraints, 2, 0, GridBagConstraints.REMAINDER, 1);
     objectPanel.add(objectClearBtn);
     setConstraints(objectScroll, objectLayout, objectConstraints, 0, 1, 5, 5);
     objectPanel.add(objectScroll);
@@ -249,6 +256,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     constClearBtn.addActionListener(this);
     selectConstBtn.addActionListener(this);
     objectBtn.addActionListener(this);
+    arrayBtn.addActionListener(this);
     objectClearBtn.addActionListener(this);
     createObjectBtn.addActionListener(this);
 
@@ -306,6 +314,13 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         System.out.println("オブジェクトを選択してください");
       } else {
         classController.objectButton();
+      }
+    } else if (source == arrayBtn) { // 配列呼び出しボタン
+      if (objectList.isSelectionEmpty()) {
+        System.out.println("配列を選択してください");
+      } else {
+        //TODO
+        classController.arrayButton();
       }
     } else if (source == aryCreateBtn) { // 配列生成ボタン
       if (classController.createAryButton()) {
