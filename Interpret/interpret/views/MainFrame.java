@@ -7,7 +7,7 @@ import javax.swing.border.*;
 
 import interpret.controllers.*;
 
-public class MainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener, ItemListener {
   private static final long serialVersionUID = -4570424264389438080L;
 
   private JLabel title; //タイトル
@@ -16,12 +16,20 @@ public class MainFrame extends JFrame implements ActionListener {
   private JButton searchBtn;    // クラス検索用
   private JPanel searchPanel;   // クラス検索用
 
+  private JLabel classLabel;       // コンストラクタ用
   private JButton constClearBtn;   // コンストラクタ用
   private JList constList;         // コンストラクタ用
   private DefaultListModel constructors; //コンストラクタ用
   private JScrollPane constScroll; // コンストラクタ用
   private JButton selectConstBtn;  // コンストラクタ用
   private JPanel constPanel;       // コンストラクタ用
+
+  private JCheckBox checkAryBox;   // 配列生成用
+  private JLabel aryNameLabel;     // 配列生成用
+  private JTextField aryNameField; // 配列生成用
+  private JLabel aryNumLabel;      // 配列生成用
+  private JTextField aryNumField;  // 配列生成用
+  private JButton aryCreateBtn;    // 配列生成用
 
   private JLabel rightArrow;
 
@@ -86,13 +94,23 @@ public class MainFrame extends JFrame implements ActionListener {
     searchPanel.add(searchBtn);
 
     /* コンストラクタ一覧表示用 */
+    classLabel = new JLabel();
     constClearBtn = new JButton("clear");
+    checkAryBox = new JCheckBox("Array");
+    checkAryBox.setPreferredSize(new Dimension(150, 30));
+    aryNameLabel = new JLabel("name");
+    aryNameField = new JTextField();
+    aryNameField.setPreferredSize(new Dimension(150, 30));
+    aryNumLabel = new JLabel("num");
+    aryNumField = new JTextField();
+    aryNumField.setPreferredSize(new Dimension(100, 30));
+    aryCreateBtn = new JButton("create");
     constructors = new DefaultListModel();
     constList = new JList(constructors);
     constList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     constScroll = new JScrollPane();
     constScroll.getViewport().setView(constList);
-    constScroll.setPreferredSize(new Dimension(480, 350));
+    constScroll.setPreferredSize(new Dimension(480, 320));
     selectConstBtn = new JButton("select");
     constPanel = new JPanel();
     constPanel.setPreferredSize(new Dimension(500, 470));
@@ -101,11 +119,37 @@ public class MainFrame extends JFrame implements ActionListener {
     constPanel.setLayout(constLayout);
     constPanel.setBorder(new TitledBorder(new EtchedBorder(), "Constructors",
                                            TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, commonFont));
-    constConstraints.anchor = GridBagConstraints.NORTHEAST;
-    setConstraints(constClearBtn, constLayout, constConstraints, 3, 0, 0, 1);
-    constPanel.add(constClearBtn);
     constConstraints.anchor = GridBagConstraints.WEST;
-    setConstraints(constScroll, constLayout, constConstraints, 0, 1, 4, 8);
+    setConstraints(classLabel, constLayout, constConstraints, 0, 0, 1, 1);
+    constPanel.add(classLabel);
+    constConstraints.anchor = GridBagConstraints.CENTER;
+    setConstraints(aryNameLabel, constLayout, constConstraints, 1, 0, 1, 1);
+    constPanel.add(aryNameLabel);
+    aryNameLabel.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.CENTER;
+    setConstraints(aryNumLabel, constLayout, constConstraints, 2, 0, 1, 1);
+    constPanel.add(aryNumLabel);
+    aryNumLabel.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(constClearBtn, constLayout, constConstraints, 3, 0, 1, 1);
+    constPanel.add(constClearBtn);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(checkAryBox, constLayout, constConstraints, 0, 1, 1, 1);
+    constPanel.add(checkAryBox);
+    constConstraints.anchor = GridBagConstraints.CENTER;
+    setConstraints(aryNameField, constLayout, constConstraints, 1, 1, 1, 1);
+    constPanel.add(aryNameField);
+    aryNameField.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(aryNumField, constLayout, constConstraints, 2, 1, 1, 1);
+    constPanel.add(aryNumField);
+    aryNumField.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(aryCreateBtn, constLayout, constConstraints, 3, 1, 1, 1);
+    constPanel.add(aryCreateBtn);
+    aryCreateBtn.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(constScroll, constLayout, constConstraints, 0, 2, 4, 7);
     constPanel.add(constScroll);
     constConstraints.anchor = GridBagConstraints.SOUTHEAST;
     setConstraints(selectConstBtn, constLayout, constConstraints, 3, 9, 1, 1);
@@ -200,6 +244,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
     /* リスナーの登録 */
     searchBtn.addActionListener(this);
+    //checkAryBox.addActionListener(this);
+    checkAryBox.addItemListener(this);
     constClearBtn.addActionListener(this);
     selectConstBtn.addActionListener(this);
     objectBtn.addActionListener(this);
@@ -241,6 +287,7 @@ public class MainFrame extends JFrame implements ActionListener {
       classController.searchButton(searchBox.getText());
       searchBox.setText(""); // 検索ボックスをクリアする
     } else if (source == constClearBtn) { // コンストラクタクリアボタン
+      classLabel.setText("");
       constructors.clear();
       constList.ensureIndexIsVisible(constructors.getSize() - 1);
       classController.constClearButton();
@@ -268,6 +315,35 @@ public class MainFrame extends JFrame implements ActionListener {
         System.out.println("オブジェクト \"" + objName + "\" を生成しました");
       }
     }
+  }
+
+  @Override
+  public void itemStateChanged(ItemEvent e) {
+    Object source = e.getSource();
+    if (source == checkAryBox) {
+      if (checkAryBox.isSelected()) {
+        aryNameLabel.setVisible(true);
+        aryNameField.setVisible(true);
+        aryNumLabel.setVisible(true);
+        aryNumField.setVisible(true);
+        aryCreateBtn.setVisible(true);
+        constPanel.validate();
+        constList.setEnabled(false);
+        selectConstBtn.setEnabled(false);
+      } else {
+        aryNameLabel.setVisible(false);
+        aryNameField.setVisible(false);
+        aryNumLabel.setVisible(false);
+        aryNumField.setVisible(false);
+        aryCreateBtn.setVisible(false);
+        constList.setEnabled(true);
+        selectConstBtn.setEnabled(true);
+      }
+    }
+  }
+
+  public void setClassLabel(String className) {
+    classLabel.setText(className);
   }
 
   public void printConstructor (String constName) {

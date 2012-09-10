@@ -36,9 +36,11 @@ public class ClassController {
       cls = Class.forName(text);
     } catch (ClassNotFoundException e) {
       printException(e);
-      System.err.println("No such type: \"" + text + "\"");
+      System.out.println("クラス \"" + text + "\" が見つかりません");
       return;
     }
+
+    mainFrame.setClassLabel(text);
 
     Constructor<?>[] cons = cls.getConstructors();
     for (Constructor<?> con : cons) {
