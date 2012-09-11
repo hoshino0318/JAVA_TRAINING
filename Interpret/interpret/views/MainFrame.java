@@ -120,7 +120,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     GridBagLayout constLayout = new GridBagLayout();
     GridBagConstraints constConstraints = new GridBagConstraints();
     constPanel.setLayout(constLayout);
-    constPanel.setBorder(new TitledBorder(new EtchedBorder(), "Constructors",
+    constPanel.setBorder(new TitledBorder(new EtchedBorder(), "Constructor",
                                            TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, commonFont));
     constConstraints.anchor = GridBagConstraints.WEST;
     setConstraints(classLabel, constLayout, constConstraints, 0, 0, 1, 1);
@@ -314,7 +314,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
       if (objectList.isSelectionEmpty()) {
         System.out.println("オブジェクトを選択してください");
       } else {
-        classController.objectButton();
+        classController.objectButton(getSelectedObject());
       }
     } else if (source == arrayBtn) { // 配列呼び出しボタン
       if (objectList.isSelectionEmpty()) {

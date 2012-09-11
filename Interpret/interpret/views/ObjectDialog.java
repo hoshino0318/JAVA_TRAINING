@@ -16,23 +16,23 @@ public class ObjectDialog extends JDialog implements ActionListener {
   private JList methodList;         // メソッド一覧用
   private JScrollPane methodScroll; // メソッド一覧用
 
-  private JLabel methodParamLabel;         // メソッドパラメータ用
-  private JLabel methodNameLabel;    // メソッドパラメータ用
+  private JLabel methodParamLabel;     // メソッドパラメータ用
+  private JLabel methodNameLabel;      // メソッドパラメータ用
   private JTextField methodParamField; // メソッドパラメータ用
 
-  private JLabel fieldLabel;
-  private DefaultListModel fields;
-  private JList fieldList;
-  private JScrollPane fieldScroll;
+  private JLabel fieldLabel;       // フィールド一覧用
+  private DefaultListModel fields; // フィールド一覧用
+  private JList fieldList;         // フィールド一覧用
+  private JScrollPane fieldScroll; // フィールド一覧用
 
-  private JLabel fieldValueLabel;
-  private JLabel fieldNameLabel;
-  private JTextField fieldValueField;
+  private JLabel fieldValueLabel;     // フィールドの値用
+  private JLabel fieldNameLabel;      // フィールドの値用
+  private JTextField fieldValueField; // フィールドの値用
 
   private JButton methodSelectBtn; // メソッド選択ボタン
-  private JButton methodCallBtn;  // メソッド呼び出しボタン
-  private JButton fieldSelectBtn; // フィールド選択ボタン
-  private JButton fieldSetBtn;    // フィールド設定ボタン
+  private JButton methodCallBtn;   // メソッド呼び出しボタン
+  private JButton fieldSelectBtn;  // フィールド選択ボタン
+  private JButton fieldSetBtn;     // フィールド設定ボタン
   private JButton closeBtn; // 閉じるボタン
 
   private ClassController classController;
@@ -253,5 +253,4 @@ public class ObjectDialog extends JDialog implements ActionListener {
     layout.setConstraints(com, constraints);
     add(com);
   }
-
 }

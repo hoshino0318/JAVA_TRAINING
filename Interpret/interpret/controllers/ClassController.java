@@ -184,12 +184,12 @@ public class ClassController {
    return true;
   }
 
-  public void objectButton() {
+  public void objectButton(String objName) {
     methodModel.clearMethods();
     fieldModel.clearFields();
     objectDialog.allClear();
 
-    String objName = mainFrame.getSelectedObject();
+    //String objName = mainFrame.getSelectedObject();
     Object obj = objectModel.getObject(objName);
 
     if (obj == null) {

@@ -137,5 +137,4 @@ class MessageFrame extends JFrame implements ActionListener {
       errArea.setText("");
     }
   }
-
 }

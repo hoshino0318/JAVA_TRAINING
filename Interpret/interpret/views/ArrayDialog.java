@@ -12,7 +12,7 @@ public class ArrayDialog extends JDialog implements ActionListener {
   private static final long serialVersionUID = 3923262360161817944L;
   private JLabel objTitle;
   private JLabel aryNumLabel;  // 配列サイズ表示用
-  private JLabel clsNameLabel;     // クラス表示用
+  private JLabel clsNameLabel; // クラス表示用
 
   private JButton closeBtn; // 閉じるボタン
 
@@ -23,6 +23,8 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
   private JTextField objField; // オブジェクト設定用
   private JButton objSetBtn;   // オブジェクト設定用
+
+  private JButton objDetailBtn; // オブジェクト呼び出し用
 
   private ClassController classController;
 
@@ -72,6 +74,9 @@ public class ArrayDialog extends JDialog implements ActionListener {
     objField.setPreferredSize(new Dimension(200, 30));
     objSetBtn = new JButton("set");
 
+    /* オブジェクト呼び出し */
+    objDetailBtn = new JButton("object detail");
+
     /* 共通設定 */
     constraints.insets = new Insets(5, 5, 5, 5);
 
@@ -96,25 +101,37 @@ public class ArrayDialog extends JDialog implements ActionListener {
     addComp(objField, 3, 2, 1, 1);
     addComp(objSetBtn, 4, 2, 1, 1);
 
+    /* オブジェクト呼び出し */
+    constraints.anchor = GridBagConstraints.EAST;
+    addComp(objDetailBtn, 3, 3, 2, 1);
+
     /* リスナーの登録 */
     closeBtn.addActionListener(this);
     objSetBtn.addActionListener(this);
+    objDetailBtn.addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     Object source = e.getSource();
 
-    if (source == closeBtn) {
+    if (source == closeBtn) { // 閉じるボタン
       setVisible(false);
-    } else if (source == objSetBtn) {
+    } else if (source == objSetBtn) { // オブジェクトセットボタン
       int selectedRow = objectTable.getSelectedRow();
       if (selectedRow == -1) {
         System.out.println("配列を選択してください");
         return;
       } else {
-        System.out.println(selectedRow + " が選択されました");
         classController.setArrayButton();
+      }
+    } else if (source == objDetailBtn) { // オブジェクト詳細ボタン
+      int selectedRow = objectTable.getSelectedRow();
+      if (selectedRow == -1) {
+        System.out.println("配列を選択してください");
+        return;
+      } else {
+        classController.objectButton(objTitle.getText() + "[" + selectedRow + "]");
       }
     }
   }
