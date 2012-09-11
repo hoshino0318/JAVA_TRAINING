@@ -3,42 +3,54 @@ package interpret.views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 import interpret.controllers.*;
 
-public class MainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener, ItemListener {
   private static final long serialVersionUID = -4570424264389438080L;
 
   private JLabel title; //タイトル
-  private JLabel searchLabel;   // クラス検索用
+
   private JTextField searchBox; // クラス検索用
-  private JButton searchBtn; // クラス検索用
-  private JLabel constLabel;    // コンストラクタ用
-  private JButton constClearBtn;  // コンストラクタ用
-  private JList constList;      // コンストラクタ用
+  private JButton searchBtn;    // クラス検索用
+  private JPanel searchPanel;   // クラス検索用
+
+  private JLabel classLabel;       // コンストラクタ用
+  private JButton constClearBtn;   // コンストラクタ用
+  private JList constList;         // コンストラクタ用
   private DefaultListModel constructors; //コンストラクタ用
   private JScrollPane constScroll; // コンストラクタ用
-  private JButton selectConstBtn; // コンストラクタ用
+  private JButton selectConstBtn;  // コンストラクタ用
+  private JPanel constPanel;       // コンストラクタ用
+
+  private JCheckBox checkAryBox;   // 配列生成用
+  private JLabel aryNameLabel;     // 配列生成用
+  private JTextField aryNameField; // 配列生成用
+  private JLabel aryNumLabel;      // 配列生成用
+  private JTextField aryNumField;  // 配列生成用
+  private JButton aryCreateBtn;    // 配列生成用
 
   private JLabel rightArrow;
 
-  private JLabel objectLabel; // オブジェクト一覧用
-  private JButton objectClearBtn; // オブジェクト一覧用
-  private JList  objectList;  // オブジェクト一覧用
+  private JButton objectBtn;        // オブジェクト一覧用
+  private JButton arrayBtn;         // オブジェクト一覧用
+  private JButton objectClearBtn;   // オブジェクト一覧用
+  private JList  objectList;        // オブジェクト一覧用
   private DefaultListModel objects; // オブジェクト一覧用
   private JScrollPane objectScroll; // オブジェクト一覧用
+  private JPanel objectPanel;       // オブジェクト一覧用
 
-  private JButton objectBtn; // オブジェクト
-
-  private JLabel paramLabel;          // パラメータ用
   private JLabel objectNameLabel;     // パラメータ用
   private JTextField objectNameText;  // パラメータ用
-  private JLabel paramConstLabel; // パラメータ用
+  private JLabel paramConstLabel;     // パラメータ用
   private JTextField paramTextFiled;  // パラメータ用
+  private JPanel paramPanel;          // パラメータ用
 
   private JButton createObjectBtn; // オブジェクト生成ボタン
 
-  private ObjectDialog methodDialog;
+  private ObjectDialog objectDialog;
+  private ArrayDialog arrayDialog;
 
   private GridBagLayout layout;
   private GridBagConstraints constraints;
@@ -49,8 +61,9 @@ public class MainFrame extends JFrame implements ActionListener {
 
   public MainFrame(){
     super("MainFrame");
-    methodDialog = new ObjectDialog(this, null);
-    classController = new ClassController(this, methodDialog);
+    objectDialog = new ObjectDialog(this);
+    arrayDialog = new ArrayDialog(this);
+    classController = new ClassController(this, objectDialog, arrayDialog);
     setSize(new Dimension(1000, 700));
     setLocationRelativeTo(null);
     setResizable(false);
@@ -66,56 +79,149 @@ public class MainFrame extends JFrame implements ActionListener {
     title.setFont(new Font("Arial", Font.BOLD, 30));
 
     /* クラス検索用 */
-    searchLabel = new JLabel("class");
-    searchLabel.setFont(commonFont);
     searchBox = new JTextField();
-    searchBox.setPreferredSize(new Dimension(370, 40));
+    searchBox.setPreferredSize(new Dimension(400, 40));
     searchBtn = new JButton("search");
+    searchPanel = new JPanel();
+    searchPanel.setPreferredSize(new Dimension(500, 100));
+    GridBagLayout searchLayout = new GridBagLayout();
+    GridBagConstraints searchConstraints = new GridBagConstraints();
+    searchPanel.setLayout(searchLayout);
+    searchPanel.setBorder(new TitledBorder(new EtchedBorder(), "Class",
+                                           TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, commonFont));
+    searchConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(searchBox, searchLayout, searchConstraints, 0, 0, 3, 1);
+    searchPanel.add(searchBox);
+    searchConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(searchBtn, searchLayout, searchConstraints, 3, 0, 1, 1);
+    searchPanel.add(searchBtn);
 
     /* コンストラクタ一覧表示用 */
-    constLabel = new JLabel("constructors");
-    constLabel.setFont(commonFont);
+    classLabel = new JLabel();
     constClearBtn = new JButton("clear");
+    checkAryBox = new JCheckBox("Array");
+    checkAryBox.setPreferredSize(new Dimension(150, 30));
+    aryNameLabel = new JLabel("name");
+    aryNameField = new JTextField();
+    aryNameField.setPreferredSize(new Dimension(150, 30));
+    aryNumLabel = new JLabel("size");
+    aryNumField = new JTextField();
+    aryNumField.setPreferredSize(new Dimension(100, 30));
+    aryCreateBtn = new JButton("create");
     constructors = new DefaultListModel();
     constList = new JList(constructors);
     constList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     constScroll = new JScrollPane();
     constScroll.getViewport().setView(constList);
-    constScroll.setPreferredSize(new Dimension(500, 300));
+    constScroll.setPreferredSize(new Dimension(480, 320));
     selectConstBtn = new JButton("select");
+    constPanel = new JPanel();
+    constPanel.setPreferredSize(new Dimension(500, 470));
+    GridBagLayout constLayout = new GridBagLayout();
+    GridBagConstraints constConstraints = new GridBagConstraints();
+    constPanel.setLayout(constLayout);
+    constPanel.setBorder(new TitledBorder(new EtchedBorder(), "Constructor",
+                                           TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, commonFont));
+    constConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(classLabel, constLayout, constConstraints, 0, 0, 1, 1);
+    constPanel.add(classLabel);
+    constConstraints.anchor = GridBagConstraints.CENTER;
+    setConstraints(aryNameLabel, constLayout, constConstraints, 1, 0, 1, 1);
+    constPanel.add(aryNameLabel);
+    aryNameLabel.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.CENTER;
+    setConstraints(aryNumLabel, constLayout, constConstraints, 2, 0, 1, 1);
+    constPanel.add(aryNumLabel);
+    aryNumLabel.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(constClearBtn, constLayout, constConstraints, 3, 0, 1, 1);
+    constPanel.add(constClearBtn);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(checkAryBox, constLayout, constConstraints, 0, 1, 1, 1);
+    constPanel.add(checkAryBox);
+    constConstraints.anchor = GridBagConstraints.CENTER;
+    setConstraints(aryNameField, constLayout, constConstraints, 1, 1, 1, 1);
+    constPanel.add(aryNameField);
+    aryNameField.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(aryNumField, constLayout, constConstraints, 2, 1, 1, 1);
+    constPanel.add(aryNumField);
+    aryNumField.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(aryCreateBtn, constLayout, constConstraints, 3, 1, 1, 1);
+    constPanel.add(aryCreateBtn);
+    aryCreateBtn.setVisible(false);
+    constConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(constScroll, constLayout, constConstraints, 0, 2, 4, 7);
+    constPanel.add(constScroll);
+    constConstraints.anchor = GridBagConstraints.SOUTHEAST;
+    setConstraints(selectConstBtn, constLayout, constConstraints, 3, 9, 1, 1);
+    constPanel.add(selectConstBtn);
+
+    /* 右矢印 */
+    rightArrow = new JLabel("→");
+    rightArrow.setFont(new Font("Arial", Font.BOLD, 25));
 
     /* オブジェクト一覧表示用 */
-    objectLabel = new JLabel("objects");
-    objectLabel.setFont(commonFont);
+    objectBtn = new JButton("object detail");
+    arrayBtn = new JButton("array detail");
     objectClearBtn = new JButton("clear");
     objects = new DefaultListModel();
     objectList = new JList(objects);
     objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     objectScroll = new JScrollPane();
     objectScroll.getViewport().setView(objectList);
-    objectScroll.setPreferredSize(new Dimension(400, 200));
-
-    /* 右矢印 */
-    rightArrow = new JLabel("→");
-    rightArrow.setFont(new Font("Arial", Font.BOLD, 25));
+    objectScroll.setPreferredSize(new Dimension(350, 200));
+    objectPanel = new JPanel();
+    objectPanel.setPreferredSize(new Dimension(400, 300));
+    GridBagLayout objectLayout = new GridBagLayout();
+    GridBagConstraints objectConstraints = new GridBagConstraints();
+    objectPanel.setLayout(objectLayout);
+    objectPanel.setBorder(new TitledBorder(new EtchedBorder(), "Object",
+                                           TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, commonFont));
+    objectConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(objectBtn, objectLayout, objectConstraints, 0, 0, 1, 1);
+    objectPanel.add(objectBtn);
+    objectConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(arrayBtn, objectLayout, objectConstraints, 1, 0, 1, 1);
+    objectPanel.add(arrayBtn);
+    objectConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(objectClearBtn, objectLayout, objectConstraints, 2, 0, GridBagConstraints.REMAINDER, 1);
+    objectPanel.add(objectClearBtn);
+    setConstraints(objectScroll, objectLayout, objectConstraints, 0, 1, 5, 5);
+    objectPanel.add(objectScroll);
 
     /* パラメータ表示 */
-    paramLabel = new JLabel("parameter");
-    paramLabel.setFont(commonFont);
-    objectNameLabel = new JLabel("object name");
+    objectNameLabel = new JLabel("Object name");
     objectNameLabel.setFont(new Font("Arial", Font.BOLD, 15));
     objectNameText = new JTextField();
-    objectNameText.setPreferredSize(new Dimension(400, 40));
-    paramConstLabel = new JLabel("constructor");
+    objectNameText.setPreferredSize(new Dimension(350, 40));
+    paramConstLabel = new JLabel("Constructor");
     paramConstLabel.setFont(new Font("Arial", Font.BOLD, 15));
     paramTextFiled = new JTextField();
-    paramTextFiled.setPreferredSize(new Dimension(400, 40));
-
-    /* オブジェクト用 */
-    objectBtn = new JButton("object detail");
+    paramTextFiled.setPreferredSize(new Dimension(350, 40));
+    paramPanel = new JPanel();
+    paramPanel.setPreferredSize(new Dimension(400, 200));
+    GridBagLayout paramLayout = new GridBagLayout();
+    GridBagConstraints paramConstraints = new GridBagConstraints();
+    paramPanel.setLayout(paramLayout);
+    paramPanel.setBorder(new TitledBorder(new EtchedBorder(), "Parameter",
+                                           TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, commonFont));
+    paramConstraints.anchor = GridBagConstraints.WEST;
+    setConstraints(objectNameLabel, paramLayout, paramConstraints, 0, 0, 1, 1);
+    paramPanel.add(objectNameLabel);
+    setConstraints(objectNameText, paramLayout, paramConstraints, 0, 1, 4, 1);
+    paramPanel.add(objectNameText);
+    setConstraints(paramConstLabel, paramLayout, paramConstraints, 0, 2, 1, 1);
+    paramPanel.add(paramConstLabel);
+    setConstraints(paramTextFiled, paramLayout, paramConstraints, 0, 3, 4, 1);
+    paramPanel.add(paramTextFiled);
 
     /* オブジェクト生成用 */
     createObjectBtn = new JButton("create");
+    paramConstraints.anchor = GridBagConstraints.EAST;
+    setConstraints(createObjectBtn, paramLayout, paramConstraints, 3, 4, GridBagConstraints.REMAINDER, 1);
+    paramPanel.add(createObjectBtn);
 
     /* 共通設定 */
     constraints.insets = new Insets(5, 5, 5, 5);
@@ -126,55 +232,31 @@ public class MainFrame extends JFrame implements ActionListener {
     addComp(title, 0, 0, 1, 1);
 
     /* 検索ボックス表示 */
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(searchLabel, 0, 1, 1, 1);
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(searchBox, 0, 2, 2, 1);
-    constraints.anchor = GridBagConstraints.EAST;
-    addComp(searchBtn, 3, 2, 1, 1);
+    addComp(searchPanel, 0, 1, 4, 2);
 
     /* コンストラクタ一覧表示 */
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(constLabel, 0, 3, 1, 1);
-    constraints.anchor = GridBagConstraints.EAST;
-    addComp(constClearBtn, 3, 3, 1, 1);
-    constraints.anchor = GridBagConstraints.NORTHWEST;
-    addComp(constScroll, 0, 4, 4, 8);
-    constraints.anchor = GridBagConstraints.SOUTHEAST;
-    addComp(selectConstBtn, 3, 11, 1, 1);
+    addComp(constPanel, 0, 3, 4, 10);
 
     /* 右矢印 */
-    addComp(rightArrow, 5, 9, 1, 1);
+    addComp(rightArrow, 4, 9, 1, 1);
 
     /* オブジェクト一覧表示 */
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(objectLabel, 6, 1, 2, 1);
-    constraints.anchor = GridBagConstraints.EAST;
-    addComp(objectBtn, 8, 1, 1, 1);
-    addComp(objectClearBtn, 9, 1, 1, 1);
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(objectScroll, 6, 2, 4, 3);
+    addComp(objectPanel, 5, 1, 5, 6);
 
     /* パラメータ表示 */
-    constraints.anchor = GridBagConstraints.WEST;
-    addComp(paramLabel, 6, 6, 1, 1);
-    addComp(objectNameLabel, 6, 7, 2, 1);
-    addComp(objectNameText, 6, 8, 4, 1);
-    addComp(paramConstLabel, 6, 9, 4, 1);
-    addComp(paramTextFiled, 6, 10, 4, 1);
-
-    /* オブジェクト生成用 */
-    constraints.anchor = GridBagConstraints.EAST;
-    addComp(createObjectBtn, 9, 11, 1, 1);
+    addComp(paramPanel, 5, 7, 5, 4);
 
     /* メッセージウィンドウ */
     new MessageFrame();
 
     /* リスナーの登録 */
     searchBtn.addActionListener(this);
+    checkAryBox.addItemListener(this);
+    aryCreateBtn.addActionListener(this);
     constClearBtn.addActionListener(this);
     selectConstBtn.addActionListener(this);
     objectBtn.addActionListener(this);
+    arrayBtn.addActionListener(this);
     objectClearBtn.addActionListener(this);
     createObjectBtn.addActionListener(this);
 
@@ -184,11 +266,22 @@ public class MainFrame extends JFrame implements ActionListener {
   private void addComp(Component com, int x, int y, int width, int height) {
     constraints.gridx = x;
     constraints.gridy = y;
+    constraints.gridwidth  = width;
     constraints.gridheight = height;
-    constraints.gridwidth = width;
     layout.setConstraints(com, constraints);
     add(com);
   }
+
+  private void setConstraints(Component com, GridBagLayout layout,
+                              GridBagConstraints constraints,
+                              int x, int y, int width, int height) {
+    constraints.gridx = x;
+    constraints.gridy = y;
+    constraints.gridwidth  = width;
+    constraints.gridheight = height;
+    layout.setConstraints(com, constraints);
+  }
+
 
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -202,6 +295,7 @@ public class MainFrame extends JFrame implements ActionListener {
       classController.searchButton(searchBox.getText());
       searchBox.setText(""); // 検索ボックスをクリアする
     } else if (source == constClearBtn) { // コンストラクタクリアボタン
+      classLabel.setText("");
       constructors.clear();
       constList.ensureIndexIsVisible(constructors.getSize() - 1);
       classController.constClearButton();
@@ -212,23 +306,76 @@ public class MainFrame extends JFrame implements ActionListener {
         classController.selectButton((String)constList.getSelectedValue());
       }
     } else if (source == objectClearBtn) { // オブジェクトクリアボタン
-      objects.clear();
-      objectList.ensureIndexIsVisible(objects.getSize() - 1);
-      classController.objectClearButton();
+      if (classController.objectClearButton()) {
+        objects.clear();
+        objectList.ensureIndexIsVisible(objects.getSize() - 1);
+      }
     } else if (source == objectBtn) { // オブジェクト呼び出しボタン
       if (objectList.isSelectionEmpty()) {
         System.out.println("オブジェクトを選択してください");
       } else {
-        classController.objectButton();
+        classController.objectButton(getSelectedObject());
+      }
+    } else if (source == arrayBtn) { // 配列呼び出しボタン
+      if (objectList.isSelectionEmpty()) {
+        System.out.println("配列を選択してください");
+      } else {
+        classController.arrayButton();
+      }
+    } else if (source == aryCreateBtn) { // 配列生成ボタン
+      if (classController.createAryButton()) {
+        String aryName = aryNameField.getText();
+        objects.addElement(aryName);
+        objectList.ensureIndexIsVisible(objects.getSize() - 1);
+        System.out.println("配列 \"" + aryName + "\" を生成しました");
       }
     } else if (source == createObjectBtn) { // オブジェクト生成ボタン
       if (classController.createButton()) {
         String objName = objectNameText.getText();
-        objects.addElement(objName);
-        objectList.ensureIndexIsVisible(objects.getSize() - 1);
-        System.out.println("オブジェクト \"" + objName + "\" を生成しました");
+        addObjectName(objName);
       }
     }
+  }
+
+  @Override
+  public void itemStateChanged(ItemEvent e) {
+    Object source = e.getSource();
+    if (source == checkAryBox) {
+      if (checkAryBox.isSelected()) {
+        aryNameLabel.setVisible(true);
+        aryNameField.setVisible(true);
+        aryNumLabel.setVisible(true);
+        aryNumField.setVisible(true);
+        aryCreateBtn.setVisible(true);
+        constPanel.validate();
+        constList.setEnabled(false);
+        selectConstBtn.setEnabled(false);
+      } else {
+        aryNameLabel.setVisible(false);
+        aryNameField.setVisible(false);
+        aryNumLabel.setVisible(false);
+        aryNumField.setVisible(false);
+        aryCreateBtn.setVisible(false);
+        constList.setEnabled(true);
+        selectConstBtn.setEnabled(true);
+      }
+    }
+  }
+
+  public void setClassLabel(String className) {
+    classLabel.setText(className);
+  }
+
+  public String getClassLabel() {
+    return classLabel.getText();
+  }
+
+  public String getAryObjName() {
+    return aryNameField.getText();
+  }
+
+  public String getAryNumStr() {
+    return aryNumField.getText();
   }
 
   public void printConstructor (String constName) {
@@ -256,7 +403,10 @@ public class MainFrame extends JFrame implements ActionListener {
     return paramTextFiled.getText();
   }
 
-  class MyMouseListener extends MouseAdapter implements MouseListener {
 
+  public void addObjectName(String objName) {
+    objects.addElement(objName);
+    objectList.ensureIndexIsVisible(objects.getSize() - 1);
+    System.out.println("オブジェクト \"" + objName + "\" を生成しました");
   }
 }
