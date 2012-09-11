@@ -1,7 +1,11 @@
 package interpret.controllers;
 
 import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import interpret.views.*;
 import interpret.models.*;
@@ -9,15 +13,20 @@ import interpret.models.*;
 public class ClassController {
   private MainFrame mainFrame;
   private ObjectDialog objectDialog;
+  private ArrayDialog arrayDialog;
   private ConstructorModel constModel;
   private ObjectModel objectModel;
   private MethodModel methodModel;
   private FieldModel fieldModel;
 
-  public ClassController(MainFrame mainFrame, ObjectDialog objectDialog) {
+  private final char[] forbiddenChars = {'[', ']'};
+
+  public ClassController(MainFrame mainFrame, ObjectDialog objectDialog, ArrayDialog arrayDialog) {
     this.mainFrame = mainFrame;
     this.objectDialog = objectDialog;
+    this.arrayDialog = arrayDialog;
     objectDialog.setClassController(this);
+    arrayDialog.setClassController(this);
     constModel = new ConstructorModel();
     objectModel = new ObjectModel();
     methodModel = new MethodModel();
@@ -31,12 +40,12 @@ public class ClassController {
     try {
       cls = Class.forName(text);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      printException(e);
+      System.out.println("クラス \"" + text + "\" が見つかりません");
+      return;
     }
 
-    if (cls == null) {
-      System.err.println("No such type: \"" + text + "\"");
-    }
+    mainFrame.setClassLabel(text);
 
     Constructor<?>[] cons = cls.getConstructors();
     for (Constructor<?> con : cons) {
@@ -45,7 +54,6 @@ public class ClassController {
       constModel.saveConstructor(constName, con);
       mainFrame.printConstructor(constName);
     }
-
   }
 
   public void selectButton(String constName) {
@@ -55,12 +63,66 @@ public class ClassController {
     mainFrame.printConstLabel(simplifyName(con.toString()));
   }
 
+  public boolean createAryButton() {
+    String clsName = mainFrame.getClassLabel();
+    String objName = mainFrame.getAryObjName();
+    String aryNumStr = mainFrame.getAryNumStr();
+
+    if (isEmptyString(clsName)) {
+      System.out.println("クラス名を選択してください");
+      return false;
+    } else if (isEmptyString(objName)) {
+      System.out.println("オブジェクト名を入力してください");
+      return false;
+    } else if (isForbiddenString(objName)) {
+      for (int i = 0; i < forbiddenChars.length; ++i)
+        System.out.print("'" + forbiddenChars[i] + "', ");
+      System.out.println(" は禁則文字です");
+      return false;
+    } else if (objectModel.containsObject(objName)) {
+      System.out.println("同名のオブジェクトが既に存在します");
+      return false;
+    }
+
+    int aryNum = 0;
+    try {
+      aryNum = Integer.parseInt(aryNumStr);
+    } catch (NumberFormatException e) {
+      printException(e);
+      System.out.println("整数値を入力してください: " + aryNumStr);
+      return false;
+    }
+
+    if (aryNum <= 0 || aryNum >= 1000) {
+      System.out.println("1 以上 1000 未満の整数値を入力してください");
+      return false;
+    }
+
+    Class<?> cls = null;
+    try {
+      cls = Class.forName(clsName);
+    } catch (ClassNotFoundException e) {
+      System.out.println("クラス " + clsName + " が見つかりません");
+      return false;
+    }
+
+    Object array = Array.newInstance(cls, aryNum);
+    objectModel.saveObject(objName, array);
+
+    return true;
+  }
+
   public boolean createButton() {
     String objName = mainFrame.getObjectName();
     String constName = mainFrame.getConstName();
     String params = mainFrame.getParamName();
     if (isEmptyString(objName)) {
       System.out.println("オブジェクト名を入力してください");
+      return false;
+    } else if (isForbiddenString(objName)) {
+      for (int i = 0; i < forbiddenChars.length; ++i)
+        System.out.print("'" + forbiddenChars[i] + "', ");
+      System.out.println(" は禁則文字です");
       return false;
     } else if (objectModel.containsObject(objName)) {
       System.out.println("同名のオブジェクトが既に存在します");
@@ -75,8 +137,13 @@ public class ClassController {
     return true;
   }
 
-  public void objectClearButton() {
+  public boolean objectClearButton() {
+    if (objectDialog.isVisible() || arrayDialog.isVisible()) {
+      System.out.println("ダイアログを閉じてください");
+      return false;
+    }
     objectModel.clearObjects();
+    return true;
   }
 
   public void constClearButton() {
@@ -104,25 +171,25 @@ public class ClassController {
      Object obj = con.newInstance(pObjs);
      objectModel.saveObject(objName, obj);
    } catch (IllegalAccessException e) {
-     e.printStackTrace();
+     printException(e);
      return false;
    } catch (InstantiationException e) {
-     e.printStackTrace();
+     printException(e);
      return false;
    } catch (InvocationTargetException e) {
-     e.printStackTrace();
+     printException(e);
      return false;
    }
 
    return true;
   }
 
-  public void objectButton() {
+  public void objectButton(String objName) {
     methodModel.clearMethods();
     fieldModel.clearFields();
     objectDialog.allClear();
 
-    String objName = mainFrame.getSelectedObject();
+    //String objName = mainFrame.getSelectedObject();
     Object obj = objectModel.getObject(objName);
 
     if (obj == null) {
@@ -131,19 +198,31 @@ public class ClassController {
     }
 
     Class<?> cls = obj.getClass();
-    Method[] methods = cls.getMethods();
-    Field[] fields = cls.getDeclaredFields();
 
-    ObjectPair[] methodPairs = new ObjectPair[methods.length];
-    for (int i = 0; i < methods.length; ++i) {
-      Method method = methods[i];
+    List<Method> methodsA = Arrays.asList(cls.getMethods());
+    List<Method> methodsB = Arrays.asList(cls.getDeclaredMethods());
+    List<Method> methods = new ArrayList<Method>();
+    methods.addAll(methodsA);
+    methods.addAll(methodsB);
+    methods = toUniqueList(methods);
+    Method[] methodAry = methods.toArray(new Method[]{});
+    ObjectPair[] methodPairs = new ObjectPair[methodAry.length];
+    for (int i = 0; i < methodAry.length; ++i) {
+      Method method = methodAry[i];
       String simpleMethodName = simplifyName(method.toString());
       methodPairs[i] = new ObjectPair(simpleMethodName, method);
     }
 
-    ObjectPair[] fieldPairs = new ObjectPair[fields.length];
-    for (int i = 0; i < fields.length; ++i) {
-      Field field = fields[i];
+    List<Field> fieldsA = Arrays.asList(cls.getFields());
+    List<Field> fieldsB = Arrays.asList(cls.getDeclaredFields());
+    List<Field> fields = new ArrayList<Field>();
+    fields.addAll(fieldsA);
+    fields.addAll(fieldsB);
+    fields = toUniqueList(fields);
+    Field[] fieldAry = fields.toArray(new Field[]{});
+    ObjectPair[] fieldPairs = new ObjectPair[fieldAry.length];
+    for (int i = 0; i < fieldAry.length; ++i) {
+      Field field = fieldAry[i];
       String fieldName = field.toString();
       fieldName = simplifyName(fieldName);
       fieldPairs[i] = new ObjectPair(fieldName, field);
@@ -166,6 +245,71 @@ public class ClassController {
     objectDialog.setVisible(true);
   }
 
+  public void arrayButton() {
+    String objName = mainFrame.getSelectedObject();
+    Object obj = objectModel.getObject(objName);
+
+    if (obj == null) {
+      System.out.println("オブジェクトが見つかりません");
+      return;
+    } else if (!obj.getClass().isArray()) {
+      System.out.println("配列オブジェクトを選択してください");
+      return;
+    }
+
+    int length = Array.getLength(obj);
+    Class<?> cls = obj.getClass();
+
+    arrayDialog.setObjName(objName);
+    arrayDialog.setAryNum("[" + String.valueOf(length) + "]");
+    arrayDialog.setClassNameLabel(cls.getCanonicalName());
+
+    arrayDialog.setObjectTable(objName, (Object[])obj);
+    arrayDialog.setVisible(true);
+  }
+
+  public boolean setArrayButton() {
+    String objName = arrayDialog.getObjName();
+    String clsName = arrayDialog.getClassName();
+    clsName = clsName.substring(0, clsName.length() - 2);
+    String param = arrayDialog.getParam();
+    int arrayIndex = arrayDialog.getSelectedRowIndex();
+    Object obj = objectModel.getObject(objName);
+
+    if (isEmptyString(param)) {
+      System.out.println("パラメータを入力してください");
+      return false;
+    } else if (obj == null) {
+      System.out.println("オブジェクトが見つかりません " + objName);
+      return false;
+    }
+
+    Class<?> cls = null;
+    try {
+      cls = Class.forName(clsName);
+    } catch (ClassNotFoundException e) {
+      System.out.println("クラスが見つかりません " + clsName);
+      printException(e);
+      return false;
+    }
+
+    Object[] pObjs = createParams(new Type[]{cls}, new String[]{param});
+    if (pObjs == null) {
+      System.out.println("パラメータが不正です");
+      return false;
+    }
+
+    Array.set(obj, arrayIndex, pObjs[0]);
+    String objAryName = objName + "[" + arrayIndex + "]";
+    System.out.println(objAryName + " を " + pObjs[0] + " に設定しました");
+
+    objectModel.saveObject(objAryName, pObjs[0]);
+    mainFrame.addObjectName(objAryName);
+    arrayDialog.setObjectTable(objName, (Object[])obj);
+
+    return true;
+  }
+
   public void fieldSelectButton() {
     String objName = objectDialog.getTitleLabel();
     Object obj = objectModel.getObject(objName);
@@ -185,7 +329,7 @@ public class ClassController {
       else
         objectDialog.setFieldArea(tmp.toString());
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return;
     }
   }
@@ -236,9 +380,9 @@ public class ClassController {
     //System.out.println("フィールドを設定します");
     try {
       field.set(obj, pObjs[0]);
-      System.out.println("フィールドを設定しました");
+      System.out.println("フィールド " + pObjs[0] + " に設定しました");
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return false;
     }
 
@@ -259,10 +403,10 @@ public class ClassController {
       if (output != null)
         System.out.println(output.toString()); // 可能であれば文字列に変換して出力する
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return false;
     } catch (InvocationTargetException e) {
-      e.printStackTrace();
+      printException(e);
       return false;
     }
 
@@ -282,33 +426,35 @@ public class ClassController {
       String param = params[i];
 
       Class<?> cls = (Class<?>)type;
-      String typeName = cls.getName();
+      String typeName = cls.getSimpleName();
+      Object obj = objectModel.getObject(param);
 
-      if (objectModel.containsObject(param)) { // オブジェクトが存在する場合はそれを利用する
-        objects[i] = objectModel.getObject(param);
+      if (objectModel.containsObject(param) // オブジェクトが登録されていて
+          && cls.isInstance(obj)) {         // 代入互換の場合
+        objects[i] = obj;
       } else if (getObject(param) != null) {
         objects[i] = getObject(param);
-      } else if (typeName.equals("byte")) {
+      } else if (typeName.equals("byte") || typeName.equals("Byte")) {
         objects[i] = Byte.valueOf(param);
-      } else if (typeName.equals("short")) {
+      } else if (typeName.equals("short") || typeName.equals("Short")) {
         objects[i] = Short.valueOf(param);
-      } else if (typeName.equals("int")) {
+      } else if (typeName.equals("int") || typeName.equals("Integer")) {
         objects[i] = Integer.valueOf(param);
-      } else if (typeName.equals("long")) {
+      } else if (typeName.equals("long") || typeName.equals("Long")) {
         objects[i] = Long.valueOf(param);
-      } else if (typeName.equals("char")) {
+      } else if (typeName.equals("char") || typeName.equals("Character")) {
         if (param.length() != 1) {
           return null;
         } else {
           objects[i] = Character.valueOf(param.charAt(0));
         }
-      } else if (typeName.equals("float")) {
+      } else if (typeName.equals("float") || typeName.equals("Float")) {
         objects[i] = Float.valueOf(param);
-      } else if (typeName.equals("double")) {
+      } else if (typeName.equals("double") || typeName.equals("Double")) {
         objects[i] = Double.valueOf(param);
-      } else if (typeName.equals("boolean")) {
+      } else if (typeName.equals("boolean") || typeName.equals("Boolean")) {
         objects[i] = Boolean.valueOf(param);
-      } else if (typeName.equals("java.lang.String")) {
+      } else if (typeName.equals("String")) {
         objects[i] = param;
       } else {
         return null;
@@ -342,7 +488,7 @@ public class ClassController {
     try {
       cls = Class.forName(className);
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      printException(e);
       return null;
     }
 
@@ -351,7 +497,7 @@ public class ClassController {
     try {
       field = cls.getField(fieldName);
     } catch (NoSuchFieldException e) {
-      e.printStackTrace();
+      printException(e);
       return null;
     }
 
@@ -359,7 +505,7 @@ public class ClassController {
     try {
       obj = field.get(null);
     } catch (IllegalAccessException e) {
-      e.printStackTrace();
+      printException(e);
       return null;
     }
 
@@ -421,6 +567,30 @@ public class ClassController {
         return false;
     }
     return true;
+  }
+
+  private boolean isForbiddenString(String str) {
+    for (int i = 0; i < forbiddenChars.length; ++i) {
+      if (str.indexOf(forbiddenChars[i]) != -1)
+        return true;
+    }
+    return false;
+  }
+
+  private static void printException(Exception e) {
+    if (e.getCause() != null) {
+      e.getCause().printStackTrace();
+    } else {
+      e.printStackTrace();
+    }
+  }
+
+  private static <T> List<T> toUniqueList(List<T> list) {
+    Set<T> uniqueSet = new HashSet<T>();
+    uniqueSet.addAll(list);
+    List<T> uniqueList = new ArrayList<T>();
+    uniqueList.addAll(uniqueSet);
+    return uniqueList;
   }
 
   class ObjectPair implements Comparable<ObjectPair> {
