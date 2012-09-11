@@ -19,6 +19,8 @@ public class ClassController {
   private MethodModel methodModel;
   private FieldModel fieldModel;
 
+  private final char[] forbiddenChars = {'[', ']'};
+
   public ClassController(MainFrame mainFrame, ObjectDialog objectDialog, ArrayDialog arrayDialog) {
     this.mainFrame = mainFrame;
     this.objectDialog = objectDialog;
@@ -72,6 +74,11 @@ public class ClassController {
     } else if (isEmptyString(objName)) {
       System.out.println("オブジェクト名を入力してください");
       return false;
+    } else if (isForbiddenString(objName)) {
+      for (int i = 0; i < forbiddenChars.length; ++i)
+        System.out.print("'" + forbiddenChars[i] + "', ");
+      System.out.println(" は禁則文字です");
+      return false;
     } else if (objectModel.containsObject(objName)) {
       System.out.println("同名のオブジェクトが既に存在します");
       return false;
@@ -111,6 +118,11 @@ public class ClassController {
     String params = mainFrame.getParamName();
     if (isEmptyString(objName)) {
       System.out.println("オブジェクト名を入力してください");
+      return false;
+    } else if (isForbiddenString(objName)) {
+      for (int i = 0; i < forbiddenChars.length; ++i)
+        System.out.print("'" + forbiddenChars[i] + "', ");
+      System.out.println(" は禁則文字です");
       return false;
     } else if (objectModel.containsObject(objName)) {
       System.out.println("同名のオブジェクトが既に存在します");
@@ -555,6 +567,14 @@ public class ClassController {
         return false;
     }
     return true;
+  }
+
+  private boolean isForbiddenString(String str) {
+    for (int i = 0; i < forbiddenChars.length; ++i) {
+      if (str.indexOf(forbiddenChars[i]) != -1)
+        return true;
+    }
+    return false;
   }
 
   private static void printException(Exception e) {
