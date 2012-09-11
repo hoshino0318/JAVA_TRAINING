@@ -3,6 +3,7 @@ package interpret.views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.*;
 
 import interpret.controllers.*;
 
@@ -15,9 +16,13 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
   private JButton closeBtn; // 閉じるボタン
 
-  private DefaultListModel objects;  // 配列一覧用
-  private JList objectList;          // 配列一覧用
-  private JScrollPane objectScroll;  // 配列一覧用
+  //private DefaultListModel objects;  // 配列一覧用
+  //private JList objectList;          // 配列一覧用
+  //private JScrollPane objectScroll;  // 配列一覧用
+  private DefaultTableModel tableModel;  // 配列一覧用
+  private String[] columnNames = {"index", "value"}; // 配列一覧用
+  private JTable objectTable;       // 配列一覧用
+  private JScrollPane objectScroll; // 配列一覧用
 
   private JTextField objField; // オブジェクト設定用
   private JButton objSetBtn;   // オブジェクト設定用
@@ -50,12 +55,16 @@ public class ArrayDialog extends JDialog implements ActionListener {
     closeBtn = new JButton("close");
 
     /* オブジェクト一覧 */
-    objects = new DefaultListModel();
-    objectList = new JList(objects);
-    objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    objectScroll = new JScrollPane();
-    objectScroll.getViewport().setView(objectList);
-    objectScroll.setPreferredSize(new Dimension(350, 400));
+    tableModel = new DefaultTableModel(new String[0][2], columnNames);
+    objectTable = new JTable(tableModel);
+    objectTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    objectTable.setDefaultEditor(Object.class, null);
+    objectScroll = new JScrollPane(objectTable);
+    objectTable.setPreferredSize(new Dimension(350, 400));
+    DefaultTableColumnModel columnModel
+        = (DefaultTableColumnModel)objectTable.getColumnModel();
+    columnModel.getColumn(0).setPreferredWidth(50);
+    columnModel.getColumn(1).setPreferredWidth(300);
 
     /* オブジェクト設定 */
     objField = new JTextField();
@@ -80,6 +89,7 @@ public class ArrayDialog extends JDialog implements ActionListener {
     /* オブジェクト一覧 */
     constraints.anchor = GridBagConstraints.WEST;
     addComp(objectScroll, 0, 2, 3, 5);
+    //addComp(objectTable, 0, 2, 3, 5);
 
     /* オブジェクト設定 */
     constraints.anchor = GridBagConstraints.WEST;
@@ -110,6 +120,24 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
   public void setClassNameLabel(String className) {
     clsNameLabel.setText(className);
+  }
+
+  public void setObjectTable(String objName, Object[] objects) {
+    tableModel.setRowCount(0);
+
+    String[][] tableData = new String[objects.length][2];
+    for (int i = 0; i < objects.length; ++i) {
+      tableData[i][0] = objName + "[" + String.valueOf(i) + "]";
+      if (objects[i] == null) {
+        tableData[i][1] = "null";
+      } else {
+        tableData[i][1] = objects[i].toString();
+      }
+    }
+
+    for (int i = 0; i < tableData.length; ++i) {
+      tableModel.insertRow(i, tableData[i]);
+    }
   }
 
   public void setClassController(ClassController classController) {

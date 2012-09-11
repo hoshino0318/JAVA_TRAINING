@@ -248,6 +248,8 @@ public class ClassController {
     arrayDialog.setObjTitle(objName);
     arrayDialog.setAryNum("[" + String.valueOf(length) + "]");
     arrayDialog.setClassNameLabel(cls.getCanonicalName());
+
+    arrayDialog.setObjectTable(objName, (Object[])obj);
     arrayDialog.setVisible(true);
   }
 
