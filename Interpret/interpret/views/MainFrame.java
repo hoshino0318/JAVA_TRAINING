@@ -104,7 +104,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     aryNameLabel = new JLabel("name");
     aryNameField = new JTextField();
     aryNameField.setPreferredSize(new Dimension(150, 30));
-    aryNumLabel = new JLabel("num");
+    aryNumLabel = new JLabel("size");
     aryNumField = new JTextField();
     aryNumField.setPreferredSize(new Dimension(100, 30));
     aryCreateBtn = new JButton("create");
@@ -306,9 +306,10 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         classController.selectButton((String)constList.getSelectedValue());
       }
     } else if (source == objectClearBtn) { // オブジェクトクリアボタン
-      objects.clear();
-      objectList.ensureIndexIsVisible(objects.getSize() - 1);
-      classController.objectClearButton();
+      if (classController.objectClearButton()) {
+        objects.clear();
+        objectList.ensureIndexIsVisible(objects.getSize() - 1);
+      }
     } else if (source == objectBtn) { // オブジェクト呼び出しボタン
       if (objectList.isSelectionEmpty()) {
         System.out.println("オブジェクトを選択してください");

@@ -125,8 +125,13 @@ public class ClassController {
     return true;
   }
 
-  public void objectClearButton() {
+  public boolean objectClearButton() {
+    if (objectDialog.isVisible() || arrayDialog.isVisible()) {
+      System.out.println("ダイアログを閉じてください");
+      return false;
+    }
     objectModel.clearObjects();
+    return true;
   }
 
   public void constClearButton() {

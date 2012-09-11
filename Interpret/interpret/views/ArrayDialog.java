@@ -56,12 +56,16 @@ public class ArrayDialog extends JDialog implements ActionListener {
     objectTable = new JTable(tableModel);
     objectTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     objectTable.setDefaultEditor(Object.class, null);
-    objectScroll = new JScrollPane(objectTable);
-    objectTable.setPreferredSize(new Dimension(350, 400));
+    objectTable.setGridColor(Color.LIGHT_GRAY);
+    objectTable.setShowHorizontalLines(true);
+    objectTable.setShowVerticalLines(false);
+    objectScroll = new JScrollPane();
+    objectScroll.getViewport().setView(objectTable);
+    objectScroll.setPreferredSize(new Dimension(350, 400));
     DefaultTableColumnModel columnModel
         = (DefaultTableColumnModel)objectTable.getColumnModel();
-    columnModel.getColumn(0).setPreferredWidth(50);
-    columnModel.getColumn(1).setPreferredWidth(300);
+    columnModel.getColumn(0).setPreferredWidth(100);
+    columnModel.getColumn(1).setPreferredWidth(250);
 
     /* オブジェクト設定 */
     objField = new JTextField();
