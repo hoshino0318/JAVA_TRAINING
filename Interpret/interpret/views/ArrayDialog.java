@@ -15,6 +15,13 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
   private JButton closeBtn; // 閉じるボタン
 
+  private DefaultListModel objects;  // 配列一覧用
+  private JList objectList;          // 配列一覧用
+  private JScrollPane objectScroll;  // 配列一覧用
+
+  private JTextField objField; // オブジェクト設定用
+  private JButton objSetBtn;   // オブジェクト設定用
+
   private ClassController classController;
 
   private GridBagLayout layout;
@@ -42,6 +49,19 @@ public class ArrayDialog extends JDialog implements ActionListener {
     /* 閉じるボタン */
     closeBtn = new JButton("close");
 
+    /* オブジェクト一覧 */
+    objects = new DefaultListModel();
+    objectList = new JList(objects);
+    objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    objectScroll = new JScrollPane();
+    objectScroll.getViewport().setView(objectList);
+    objectScroll.setPreferredSize(new Dimension(350, 400));
+
+    /* オブジェクト設定 */
+    objField = new JTextField();
+    objField.setPreferredSize(new Dimension(200, 30));
+    objSetBtn = new JButton("set");
+
     /* 共通設定 */
     constraints.insets = new Insets(5, 5, 5, 5);
 
@@ -55,7 +75,17 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
     /* 閉じるボタン */
     constraints.anchor = GridBagConstraints.EAST;
-    addComp(closeBtn, 3, 1, 1, 1);
+    addComp(closeBtn, 4, 1, GridBagConstraints.REMAINDER, 1);
+
+    /* オブジェクト一覧 */
+    constraints.anchor = GridBagConstraints.WEST;
+    addComp(objectScroll, 0, 2, 3, 5);
+
+    /* オブジェクト設定 */
+    constraints.anchor = GridBagConstraints.WEST;
+    addComp(objField, 3, 2, 1, 1);
+    addComp(objSetBtn, 4, 2, 1, 1);
+
 
     /* リスナーの登録 */
     closeBtn.addActionListener(this);
