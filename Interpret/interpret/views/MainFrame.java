@@ -319,7 +319,6 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
       if (objectList.isSelectionEmpty()) {
         System.out.println("配列を選択してください");
       } else {
-        //TODO
         classController.arrayButton();
       }
     } else if (source == aryCreateBtn) { // 配列生成ボタン
@@ -329,12 +328,10 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         objectList.ensureIndexIsVisible(objects.getSize() - 1);
         System.out.println("配列 \"" + aryName + "\" を生成しました");
       }
-    }else if (source == createObjectBtn) { // オブジェクト生成ボタン
+    } else if (source == createObjectBtn) { // オブジェクト生成ボタン
       if (classController.createButton()) {
         String objName = objectNameText.getText();
-        objects.addElement(objName);
-        objectList.ensureIndexIsVisible(objects.getSize() - 1);
-        System.out.println("オブジェクト \"" + objName + "\" を生成しました");
+        addObjectName(objName);
       }
     }
   }
@@ -405,7 +402,10 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     return paramTextFiled.getText();
   }
 
-  class MyMouseListener extends MouseAdapter implements MouseListener {
 
+  public void addObjectName(String objName) {
+    objects.addElement(objName);
+    objectList.ensureIndexIsVisible(objects.getSize() - 1);
+    System.out.println("オブジェクト \"" + objName + "\" を生成しました");
   }
 }

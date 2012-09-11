@@ -243,14 +243,54 @@ public class ClassController {
     int length = Array.getLength(obj);
     Class<?> cls = obj.getClass();
 
-    //TODO
-
-    arrayDialog.setObjTitle(objName);
+    arrayDialog.setObjName(objName);
     arrayDialog.setAryNum("[" + String.valueOf(length) + "]");
     arrayDialog.setClassNameLabel(cls.getCanonicalName());
 
     arrayDialog.setObjectTable(objName, (Object[])obj);
     arrayDialog.setVisible(true);
+  }
+
+  public boolean setArrayButton() {
+    String objName = arrayDialog.getObjName();
+    String clsName = arrayDialog.getClassName();
+    clsName = clsName.substring(0, clsName.length() - 2);
+    String param = arrayDialog.getParam();
+    int arrayIndex = arrayDialog.getSelectedRowIndex();
+    Object obj = objectModel.getObject(objName);
+
+    if (isEmptyString(param)) {
+      System.out.println("パラメータを入力してください");
+      return false;
+    } else if (obj == null) {
+      System.out.println("オブジェクトが見つかりません " + objName);
+      return false;
+    }
+
+    Class<?> cls = null;
+    try {
+      cls = Class.forName(clsName);
+    } catch (ClassNotFoundException e) {
+      System.out.println("クラスが見つかりません " + clsName);
+      printException(e);
+      return false;
+    }
+
+    Object[] pObjs = createParams(new Type[]{cls}, new String[]{param});
+    if (pObjs == null) {
+      System.out.println("パラメータが不正です");
+      return false;
+    }
+
+    Array.set(obj, arrayIndex, pObjs[0]);
+    String objAryName = objName + "[" + arrayIndex + "]";
+    System.out.println(objAryName + " を " + pObjs[0] + " に設定しました");
+
+    objectModel.saveObject(objAryName, pObjs[0]);
+    mainFrame.addObjectName(objAryName);
+    arrayDialog.setObjectTable(objName, (Object[])obj);
+
+    return true;
   }
 
   public void fieldSelectButton() {
@@ -323,7 +363,7 @@ public class ClassController {
     //System.out.println("フィールドを設定します");
     try {
       field.set(obj, pObjs[0]);
-      System.out.println("フィールドを設定しました");
+      System.out.println("フィールド " + pObjs[0] + " に設定しました");
     } catch (IllegalAccessException e) {
       printException(e);
       return false;
@@ -369,33 +409,35 @@ public class ClassController {
       String param = params[i];
 
       Class<?> cls = (Class<?>)type;
-      String typeName = cls.getName();
+      String typeName = cls.getSimpleName();
+      Object obj = objectModel.getObject(param);
 
-      if (objectModel.containsObject(param)) { // オブジェクトが存在する場合はそれを利用する
-        objects[i] = objectModel.getObject(param);
+      if (objectModel.containsObject(param) // オブジェクトが登録されていて
+          && cls.isInstance(obj)) {         // 代入互換の場合
+        objects[i] = obj;
       } else if (getObject(param) != null) {
         objects[i] = getObject(param);
-      } else if (typeName.equals("byte")) {
+      } else if (typeName.equals("byte") || typeName.equals("Byte")) {
         objects[i] = Byte.valueOf(param);
-      } else if (typeName.equals("short")) {
+      } else if (typeName.equals("short") || typeName.equals("Short")) {
         objects[i] = Short.valueOf(param);
-      } else if (typeName.equals("int")) {
+      } else if (typeName.equals("int") || typeName.equals("Integer")) {
         objects[i] = Integer.valueOf(param);
-      } else if (typeName.equals("long")) {
+      } else if (typeName.equals("long") || typeName.equals("Long")) {
         objects[i] = Long.valueOf(param);
-      } else if (typeName.equals("char")) {
+      } else if (typeName.equals("char") || typeName.equals("Character")) {
         if (param.length() != 1) {
           return null;
         } else {
           objects[i] = Character.valueOf(param.charAt(0));
         }
-      } else if (typeName.equals("float")) {
+      } else if (typeName.equals("float") || typeName.equals("Float")) {
         objects[i] = Float.valueOf(param);
-      } else if (typeName.equals("double")) {
+      } else if (typeName.equals("double") || typeName.equals("Double")) {
         objects[i] = Double.valueOf(param);
-      } else if (typeName.equals("boolean")) {
+      } else if (typeName.equals("boolean") || typeName.equals("Boolean")) {
         objects[i] = Boolean.valueOf(param);
-      } else if (typeName.equals("java.lang.String")) {
+      } else if (typeName.equals("String")) {
         objects[i] = param;
       } else {
         return null;

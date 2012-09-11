@@ -16,9 +16,6 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
   private JButton closeBtn; // 閉じるボタン
 
-  //private DefaultListModel objects;  // 配列一覧用
-  //private JList objectList;          // 配列一覧用
-  //private JScrollPane objectScroll;  // 配列一覧用
   private DefaultTableModel tableModel;  // 配列一覧用
   private String[] columnNames = {"index", "value"}; // 配列一覧用
   private JTable objectTable;       // 配列一覧用
@@ -89,16 +86,15 @@ public class ArrayDialog extends JDialog implements ActionListener {
     /* オブジェクト一覧 */
     constraints.anchor = GridBagConstraints.WEST;
     addComp(objectScroll, 0, 2, 3, 5);
-    //addComp(objectTable, 0, 2, 3, 5);
 
     /* オブジェクト設定 */
     constraints.anchor = GridBagConstraints.WEST;
     addComp(objField, 3, 2, 1, 1);
     addComp(objSetBtn, 4, 2, 1, 1);
 
-
     /* リスナーの登録 */
     closeBtn.addActionListener(this);
+    objSetBtn.addActionListener(this);
   }
 
   @Override
@@ -107,11 +103,24 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
     if (source == closeBtn) {
       setVisible(false);
+    } else if (source == objSetBtn) {
+      int selectedRow = objectTable.getSelectedRow();
+      if (selectedRow == -1) {
+        System.out.println("配列を選択してください");
+        return;
+      } else {
+        System.out.println(selectedRow + " が選択されました");
+        classController.setArrayButton();
+      }
     }
   }
 
-  public void setObjTitle(String objTitle) {
+  public void setObjName(String objTitle) {
     this.objTitle.setText(objTitle);
+  }
+
+  public String getObjName() {
+    return objTitle.getText();
   }
 
   public void setAryNum(String aryNum) {
@@ -120,6 +129,10 @@ public class ArrayDialog extends JDialog implements ActionListener {
 
   public void setClassNameLabel(String className) {
     clsNameLabel.setText(className);
+  }
+
+  public String getClassName() {
+    return clsNameLabel.getText();
   }
 
   public void setObjectTable(String objName, Object[] objects) {
@@ -138,6 +151,14 @@ public class ArrayDialog extends JDialog implements ActionListener {
     for (int i = 0; i < tableData.length; ++i) {
       tableModel.insertRow(i, tableData[i]);
     }
+  }
+
+  public String getParam() {
+    return objField.getText();
+  }
+
+  public int getSelectedRowIndex() {
+    return objectTable.getSelectedRow();
   }
 
   public void setClassController(ClassController classController) {
