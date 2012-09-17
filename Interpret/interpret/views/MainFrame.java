@@ -41,13 +41,13 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
   private JScrollPane objectScroll; // オブジェクト一覧用
   private JPanel objectPanel;       // オブジェクト一覧用
 
-  private JLabel objectNameLabel;     // パラメータ用
-  private JTextField objectNameText;  // パラメータ用
-  private JLabel paramConstLabel;     // パラメータ用
-  private JTextField paramTextFiled;  // パラメータ用
-  private JPanel paramPanel;          // パラメータ用
+  private JLabel objectNameLabel;    // パラメータ用
+  private JTextField objectNameText; // パラメータ用
+  private JLabel paramConstLabel;    // パラメータ用
+  private JTextField paramTextFiled; // パラメータ用
+  private JPanel paramPanel;         // パラメータ用
 
-  private JButton createObjectBtn; // オブジェクト生成ボタン
+  private JButton createObjectBtn;   // オブジェクト生成ボタン
 
   private ObjectDialog objectDialog;
   private ArrayDialog arrayDialog;
@@ -249,7 +249,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     /* メッセージウィンドウ */
     new MessageFrame();
 
-    /* リスナーの登録 */
+    /* アクションリスナーの登録 */
     searchBtn.addActionListener(this);
     checkAryBox.addItemListener(this);
     aryCreateBtn.addActionListener(this);
@@ -260,30 +260,20 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     objectClearBtn.addActionListener(this);
     createObjectBtn.addActionListener(this);
 
-    searchBox.addKeyListener(new MyKeyAdapter());
+    /* キーイベントリスナーの登録 */
+    MyKeyAdapter keyAdapter = new MyKeyAdapter();
+    searchBox.addKeyListener(keyAdapter);
+    searchBtn.addKeyListener(keyAdapter);
+    aryNameField.addKeyListener(keyAdapter);
+    aryNumField.addKeyListener(keyAdapter);
+    aryCreateBtn.addKeyListener(keyAdapter);
+    constList.addKeyListener(keyAdapter);
+    selectConstBtn.addKeyListener(keyAdapter);
+    objectNameText.addKeyListener(keyAdapter);
+    paramTextFiled.addKeyListener(keyAdapter);
 
     setVisible(true);
   }
-
-  private void addComp(Component com, int x, int y, int width, int height) {
-    constraints.gridx = x;
-    constraints.gridy = y;
-    constraints.gridwidth  = width;
-    constraints.gridheight = height;
-    layout.setConstraints(com, constraints);
-    add(com);
-  }
-
-  private void setConstraints(Component com, GridBagLayout layout,
-                              GridBagConstraints constraints,
-                              int x, int y, int width, int height) {
-    constraints.gridx = x;
-    constraints.gridy = y;
-    constraints.gridwidth  = width;
-    constraints.gridheight = height;
-    layout.setConstraints(com, constraints);
-  }
-
 
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -302,11 +292,7 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
       constList.ensureIndexIsVisible(constructors.getSize() - 1);
       classController.constClearButton();
     } else if (source == selectConstBtn) { // コンストラクタ選択ボタン
-      if (constList.isSelectionEmpty()) {
-        System.out.println("コンストラクタを選択してください");
-      } else {
-        classController.selectButton((String)constList.getSelectedValue());
-      }
+      selectConst();
     } else if (source == objectClearBtn) { // オブジェクトクリアボタン
       if (classController.objectClearButton()) {
         objects.clear();
@@ -325,17 +311,9 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
         classController.arrayButton();
       }
     } else if (source == aryCreateBtn) { // 配列生成ボタン
-      if (classController.createAryButton()) {
-        String aryName = aryNameField.getText();
-        objects.addElement(aryName);
-        objectList.ensureIndexIsVisible(objects.getSize() - 1);
-        System.out.println("配列 \"" + aryName + "\" を生成しました");
-      }
+      arrayCreate();
     } else if (source == createObjectBtn) { // オブジェクト生成ボタン
-      if (classController.createButton()) {
-        String objName = objectNameText.getText();
-        addObjectName(objName);
-      }
+      createObject();
     }
   }
 
@@ -405,11 +383,53 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     return paramTextFiled.getText();
   }
 
-
   public void addObjectName(String objName) {
     objects.addElement(objName);
     objectList.ensureIndexIsVisible(objects.getSize() - 1);
     System.out.println("オブジェクト \"" + objName + "\" を生成しました");
+  }
+
+  private void addComp(Component com, int x, int y, int width, int height) {
+    constraints.gridx = x;
+    constraints.gridy = y;
+    constraints.gridwidth  = width;
+    constraints.gridheight = height;
+    layout.setConstraints(com, constraints);
+    add(com);
+  }
+
+  private void setConstraints(Component com, GridBagLayout layout,
+                              GridBagConstraints constraints,
+                              int x, int y, int width, int height) {
+    constraints.gridx = x;
+    constraints.gridy = y;
+    constraints.gridwidth  = width;
+    constraints.gridheight = height;
+    layout.setConstraints(com, constraints);
+  }
+
+  private void arrayCreate() {
+    if (classController.createAryButton()) {
+      String aryName = aryNameField.getText();
+      objects.addElement(aryName);
+      objectList.ensureIndexIsVisible(objects.getSize() - 1);
+      System.out.println("配列 \"" + aryName + "\" を生成しました");
+    }
+  }
+
+  private void selectConst() {
+    if (constList.isSelectionEmpty()) {
+      System.out.println("コンストラクタを選択してください");
+    } else {
+      classController.selectButton((String)constList.getSelectedValue());
+    }
+  }
+
+  private void createObject() {
+    if (classController.createButton()) {
+      String objName = objectNameText.getText();
+      addObjectName(objName);
+    }
   }
 
   class MyKeyAdapter extends KeyAdapter implements KeyListener {
@@ -417,9 +437,21 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     public void keyPressed(KeyEvent e) {
       Object source = e.getSource();
       int keyCode = e.getKeyCode();
-      if (source == searchBox) {
+      if (source == searchBox || source == searchBtn) {
         if (keyCode == KeyEvent.VK_ENTER) {
           classController.searchButton(searchBox.getText());
+        }
+      } else if (source == aryNameField || source == aryNumField || source == aryCreateBtn) {
+        if (keyCode == KeyEvent.VK_ENTER) {
+          arrayCreate();
+        }
+      } else if (source == constList || source == selectConstBtn) {
+        if (keyCode == KeyEvent.VK_ENTER) {
+          selectConst();
+        }
+      } else if (source == objectNameText || source == paramTextFiled) {
+        if (keyCode == KeyEvent.VK_ENTER) {
+          createObject();
         }
       }
     }
