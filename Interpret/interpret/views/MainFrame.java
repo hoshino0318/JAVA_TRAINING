@@ -260,6 +260,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     objectClearBtn.addActionListener(this);
     createObjectBtn.addActionListener(this);
 
+    searchBox.addKeyListener(new MyKeyAdapter());
+
     setVisible(true);
   }
 
@@ -408,5 +410,18 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     objects.addElement(objName);
     objectList.ensureIndexIsVisible(objects.getSize() - 1);
     System.out.println("オブジェクト \"" + objName + "\" を生成しました");
+  }
+
+  class MyKeyAdapter extends KeyAdapter implements KeyListener {
+    @Override
+    public void keyPressed(KeyEvent e) {
+      Object source = e.getSource();
+      int keyCode = e.getKeyCode();
+      if (source == searchBox) {
+        if (keyCode == KeyEvent.VK_ENTER) {
+          classController.searchButton(searchBox.getText());
+        }
+      }
+    }
   }
 }
