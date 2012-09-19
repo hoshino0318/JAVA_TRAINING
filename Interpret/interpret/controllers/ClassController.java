@@ -429,34 +429,39 @@ public class ClassController {
       String typeName = cls.getSimpleName();
       Object obj = objectModel.getObject(param);
 
-      if (objectModel.containsObject(param) // オブジェクトが登録されていて
-          && cls.isInstance(obj)) {         // 代入互換の場合
-        objects[i] = obj;
-      } else if (getObject(param) != null) {
-        objects[i] = getObject(param);
-      } else if (typeName.equals("byte") || typeName.equals("Byte")) {
-        objects[i] = Byte.valueOf(param);
-      } else if (typeName.equals("short") || typeName.equals("Short")) {
-        objects[i] = Short.valueOf(param);
-      } else if (typeName.equals("int") || typeName.equals("Integer")) {
-        objects[i] = Integer.valueOf(param);
-      } else if (typeName.equals("long") || typeName.equals("Long")) {
-        objects[i] = Long.valueOf(param);
-      } else if (typeName.equals("char") || typeName.equals("Character")) {
-        if (param.length() != 1) {
-          return null;
-        } else {
-          objects[i] = Character.valueOf(param.charAt(0));
-        }
-      } else if (typeName.equals("float") || typeName.equals("Float")) {
+      try {
+        if (objectModel.containsObject(param) // オブジェクトが登録されていて
+            && cls.isInstance(obj)) {         // 代入互換の場合
+          objects[i] = obj;
+        } else if (getObject(param) != null) {
+          objects[i] = getObject(param);
+        } else if (typeName.equals("byte") || typeName.equals("Byte")) {
+          objects[i] = Byte.valueOf(param);
+        } else if (typeName.equals("short") || typeName.equals("Short")) {
+          objects[i] = Short.valueOf(param);
+        } else if (typeName.equals("int") || typeName.equals("Integer")) {
+          objects[i] = Integer.valueOf(param);
+        } else if (typeName.equals("long") || typeName.equals("Long")) {
+          objects[i] = Long.valueOf(param);
+        } else if (typeName.equals("char") || typeName.equals("Character")) {
+          if (param.length() != 1) {
+            return null;
+          } else {
+            objects[i] = Character.valueOf(param.charAt(0));
+          }
+        } else if (typeName.equals("float") || typeName.equals("Float")) {
         objects[i] = Float.valueOf(param);
-      } else if (typeName.equals("double") || typeName.equals("Double")) {
-        objects[i] = Double.valueOf(param);
-      } else if (typeName.equals("boolean") || typeName.equals("Boolean")) {
-        objects[i] = Boolean.valueOf(param);
-      } else if (typeName.equals("String")) {
-        objects[i] = param;
-      } else {
+        } else if (typeName.equals("double") || typeName.equals("Double")) {
+          objects[i] = Double.valueOf(param);
+        } else if (typeName.equals("boolean") || typeName.equals("Boolean")) {
+          objects[i] = Boolean.valueOf(param);
+        } else if (typeName.equals("String")) {
+          objects[i] = param;
+        } else {
+        return null;
+        }
+      } catch (NumberFormatException e) {
+        // パラメータが不正
         return null;
       }
     }
