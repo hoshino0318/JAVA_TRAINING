@@ -9,8 +9,6 @@ import java.lang.StringBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.sampled.LineEvent;
-
 class LineReader extends FilterReader {
   LineReader(Reader in) {
     super(in);
