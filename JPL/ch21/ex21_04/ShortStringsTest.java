@@ -37,14 +37,14 @@ public class ShortStringsTest {
 
   @Test(expected = NoSuchElementException.class)
   public void testNextNoSuchElement() {
-    while(shortStrings.hasNext())
+    while (shortStrings.hasNext())
       shortStrings.next();
     shortStrings.next();
   }
 
   @Test
   public void testHasPrevious() {
-    while(shortStrings.hasNext())
+    while (shortStrings.hasNext())
       shortStrings.next();
     assertThat(shortStrings.hasPrevious(), is(true));
   }
