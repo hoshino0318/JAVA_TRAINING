@@ -1,6 +1,7 @@
 package ex02_01;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,6 +47,10 @@ class DigitalClock extends JFrame {
       super();
       setPreferredSize(d);
       setOpaque(true);
+      setForeground(Color.BLACK);
+      setBackground(Color.WHITE);
+
+      addMouseListener(new DoubleClickListener());
     }
 
     @Override
@@ -71,9 +76,25 @@ class DigitalClock extends JFrame {
       int y = metrics.getAscent() + (getHeight() - metrics.getAscent()) / 2;
       g2.drawString(time_str, x, y);
     }
+
+    private class DoubleClickListener extends MouseAdapter {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() >= 2) {
+          if (getBackground().equals(Color.WHITE)) {
+            setForeground(Color.WHITE);
+            setBackground(Color.BLACK);
+          } else {
+            setForeground(Color.BLACK);
+            setBackground(Color.WHITE);
+          }
+        }
+      }
+    }
   }
 
   private class PaintTimer extends TimerTask {
+    @Override
     public void run() {
       repaint();
     }
