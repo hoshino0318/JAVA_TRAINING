@@ -20,7 +20,7 @@ class DigitalClock extends JFrame {
 
   DigitalClock() {
     super("DigitalClock");
-    setSize(300, 300);
+    setSize(300, 200);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
 
