@@ -9,8 +9,8 @@ class Dice {
     random = new Random();
   }
 
-  public short hrowDice() {
-    return (short)random.nextInt(6) + 1;
+  public short throwDice() {
+    return (short)(random.nextInt(6) + 1);
   }
 }
 
