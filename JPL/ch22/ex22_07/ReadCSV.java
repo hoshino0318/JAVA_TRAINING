@@ -14,7 +14,7 @@ class ReadCSV {
     List<String[]> vals = new ArrayList<String[]>();
     String exp = createCSVExp(cellNum);
     Pattern pat = Pattern.compile(exp, Pattern.MULTILINE);
-    while (in.hasNext()) {
+    while (in.hasNextLine()) {
       String line = in.findInLine(pat);
       if (line != null) {
         String[] cells = new String[cellNum];
