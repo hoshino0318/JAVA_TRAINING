@@ -33,7 +33,7 @@ class DigitalClock extends JFrame {
     mainPanel = new MainPanel(getSize());
     getContentPane().add(mainPanel);
 
-    ClockMenuBar clockMenuBar = new ClockMenuBar();
+    ClockMenuBar clockMenuBar = new ClockMenuBar(this);
     setJMenuBar(clockMenuBar);
 
     /* 1000 ミリ秒間隔で再描画 */
