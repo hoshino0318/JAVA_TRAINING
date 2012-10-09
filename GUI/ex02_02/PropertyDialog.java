@@ -77,6 +77,7 @@ class PropertyDialog extends JDialog {
     PropertyActionListener listener = new PropertyActionListener();
     fontBox.addActionListener(listener);
     fontSizeBox.addActionListener(listener);
+    okButton.addActionListener(listener);
   }
 
   private void addComponent(Component com, int x, int y) {
@@ -98,6 +99,8 @@ class PropertyDialog extends JDialog {
         int fontSize = Integer.valueOf((String)fontSizeBox.getSelectedItem());
         property.setFont(fontSize);
         owner.changeFont();
+      } else if (source == okButton) {
+        PropertyDialog.this.setVisible(false);
       }
     }
   }
