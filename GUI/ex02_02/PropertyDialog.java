@@ -8,6 +8,7 @@ class PropertyDialog extends JDialog {
   private static final long serialVersionUID = -8600365985749587342L;
   private static final Font lableCommonFont = new Font("Arial", Font.BOLD, 20);
 
+  private DigitalClock owner;
   private ClockProperty property;
 
   private JLabel fontLabel;
@@ -27,8 +28,9 @@ class PropertyDialog extends JDialog {
   private GridBagLayout layout;
   private GridBagConstraints constraints;
 
-  PropertyDialog(JFrame owner, ClockProperty property) {
+  PropertyDialog(DigitalClock owner, ClockProperty property) {
     super(owner);
+    this.owner = owner;
     this.property = property;
     setModal(true);
     setTitle("Property");
@@ -74,6 +76,7 @@ class PropertyDialog extends JDialog {
 
     PropertyActionListener listener = new PropertyActionListener();
     fontBox.addActionListener(listener);
+    fontSizeBox.addActionListener(listener);
   }
 
   private void addComponent(Component com, int x, int y) {
@@ -90,6 +93,11 @@ class PropertyDialog extends JDialog {
       if (source == fontBox) {
         String fontName = (String)fontBox.getSelectedItem();
         property.setFont(fontName);
+        owner.changeFont();
+      } else if (source == fontSizeBox) {
+        int fontSize = Integer.valueOf((String)fontSizeBox.getSelectedItem());
+        property.setFont(fontSize);
+        owner.changeFont();
       }
     }
   }
