@@ -13,11 +13,13 @@ import javax.swing.JPanel;
 
 class DigitalClock extends JFrame {
   private static final long serialVersionUID = -5780612053215771853L;
-  private static final Font CLOCK_FONT = new Font("Consolas", Font.BOLD, 60);
+  private static final Font DEFAULT_CLOCK_FONT = new Font("Consolas", Font.BOLD, 60);
 
   private DateFormat sdf;
   private TimeZone timeZone;
   private MainPanel mainPanel;
+  private PropertyDialog propertyDialog;
+  private ClockProperty property;
 
   DigitalClock() {
     super("DigitalClock");
@@ -33,7 +35,9 @@ class DigitalClock extends JFrame {
     mainPanel = new MainPanel(getSize());
     getContentPane().add(mainPanel);
 
-    ClockMenuBar clockMenuBar = new ClockMenuBar(this);
+    property = new ClockProperty(DEFAULT_CLOCK_FONT);
+    propertyDialog = new PropertyDialog(this, property);
+    ClockMenuBar clockMenuBar = new ClockMenuBar(propertyDialog);
     setJMenuBar(clockMenuBar);
 
     /* 1000 ミリ秒間隔で再描画 */
@@ -64,7 +68,7 @@ class DigitalClock extends JFrame {
       Calendar calendar = Calendar.getInstance();
       String time_str = sdf.format(calendar.getTime());
 
-      g2.setFont(CLOCK_FONT);
+      g2.setFont(property.getFont());
       g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                               RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       FontMetrics metrics = g2.getFontMetrics();
