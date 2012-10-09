@@ -18,14 +18,19 @@ class DigitalClock extends JFrame {
   private DateFormat sdf;
   private TimeZone timeZone;
   private MainPanel mainPanel;
-  private PropertyDialog propertyDialog;
   private ClockProperty property;
+  private PropertyDialog propertyDialog;
+  private ClockMenuBar menuBar;
+
+  private boolean isFontChanged;
 
   DigitalClock() {
     super("DigitalClock");
     setSize(300, 200);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
+
+    isFontChanged = true;
 
     /* setting for a clock */
     sdf = new SimpleDateFormat("HH:mm:ss");
@@ -37,14 +42,18 @@ class DigitalClock extends JFrame {
 
     property = new ClockProperty(DEFAULT_CLOCK_FONT);
     propertyDialog = new PropertyDialog(this, property);
-    ClockMenuBar clockMenuBar = new ClockMenuBar(propertyDialog);
-    setJMenuBar(clockMenuBar);
+    menuBar = new ClockMenuBar(propertyDialog);
+    setJMenuBar(menuBar);
 
     /* 1000 ミリ秒間隔で再描画 */
     Timer timer = new Timer(true);
     timer.schedule(new PaintTimer(), 0, 1000);
 
     setVisible(true);
+  }
+
+  void changeFont() {
+    isFontChanged = true;
   }
 
   private class MainPanel extends JPanel {
@@ -64,24 +73,33 @@ class DigitalClock extends JFrame {
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
+      g2.setFont(property.getFont());
+      g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                              RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
       Calendar calendar = Calendar.getInstance();
       String time_str = sdf.format(calendar.getTime());
 
-      g2.setFont(property.getFont());
-      g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                              RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       FontMetrics metrics = g2.getFontMetrics();
       Insets insets = DigitalClock.this.getInsets();
       int strWidth = metrics.stringWidth(time_str);
       int strHeight = metrics.getDescent() + metrics.getAscent();
       int width = strWidth + insets.left + insets.right;
-      int height = strHeight + insets.top;
-      DigitalClock.this.setMinimumSize(new Dimension(width, height));
+      int height = strHeight + insets.top + menuBar.getHeight();
+      setSizeOneTime(width, height);
 
       int x = (getWidth() / 2) - (strWidth / 2);
       int y = metrics.getAscent() + (getHeight() - metrics.getAscent()) / 2;
       g2.drawString(time_str, x, y);
+    }
+
+    private void setSizeOneTime(int width, int height) {
+      if (!isFontChanged)
+        return;
+
+      DigitalClock.this.setMinimumSize(new Dimension(width, height));
+      DigitalClock.this.setSize(new Dimension(width, height));
+      isFontChanged = false;
     }
 
     private class DoubleClickListener extends MouseAdapter {
@@ -99,6 +117,7 @@ class DigitalClock extends JFrame {
       }
     }
   }
+
 
   private class PaintTimer extends TimerTask {
     @Override
