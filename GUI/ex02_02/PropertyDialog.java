@@ -22,6 +22,9 @@ class PropertyDialog extends JDialog {
   private JLabel fontColorLabel;
 
   private JLabel backGroundLabel;
+  private DefaultListModel<String> backGroundModel;
+  private JList<String> backGroundList;
+  private JScrollPane backGroundScroll;
 
   private JButton okButton;
 
@@ -53,6 +56,14 @@ class PropertyDialog extends JDialog {
 
     backGroundLabel = new JLabel("背景色");
     backGroundLabel.setFont(lableCommonFont);
+    backGroundModel = new DefaultListModel<String>();
+    for (String fontName : ClockProperty.colorFamily) {
+      backGroundModel.addElement(fontName);
+    }
+    backGroundList = new JList<String>(backGroundModel);
+    backGroundScroll = new JScrollPane();
+    backGroundScroll.getViewport().setView(backGroundList);
+    backGroundScroll.setPreferredSize(new Dimension(200, 100));
 
     okButton = new JButton("OK");
 
@@ -72,6 +83,8 @@ class PropertyDialog extends JDialog {
     constraints.anchor = GridBagConstraints.EAST;
     addComponent(fontColorLabel, 0, 2);
     addComponent(backGroundLabel, 0, 3);
+    constraints.anchor = GridBagConstraints.WEST;
+    addComponent(backGroundScroll, 1, 3);
     addComponent(okButton, 1, 4);
 
     PropertyActionListener listener = new PropertyActionListener();
