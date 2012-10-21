@@ -36,14 +36,14 @@ class DigitalClock extends JFrame {
     sdf = new SimpleDateFormat("HH:mm:ss");
     timeZone = TimeZone.getTimeZone("Asia/Tokyo");
     sdf.setTimeZone(timeZone);
-
-    mainPanel = new MainPanel(getSize());
-    getContentPane().add(mainPanel);
-
-    property = new ClockProperty(DEFAULT_CLOCK_FONT);
+   
+    property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.WHITE);
     propertyDialog = new PropertyDialog(this, property);
     menuBar = new ClockMenuBar(propertyDialog);
     setJMenuBar(menuBar);
+    
+    mainPanel = new MainPanel(getSize());
+    getContentPane().add(mainPanel);
 
     /* 1000 ミリ秒間隔で再描画 */
     Timer timer = new Timer(true);
@@ -64,13 +64,14 @@ class DigitalClock extends JFrame {
       setPreferredSize(d);
       setOpaque(true);
       setForeground(Color.BLACK);
-      setBackground(Color.WHITE);
+      setBackground(property.getBackGroundColor());
 
       addMouseListener(new DoubleClickListener());
     }
 
     @Override
     public void paintComponent(Graphics g) {
+      setBackground(property.getBackGroundColor());
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
       g2.setFont(property.getFont());
