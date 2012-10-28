@@ -36,18 +36,18 @@ class DigitalClock extends JFrame {
     sdf = new SimpleDateFormat("HH:mm:ss");
     timeZone = TimeZone.getTimeZone("Asia/Tokyo");
     sdf.setTimeZone(timeZone);
-   
-    property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.WHITE);
+
+    property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.BLACK, Color.WHITE);
     propertyDialog = new PropertyDialog(this, property);
     menuBar = new ClockMenuBar(propertyDialog);
     setJMenuBar(menuBar);
-    
+
     mainPanel = new MainPanel(getSize());
     getContentPane().add(mainPanel);
 
-    /* 1000 ミリ秒間隔で再描画 */
+    /* 500 ミリ秒間隔で再描画 */
     Timer timer = new Timer(true);
-    timer.schedule(new PaintTimer(), 0, 1000);
+    timer.schedule(new PaintTimer(), 0, 500);
 
     setVisible(true);
   }
@@ -63,7 +63,6 @@ class DigitalClock extends JFrame {
       super();
       setPreferredSize(d);
       setOpaque(true);
-      setForeground(Color.BLACK);
       setBackground(property.getBackGroundColor());
 
       addMouseListener(new DoubleClickListener());
@@ -71,7 +70,9 @@ class DigitalClock extends JFrame {
 
     @Override
     public void paintComponent(Graphics g) {
+      setForeground(property.getFontColor());
       setBackground(property.getBackGroundColor());
+
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
       g2.setFont(property.getFont());
@@ -108,17 +109,16 @@ class DigitalClock extends JFrame {
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() >= 2) {
           if (getBackground().equals(Color.WHITE)) {
-            setForeground(Color.WHITE);
-            setBackground(Color.BLACK);
+            property.setFontColor("WHITE");
+            property.setBackGroundColor("BLACK");
           } else {
-            setForeground(Color.BLACK);
-            setBackground(Color.WHITE);
+            property.setFontColor("BLACK");
+            property.setBackGroundColor("WHITE");
           }
         }
       }
     }
   }
-
 
   private class PaintTimer extends TimerTask {
     @Override
