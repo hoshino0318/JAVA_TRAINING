@@ -63,6 +63,7 @@ class DigitalClock extends JFrame {
       super();
       setPreferredSize(d);
       setOpaque(true);
+      setForeground(Color.BLACK);
       setBackground(property.getBackGroundColor());
 
       addMouseListener(new DoubleClickListener());
@@ -72,7 +73,6 @@ class DigitalClock extends JFrame {
     public void paintComponent(Graphics g) {
       setForeground(property.getFontColor());
       setBackground(property.getBackGroundColor());
-
       super.paintComponent(g);
       Graphics2D g2 = (Graphics2D) g;
       g2.setFont(property.getFont());
