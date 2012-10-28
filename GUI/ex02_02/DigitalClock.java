@@ -45,9 +45,9 @@ class DigitalClock extends JFrame {
     mainPanel = new MainPanel(getSize());
     getContentPane().add(mainPanel);
 
-    /* 500 ミリ秒間隔で再描画 */
+    /* 200 ミリ秒間隔で再描画 */
     Timer timer = new Timer(true);
-    timer.schedule(new PaintTimer(), 0, 500);
+    timer.schedule(new PaintTimer(), 0, 200);
 
     setVisible(true);
   }
@@ -108,12 +108,20 @@ class DigitalClock extends JFrame {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() >= 2) {
-          if (getBackground().equals(Color.WHITE)) {
-            property.setFontColor("WHITE");
-            property.setBackGroundColor("BLACK");
-          } else {
+          if (e.getButton() == MouseEvent.BUTTON1) {
+            if (getBackground().equals(Color.WHITE)) {
+              property.setFontColor("WHITE");
+              property.setBackGroundColor("BLACK");
+            } else {
             property.setFontColor("BLACK");
             property.setBackGroundColor("WHITE");
+            }
+          } else if (e.getButton() == MouseEvent.BUTTON3) {
+            if (menuBar.isVisible()) {
+              menuBar.setVisible(false);
+            } else {
+              menuBar.setVisible(true);
+            }
           }
         }
       }
