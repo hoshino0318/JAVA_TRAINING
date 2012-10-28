@@ -109,13 +109,10 @@ class DigitalClock extends JFrame {
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() >= 2) {
           if (e.getButton() == MouseEvent.BUTTON1) {
-            if (getBackground().equals(Color.WHITE)) {
-              property.setFontColor("WHITE");
-              property.setBackGroundColor("BLACK");
-            } else {
-            property.setFontColor("BLACK");
-            property.setBackGroundColor("WHITE");
-            }
+            Color fontColor = property.getFontColor();
+            Color backGroundColor = property.getBackGroundColor();
+            property.setFontColor(reverseColor(fontColor));
+            property.setBackGroundColor(reverseColor(backGroundColor));
           } else if (e.getButton() == MouseEvent.BUTTON3) {
             if (menuBar.isVisible()) {
               menuBar.setVisible(false);
@@ -124,6 +121,10 @@ class DigitalClock extends JFrame {
             }
           }
         }
+      }
+
+      private Color reverseColor(Color color) {
+        return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
       }
     }
   }

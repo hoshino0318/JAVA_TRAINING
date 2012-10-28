@@ -64,12 +64,20 @@ class ClockProperty {
     fontColor = getColorInstance(colorName);
   }
 
+  void setFontColor(Color color) {
+    fontColor = color;
+  }
+
   Color getBackGroundColor() {
     return backGroundColor;
   }
 
   void setBackGroundColor(String colorName) {
     backGroundColor = getColorInstance(colorName);
+  }
+
+  void setBackGroundColor(Color color) {
+    backGroundColor = color;
   }
 
   /** 文字列から Color インスタンスを返す */
