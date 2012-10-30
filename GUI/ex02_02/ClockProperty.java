@@ -11,7 +11,7 @@ class ClockProperty {
   public static final String[] fontFamily;
   public static final String[] colorFamily;
   public static final String[] fontSizes =
-    {"10", "20", "30", "40", "50", "60", "70", "80", "90", "100"};
+    {"10", "20", "40", "60", "80", "100", "150", "200", "300", "500"};
 
   private Font font;
   private Color fontColor;
