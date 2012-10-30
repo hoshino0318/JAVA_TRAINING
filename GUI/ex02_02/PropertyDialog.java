@@ -46,12 +46,12 @@ class PropertyDialog extends JDialog {
     setResizable(false);
     setLocationRelativeTo(null);
 
-    fontLabel = new JLabel("フォント");
+    fontLabel = new JLabel("Font");
     fontLabel.setFont(labelCommonFont);
     fontModel = new DefaultComboBoxModel<String>(ClockProperty.fontFamily);
     fontBox   = new JComboBox<String>(fontModel);
 
-    fontSizeLabel = new JLabel("フォントサイズ");
+    fontSizeLabel = new JLabel("Font Size");
     fontSizeLabel.setFont(labelCommonFont);
     fontSizeModel = new DefaultComboBoxModel<String>(ClockProperty.fontSizes);
     fontSizeBox   = new JComboBox<String>(fontSizeModel);
@@ -64,7 +64,7 @@ class PropertyDialog extends JDialog {
       tableData[i][1] = ClockProperty.colorFamily[i];
     }
 
-    fontColorLabel = new JLabel("文字色");
+    fontColorLabel = new JLabel("Font Color");
     fontColorLabel.setFont(labelCommonFont);
     fontColorModel = new DefaultTableModel(tableData, new String[]{"", ""});
     fontColorTable = new JTable(fontColorModel);
@@ -78,7 +78,7 @@ class PropertyDialog extends JDialog {
     fontColorScroll = new JScrollPane(fontColorTable);
     fontColorScroll.setPreferredSize(new Dimension(200, 50));
 
-    backGroundLabel = new JLabel("背景色");
+    backGroundLabel = new JLabel("Background Color");
     backGroundLabel.setFont(labelCommonFont);
     backGroundModel = new DefaultTableModel(tableData, new String[]{"", ""});
     backGroundTable = new JTable(backGroundModel);
