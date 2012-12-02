@@ -18,8 +18,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
 
   private JLabel classLabel;                     // コンストラクタ用
   private JButton constClearBtn;                 // コンストラクタ用
-  private JList<String> constList;               // コンストラクタ用
-  private DefaultListModel<String> constructors; //コンストラクタ用
+  private JList constList;               // コンストラクタ用
+  private DefaultListModel constructors; //コンストラクタ用
   private JScrollPane constScroll;               // コンストラクタ用
   private JButton selectConstBtn;                // コンストラクタ用
   private JPanel constPanel;                     // コンストラクタ用
@@ -36,8 +36,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
   private JButton objectBtn;                // オブジェクト一覧用
   private JButton arrayBtn;                 // オブジェクト一覧用
   private JButton objectClearBtn;           // オブジェクト一覧用
-  private JList<String>  objectList;        // オブジェクト一覧用
-  private DefaultListModel<String> objects; // オブジェクト一覧用
+  private JList  objectList;        // オブジェクト一覧用
+  private DefaultListModel objects; // オブジェクト一覧用
   private JScrollPane objectScroll;         // オブジェクト一覧用
   private JPanel objectPanel;               // オブジェクト一覧用
 
@@ -108,8 +108,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     aryNumField = new JTextField();
     aryNumField.setPreferredSize(new Dimension(100, 30));
     aryCreateBtn = new JButton("create");
-    constructors = new DefaultListModel<String>();
-    constList = new JList<String>(constructors);
+    constructors = new DefaultListModel();
+    constList = new JList(constructors);
     constList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     constScroll = new JScrollPane();
     constScroll.getViewport().setView(constList);
@@ -166,8 +166,8 @@ public class MainFrame extends JFrame implements ActionListener, ItemListener {
     objectBtn = new JButton("object detail");
     arrayBtn = new JButton("array detail");
     objectClearBtn = new JButton("clear");
-    objects = new DefaultListModel<String>();
-    objectList = new JList<String>(objects);
+    objects = new DefaultListModel();
+    objectList = new JList(objects);
     objectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     objectScroll = new JScrollPane();
     objectScroll.getViewport().setView(objectList);
