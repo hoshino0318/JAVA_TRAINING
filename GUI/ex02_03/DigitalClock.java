@@ -24,7 +24,7 @@ class DigitalClock extends JWindow {
 
   private boolean isFontChanged;
   private PropertyPopupMenu propertyPopupMenu;
-  
+
   DigitalClock() {
     setSize(300, 200);
     setLocationRelativeTo(null);
@@ -35,26 +35,26 @@ class DigitalClock extends JWindow {
     sdf = new SimpleDateFormat("HH:mm:ss");
     timeZone = TimeZone.getTimeZone("Asia/Tokyo");
     sdf.setTimeZone(timeZone);
-    
+
     property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.BLACK, Color.WHITE);
 
     mainPanel = new ClockPanel(getSize());
     getContentPane().add(mainPanel);
-    
+
     /* 200 ミリ秒間隔で再描画 */
     Timer timer = new Timer(true);
     timer.schedule(new PaintTimer(), 0, 200);
 
-    propertyPopupMenu = new PropertyPopupMenu();    
+    propertyPopupMenu = new PropertyPopupMenu();
     addMouseListener(new MouseClickListener());
     addMouseMotionListener(new WindowMotionLinstener());
     setVisible(true);
   }
-  
+
   void changeFont() {
     isFontChanged = true;
   }
-  
+
   private class MouseClickListener extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -71,19 +71,19 @@ class DigitalClock extends JWindow {
       }
     }
   }
-  
+
   private class WindowMotionLinstener extends MouseMotionAdapter {
-    @Override 
+    @Override
     public void mouseMoved(MouseEvent e) {
       // TODO
-      System.out.println("MouseMoved");
+      //System.out.println("MouseMoved");
     }
     public void mouseDragged(MouseEvent e) {
       // TODO
-      System.out.println("MouseDragged");
+//      /System.out.println("MouseDragged");
     }
   }
-  
+
   private class ClockPanel extends JPanel {
     private static final long serialVersionUID = -3865314627366195394L;
 
@@ -93,9 +93,9 @@ class DigitalClock extends JWindow {
       setOpaque(true);
       setForeground(Color.BLACK);
       setBackground(property.getBackGroundColor());
-      
+
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
       setForeground(property.getFontColor());
@@ -132,7 +132,7 @@ class DigitalClock extends JWindow {
     }
 
   }
-  
+
   private Color reverseColor(Color color) {
     return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
   }

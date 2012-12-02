@@ -69,18 +69,17 @@ class Calculator {
     op2 = stack.pollLast();
     op1 = stack.pollLast();
 
-    switch (op) {
-    case "+":
+    if (op.equals("+")) {
       return op1 + op2;
-    case "-":
+    } else if (op.equals("-")) {
       return op1 - op2;
-    case "*":
+    } else if (op.equals("*")) {
       return op1 * op2;
-    case "/":
+    } else if (op.equals("/")) {
       return op1 / op2;
-    case "%":
+    } else if (op.equals("%")) {
       return op1 % op2;
-    default:
+    } else {
       throw new AssertionError(op);
     }
   }
@@ -124,7 +123,7 @@ class Calculator {
         }
 
         try {
-          double d = (double)method.invoke(null, params);
+          double d = (Double)method.invoke(null, params);
           stack.add(d);
         } catch (IllegalAccessException e) {
           e.printStackTrace();
