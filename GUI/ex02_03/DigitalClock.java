@@ -1,6 +1,5 @@
 package ex02_03;
 
-
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DateFormat;
@@ -22,6 +21,8 @@ class DigitalClock extends JWindow {
   private ClockPanel mainPanel;
   private ClockProperty property;
 
+  private Point clockPosition;
+
   private boolean isFontChanged;
   private PropertyPopupMenu propertyPopupMenu;
 
@@ -31,7 +32,7 @@ class DigitalClock extends JWindow {
 
     isFontChanged = true;
 
-    /* setting for a clock */
+    /* Setting for a clock */
     sdf = new SimpleDateFormat("HH:mm:ss");
     timeZone = TimeZone.getTimeZone("Asia/Tokyo");
     sdf.setTimeZone(timeZone);
@@ -46,8 +47,12 @@ class DigitalClock extends JWindow {
     timer.schedule(new PaintTimer(), 0, 200);
 
     propertyPopupMenu = new PropertyPopupMenu();
+
+    /* For mouse clicked */
     addMouseListener(new MouseClickListener());
+    /* For mouse dragged */
     addMouseMotionListener(new WindowMotionLinstener());
+
     setVisible(true);
   }
 
@@ -70,18 +75,55 @@ class DigitalClock extends JWindow {
         }
       }
     }
+    @Override
+    public void mousePressed(MouseEvent e) {
+      if (e.getButton() == MouseEvent.BUTTON1) {
+        System.out.println("mouse pressed");
+        clockPosition = e.getLocationOnScreen();
+      }
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+      if (e.getButton() == MouseEvent.BUTTON1) {
+        System.out.println("mouse released");
+        clockPosition = null;
+      }
+    }
   }
 
   private class WindowMotionLinstener extends MouseMotionAdapter {
-    @Override
-    public void mouseMoved(MouseEvent e) {
-      // TODO
-      //System.out.println("MouseMoved");
-    }
     public void mouseDragged(MouseEvent e) {
-      // TODO
-//      /System.out.println("MouseDragged");
+      if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
+        if (clockPosition == null)
+          clockPosition = e.getLocationOnScreen();
+
+        int dx = e.getXOnScreen() - clockPosition.x;
+        int dy = e.getYOnScreen() - clockPosition.y;
+
+        clockPosition = e.getLocationOnScreen();
+
+        Point newLocation = getLocation();
+        newLocation.translate(dx, dy);
+
+        ajustWindowLocation(newLocation);
+      }
     }
+  }
+
+  /** Set a window location in a screen */
+  private void ajustWindowLocation(Point newLocation) {
+    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+
+    if (newLocation.x < 0)
+      newLocation.x = 0;
+    if (newLocation.y < 0)
+      newLocation.y = 0;
+    if (newLocation.x + getSize().width > screen.width)
+       newLocation.x = screen.width - getSize().width;
+    if (newLocation.y + getSize().height > screen.height)
+      newLocation.y = screen.height - getSize().height;
+
+    setLocation(newLocation);
   }
 
   private class ClockPanel extends JPanel {
@@ -93,7 +135,6 @@ class DigitalClock extends JWindow {
       setOpaque(true);
       setForeground(Color.BLACK);
       setBackground(property.getBackGroundColor());
-
     }
 
     @Override
@@ -133,7 +174,7 @@ class DigitalClock extends JWindow {
 
   }
 
-  private Color reverseColor(Color color) {
+  private static Color reverseColor(Color color) {
     return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
   }
 
