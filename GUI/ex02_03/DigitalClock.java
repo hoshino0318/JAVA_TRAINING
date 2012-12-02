@@ -8,10 +8,10 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import javax.swing.JWindow;
 import javax.swing.JPanel;
 
-//class DigitalClock extends JFrame {
 class DigitalClock extends JWindow {
   private static final long serialVersionUID = -5780612053215771853L;
   private static final Font DEFAULT_CLOCK_FONT = new Font("Consolas", Font.BOLD, 60);
@@ -20,7 +20,6 @@ class DigitalClock extends JWindow {
   private TimeZone timeZone;
   private MainPanel mainPanel;
   private ClockProperty property;
-  private PropertyDialog propertyDialog;
 
   private boolean isFontChanged;
 
@@ -36,7 +35,7 @@ class DigitalClock extends JWindow {
     sdf.setTimeZone(timeZone);
 
     property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.BLACK, Color.WHITE);
-    //propertyDialog = new PropertyDialog(this, property);
+
     mainPanel = new MainPanel(getSize());
     getContentPane().add(mainPanel);
 
@@ -51,8 +50,9 @@ class DigitalClock extends JWindow {
     isFontChanged = true;
   }
 
-  private class MainPanel extends JPanel {
+  private class MainPanel extends JPanel implements ActionListener {
     private static final long serialVersionUID = -3865314627366195394L;
+    private PropertyPopupMenu propertyPopupMenu;
 
     MainPanel(Dimension d) {
       super();
@@ -61,7 +61,14 @@ class DigitalClock extends JWindow {
       setForeground(Color.BLACK);
       setBackground(property.getBackGroundColor());
 
-      addMouseListener(new DoubleClickListener());
+      propertyPopupMenu = new PropertyPopupMenu();
+      add(propertyPopupMenu);
+      setComponentPopupMenu(propertyPopupMenu);
+      addMouseListener(new MouseClickListener());
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      System.out.println("AAAACtion");
     }
 
     @Override
@@ -99,11 +106,13 @@ class DigitalClock extends JWindow {
       isFontChanged = false;
     }
 
-    private class DoubleClickListener extends MouseAdapter {
+    private class MouseClickListener extends MouseAdapter {
       @Override
       public void mouseClicked(MouseEvent e) {
+        System.out.println("mouseClicked");
         if (e.getClickCount() == 1) {         // クリック 1 回
           if (e.getButton() == MouseEvent.BUTTON3) {
+            propertyPopupMenu.show(e.getComponent(), e.getX(), e.getY());
             System.out.println("右クリック 1 回");
           }
         } else if (e.getClickCount() >= 2) {  // クリック 2 回
