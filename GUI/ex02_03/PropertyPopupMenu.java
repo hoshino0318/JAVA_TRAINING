@@ -17,49 +17,33 @@ class PropertyPopupMenu extends JPopupMenu implements ActionListener {
   PropertyPopupMenu() {
     fontSizeMenu = new JMenu("Font size");
     quitMenu = new JMenuItem("Quit");
-
+    
     add(fontSizeMenu);
     fontSizeSubMenus = new JMenuItem[fontSizes.length];
     for (int i = 0; i < fontSizeSubMenus.length; ++i) {
       JMenuItem tmpJMenuItem = new JMenuItem(fontSizes[i]);
       fontSizeMenu.add(tmpJMenuItem);
       tmpJMenuItem.addActionListener(this);
-      tmpJMenuItem.addMouseListener(new MouseClickListener());
     }
-
-
+    
     add(quitMenu);
+    fontSizeMenu.addActionListener(this);
     quitMenu.addActionListener(this);
-    quitMenu.addActionListener(this);
-    quitMenu.addMouseListener(new MouseClickListener());
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     Object source = e.getSource();
-    System.out.println("PropertyPopupMenu");
-    if (source == quitMenu)
+    if (source == quitMenu) {
       System.exit(0);
-    for (JMenuItem fontSizeSubMenu : fontSizeSubMenus) {
+    }
+    
+    System.out.println("Action!!");
+    
+    /*for (JMenuItem fontSizeSubMenu : fontSizeSubMenus) {
       if (source == fontSizeSubMenu) {
         System.out.println("hogheoge");
       }
-    }
-  }
-
-  private class MouseClickListener extends MouseAdapter {
-    public void mouseClicked(MouseEvent e) {
-      System.out.println("mouseClicked");
-    }
-    public void mousePressed(MouseEvent e) {
-      System.out.println("mousePressed");
-    }
-    public void mouseEntered(MouseEvent e){
-      System.out.println("mouseEntered");
-    }
-    public void mouseExited(MouseEvent e){
-      System.out.println("mouseExited");
-    }
-
+    }*/
   }
 }
