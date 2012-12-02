@@ -17,6 +17,8 @@ class ClockProperty {
   private Color fontColor;
   private Color backGroundColor;
 
+  boolean fontChanged;
+
   static {
     fontFamily =
         GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
@@ -38,6 +40,7 @@ class ClockProperty {
     this.font = font;
     this.fontColor = fontColor;
     this.backGroundColor = backGroundColor;
+    this.fontChanged = true;
   }
 
   Font getFont() {
@@ -45,12 +48,14 @@ class ClockProperty {
   }
 
   void setFont(String fontName) {
+    fontChanged = true;
     int fontStyle = font.getStyle();
     int fontSize  = font.getSize();
     font = new Font(fontName, fontStyle, fontSize);
   }
 
   void setFont(int fontSize) {
+    fontChanged = true;
     String fontName = font.getName();
     int fontStyle = font.getStyle();
     font = new Font(fontName, fontStyle, fontSize);

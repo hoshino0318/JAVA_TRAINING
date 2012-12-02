@@ -21,16 +21,13 @@ class DigitalClock extends JWindow {
   private ClockPanel mainPanel;
   private ClockProperty property;
 
-  private Point clockPosition;
-
-  private boolean isFontChanged;
   private PropertyPopupMenu propertyPopupMenu;
+
+  private Point clockPosition;
 
   DigitalClock() {
     setSize(300, 200);
     setLocationRelativeTo(null);
-
-    isFontChanged = true;
 
     /* Setting for a clock */
     sdf = new SimpleDateFormat("HH:mm:ss");
@@ -46,7 +43,7 @@ class DigitalClock extends JWindow {
     Timer timer = new Timer(true);
     timer.schedule(new PaintTimer(), 0, 200);
 
-    propertyPopupMenu = new PropertyPopupMenu();
+    propertyPopupMenu = new PropertyPopupMenu(this);
 
     /* For mouse clicked */
     addMouseListener(new MouseClickListener());
@@ -56,8 +53,20 @@ class DigitalClock extends JWindow {
     setVisible(true);
   }
 
-  void changeFont() {
-    isFontChanged = true;
+  void changeFont(String fontName) {
+    property.setFont(fontName);
+  }
+
+  void changeFontSize(int fontSize) {
+    property.setFont(fontSize);
+  }
+
+  void changeFontColor(String colorName) {
+    property.setFontColor(colorName);
+  }
+
+  void changeBackColor(String colorName) {
+    property.setBackGroundColor(colorName);
   }
 
   private class MouseClickListener extends MouseAdapter {
@@ -78,14 +87,12 @@ class DigitalClock extends JWindow {
     @Override
     public void mousePressed(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON1) {
-        System.out.println("mouse pressed");
         clockPosition = e.getLocationOnScreen();
       }
     }
     @Override
     public void mouseReleased(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON1) {
-        System.out.println("mouse released");
         clockPosition = null;
       }
     }
@@ -164,14 +171,13 @@ class DigitalClock extends JWindow {
     }
 
     private void setSizeOneTime(int width, int height) {
-      if (!isFontChanged)
+      if (!property.fontChanged)
         return;
 
       DigitalClock.this.setMinimumSize(new Dimension(width, height));
       DigitalClock.this.setSize(new Dimension(width, height));
-      isFontChanged = false;
+      property.fontChanged = false;
     }
-
   }
 
   private static Color reverseColor(Color color) {
