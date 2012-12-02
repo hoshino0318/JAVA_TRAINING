@@ -8,10 +8,11 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.JFrame;
+import javax.swing.JWindow;
 import javax.swing.JPanel;
 
-class DigitalClock extends JFrame {
+//class DigitalClock extends JFrame {
+class DigitalClock extends JWindow {
   private static final long serialVersionUID = -5780612053215771853L;
   private static final Font DEFAULT_CLOCK_FONT = new Font("Consolas", Font.BOLD, 60);
 
@@ -20,14 +21,11 @@ class DigitalClock extends JFrame {
   private MainPanel mainPanel;
   private ClockProperty property;
   private PropertyDialog propertyDialog;
-  private ClockMenuBar menuBar;
 
   private boolean isFontChanged;
 
   DigitalClock() {
-    super("DigitalClock");
     setSize(300, 200);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLocationRelativeTo(null);
 
     isFontChanged = true;
@@ -38,10 +36,7 @@ class DigitalClock extends JFrame {
     sdf.setTimeZone(timeZone);
 
     property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.BLACK, Color.WHITE);
-    propertyDialog = new PropertyDialog(this, property);
-    menuBar = new ClockMenuBar(propertyDialog);
-    setJMenuBar(menuBar);
-
+    //propertyDialog = new PropertyDialog(this, property);
     mainPanel = new MainPanel(getSize());
     getContentPane().add(mainPanel);
 
@@ -87,7 +82,7 @@ class DigitalClock extends JFrame {
       int strWidth = metrics.stringWidth(time_str);
       int strHeight = metrics.getDescent() + metrics.getAscent();
       int width = strWidth + insets.left + insets.right;
-      int height = strHeight + insets.top + menuBar.getHeight();
+      int height = strHeight + insets.top;
       setSizeOneTime(width, height);
 
       int x = (getWidth() / 2) - (strWidth / 2);
@@ -107,18 +102,16 @@ class DigitalClock extends JFrame {
     private class DoubleClickListener extends MouseAdapter {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() >= 2) {
+        if (e.getClickCount() == 1) {         // クリック 1 回
+          if (e.getButton() == MouseEvent.BUTTON3) {
+            System.out.println("右クリック 1 回");
+          }
+        } else if (e.getClickCount() >= 2) {  // クリック 2 回
           if (e.getButton() == MouseEvent.BUTTON1) {
             Color fontColor = property.getFontColor();
             Color backGroundColor = property.getBackGroundColor();
             property.setFontColor(reverseColor(fontColor));
             property.setBackGroundColor(reverseColor(backGroundColor));
-          } else if (e.getButton() == MouseEvent.BUTTON3) {
-            if (menuBar.isVisible()) {
-              menuBar.setVisible(false);
-            } else {
-              menuBar.setVisible(true);
-            }
           }
         }
       }
