@@ -1,9 +1,11 @@
 package ex02_03;
 
 import java.awt.event.*;
-import javax.swing.JPopupMenu;
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
 
 class PropertyPopupMenu extends JPopupMenu implements ActionListener {
   private static final long serialVersionUID = -5886033453588110137L;
@@ -47,6 +49,8 @@ class PropertyPopupMenu extends JPopupMenu implements ActionListener {
     fontColorSubMenus = new JMenuItem[ClockProperty.colorFamily.length];
     for (int i = 0; i < fontColorSubMenus.length; ++i) {
       fontColorSubMenus[i] = new JMenuItem(ClockProperty.colorFamily[i]);
+      ImageIcon icon = new ImageIcon("./image/" + ClockProperty.colorFamily[i] + ".png");
+      fontColorSubMenus[i].setIcon(icon);
       fontColorMenu.add(fontColorSubMenus[i]);
       fontColorSubMenus[i].addActionListener(this);
     }
@@ -55,6 +59,8 @@ class PropertyPopupMenu extends JPopupMenu implements ActionListener {
     backColorSubMenus = new JMenuItem[ClockProperty.colorFamily.length];
     for (int i = 0; i < backColorSubMenus.length; ++i) {
       backColorSubMenus[i] = new JMenuItem(ClockProperty.colorFamily[i]);
+      ImageIcon icon = new ImageIcon("./image/" + ClockProperty.colorFamily[i] + ".png");
+      backColorSubMenus[i].setIcon(icon);
       backColorMenu.add(backColorSubMenus[i]);
       backColorSubMenus[i].addActionListener(this);
     }
