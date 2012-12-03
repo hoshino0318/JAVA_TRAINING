@@ -2,13 +2,15 @@ package ex02_03;
 
 import java.awt.event.*;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-
 class PropertyPopupMenu extends JPopupMenu implements ActionListener {
   private static final long serialVersionUID = -5886033453588110137L;
+  private static final int DISPLAY_FONT_NUM = 50;
+
   private DigitalClock parent;
   private JMenu fontMenu;
   private JMenu fontSizeMenu;
@@ -31,10 +33,15 @@ class PropertyPopupMenu extends JPopupMenu implements ActionListener {
 
     add(fontMenu);
     fontSubMenus = new JMenuItem[ClockProperty.fontFamily.length];
+    /* すべてのフォントを表示できないので間引く間隔を決める */
+    int fontNumInterval = (ClockProperty.fontFamily.length / DISPLAY_FONT_NUM) + 1;
+    System.out.println(fontNumInterval);
     for (int i = 0; i < fontSubMenus.length; ++i) {
       fontSubMenus[i] = new JMenuItem(ClockProperty.fontFamily[i]);
-      fontMenu.add(fontSubMenus[i]);
-      fontSubMenus[i].addActionListener(this);
+      if (i % fontNumInterval == 0) {  // 間引く
+        fontMenu.add(fontSubMenus[i]);
+        fontSubMenus[i].addActionListener(this);
+      }
     }
 
     add(fontSizeMenu);
