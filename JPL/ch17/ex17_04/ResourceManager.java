@@ -76,8 +76,7 @@ public final class ResourceManager {
           Reference<?> ref = queue.remove();
           Resource res = null;
           synchronized(ResourceManager.this) {
-           res = refs.get(ref);
-           refs.remove(ref);
+           res = refs.remove(ref);
           }
           res.release();
           ref.clear();
@@ -88,11 +87,14 @@ public final class ResourceManager {
           while ((ref = queue.poll()) != null) {
             Resource res = null;
             synchronized(ResourceManager.this) {
-              res = refs.get(ref);
-              refs.remove(ref);
+              res = refs.remove(ref);
             }
             res.release();
             ref.clear();
+          }
+          for (Map.Entry<Reference<?>, Resource> e : refs.entrySet()) {
+            e.getValue().release();
+            e.getKey().clear();
           }
         }
       }
