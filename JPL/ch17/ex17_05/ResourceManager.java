@@ -1,4 +1,4 @@
-package ch17.ex17_04;
+package ch17.ex17_05;
 
 import java.lang.ref.*;
 import java.util.*;
@@ -7,14 +7,11 @@ public final class ResourceManager {
 
   final ReferenceQueue<Object> queue;
   final Map<Reference<?>, Resource> refs;
-  final Thread reaper;
   boolean shutdown = false;
 
   public ResourceManager() {
     queue = new ReferenceQueue<Object>();
     refs = new HashMap<Reference<?>, Resource>();
-    reaper = new ReaperThread();
-    reaper.start();
 
     // ... リソースの初期化 ...
   }
@@ -22,7 +19,7 @@ public final class ResourceManager {
   public synchronized void shutdown() {
     if (!shutdown) {
       shutdown = true;
-      reaper.interrupt();
+      releaseResource();
     }
   }
 
@@ -32,7 +29,22 @@ public final class ResourceManager {
     Resource res = new ResourceImpl(key);
     Reference<?> ref = new PhantomReference<Object>(key, queue);
     refs.put(ref, res);
+
+    releaseResource();
+
     return res;
+  }
+
+  private synchronized void releaseResource() {
+    Reference<?> ref = null;
+    while ((ref = queue.poll()) != null) {
+      Resource res = null;
+      synchronized(ResourceManager.this) {
+        res = refs.remove(ref);
+      }
+      res.release();
+      ref.clear();
+    }
   }
 
   private static class ResourceImpl implements Resource {
@@ -67,7 +79,7 @@ public final class ResourceManager {
     }
   }
 
-  class ReaperThread extends Thread {
+  /*class ReaperThread extends Thread {
     @Override
     public void run() {
       // 割り込まれるまで実行
@@ -99,5 +111,5 @@ public final class ResourceManager {
         }
       }
     }
-  }
+  }*/
 }
