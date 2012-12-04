@@ -3,7 +3,7 @@ package ch22.ex22_06;
 import java.util.Random;
 
 class Gaussian {
-  private static final int EXPERIMENT_NUM = 50_000_000;
+  private static final int EXPERIMENT_NUM = 50000000;
   private static final int PERIOD_NUM = 20;
   private static final double PERIOD = 1.0 / PERIOD_NUM;
   private static final int STEP = 100;

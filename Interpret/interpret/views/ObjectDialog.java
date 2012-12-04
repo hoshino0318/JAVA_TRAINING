@@ -12,8 +12,8 @@ public class ObjectDialog extends JDialog implements ActionListener {
   private JLabel title;
 
   private JLabel methodLabel;               // メソッド一覧用
-  private DefaultListModel<String> methods; // メソッド一覧用
-  private JList<String> methodList;         // メソッド一覧用
+  private DefaultListModel methods; // メソッド一覧用
+  private JList methodList;         // メソッド一覧用
   private JScrollPane methodScroll;         // メソッド一覧用
 
   private JLabel methodParamLabel;     // メソッドパラメータ用
@@ -21,8 +21,8 @@ public class ObjectDialog extends JDialog implements ActionListener {
   private JTextField methodParamField; // メソッドパラメータ用
 
   private JLabel fieldLabel;               // フィールド一覧用
-  private DefaultListModel<String> fields; // フィールド一覧用
-  private JList<String> fieldList;         // フィールド一覧用
+  private DefaultListModel fields; // フィールド一覧用
+  private JList fieldList;         // フィールド一覧用
   private JScrollPane fieldScroll;         // フィールド一覧用
 
   private JLabel fieldValueLabel;     // フィールドの値用
@@ -58,8 +58,8 @@ public class ObjectDialog extends JDialog implements ActionListener {
     /* メソッド一覧 */
     methodLabel = new JLabel("methods");
     methodLabel.setFont(new Font("Arial", Font.BOLD, 20));
-    methods = new DefaultListModel<String>();
-    methodList = new JList<String>(methods);
+    methods = new DefaultListModel();
+    methodList = new JList(methods);
     methodList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     methodScroll = new JScrollPane();
     methodScroll.getViewport().setView(methodList);
@@ -76,8 +76,8 @@ public class ObjectDialog extends JDialog implements ActionListener {
     /* フィールド一覧 */
     fieldLabel = new JLabel("fields");
     fieldLabel.setFont(new Font("Arial", Font.BOLD, 20));
-    fields = new DefaultListModel<String>();
-    fieldList = new JList<String>(fields);
+    fields = new DefaultListModel();
+    fieldList = new JList(fields);
     fieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     fieldScroll = new JScrollPane();
     fieldScroll.getViewport().setView(fieldList);
