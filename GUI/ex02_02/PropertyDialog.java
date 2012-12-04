@@ -14,12 +14,12 @@ class PropertyDialog extends JDialog {
   private ClockProperty property;
 
   private JLabel fontLabel;
-  private DefaultComboBoxModel<String> fontModel;
-  private JComboBox<String> fontBox;
+  private DefaultComboBoxModel fontModel;
+  private JComboBox fontBox;
 
   private JLabel fontSizeLabel;
-  private DefaultComboBoxModel<String> fontSizeModel;
-  private JComboBox<String> fontSizeBox;
+  private DefaultComboBoxModel fontSizeModel;
+  private JComboBox fontSizeBox;
 
   private JLabel fontColorLabel;
   private DefaultTableModel fontColorModel;
@@ -48,13 +48,13 @@ class PropertyDialog extends JDialog {
 
     fontLabel = new JLabel("Font");
     fontLabel.setFont(labelCommonFont);
-    fontModel = new DefaultComboBoxModel<String>(ClockProperty.fontFamily);
-    fontBox   = new JComboBox<String>(fontModel);
+    fontModel = new DefaultComboBoxModel(ClockProperty.fontFamily);
+    fontBox   = new JComboBox(fontModel);
 
     fontSizeLabel = new JLabel("Font Size");
     fontSizeLabel.setFont(labelCommonFont);
-    fontSizeModel = new DefaultComboBoxModel<String>(ClockProperty.fontSizes);
-    fontSizeBox   = new JComboBox<String>(fontSizeModel);
+    fontSizeModel = new DefaultComboBoxModel(ClockProperty.fontSizes);
+    fontSizeBox   = new JComboBox(fontSizeModel);
 
     /* 色情報 */
     int colorNum = ClockProperty.colorFamily.length;
