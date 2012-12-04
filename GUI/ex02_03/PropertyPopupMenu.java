@@ -13,8 +13,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JLabel;
 
-import javax.swing.JWindow;
-
 class PropertyPopupMenu extends JPopupMenu implements ActionListener {
   private static final long serialVersionUID = -5886033453588110137L;
   private static final int DISPLAY_FONT_NUM = 50;
