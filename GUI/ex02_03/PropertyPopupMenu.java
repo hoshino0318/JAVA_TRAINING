@@ -2,7 +2,6 @@ package ex02_03;
 
 import java.awt.event.*;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
