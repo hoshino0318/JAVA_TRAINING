@@ -15,7 +15,7 @@ class Favorites {
   public <T> T getFavorite(Class<T> type) {
     return type.cast(favorites.get(type));
   }
-  
+
   public static void main(String[] args) {
     Favorites f = new Favorites();
     f.putFavorite(String.class, "Java");
@@ -25,6 +25,6 @@ class Favorites {
     int favoriteInteger= f.getFavorite(Integer.class);
     Class<?> favoriteClass= f.getFavorite(Class.class);
     System.out.printf("%s %x %s%n", favoriteString,
-        favoriteInteger, favoriteClass.getName());    
+        favoriteInteger, favoriteClass.getName());
   }
 }
