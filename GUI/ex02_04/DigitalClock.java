@@ -23,7 +23,8 @@ class DigitalClock extends JFrame {
   private PropertyDialog propertyDialog;
   private ClockMenuBar menuBar;
 
-  private boolean isFontChanged;
+  private boolean isFontChanged; // フォントが変更されたかどうか
+                                 // フォントの変更に合わせてウィンドウのサイズを変更するために必要
 
   DigitalClock() {
     super("DigitalClock");
@@ -62,6 +63,7 @@ class DigitalClock extends JFrame {
     System.out.println("[Debug]: DigitalClock.rollback()");
     property = propertySnapshot;
     propertyDialog.setProperty(propertySnapshot);
+    isFontChanged = true; // フォントの変更がもとに戻った際にウィンドウのサイズを調整必要がある
   }
   
   void changeFont() {
