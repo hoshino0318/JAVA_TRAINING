@@ -1,13 +1,16 @@
 package ex02_04;
 
 import java.awt.*;
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-class ClockProperty {
+class ClockProperty implements Serializable {
+  private static final long serialVersionUID = -5175901802310178105L;
+
   public static final String[] fontFamily;
   public static final String[] colorFamily;
   public static final String[] fontSizes =
@@ -39,7 +42,7 @@ class ClockProperty {
     this.fontColor = fontColor;
     this.backGroundColor = backGroundColor;
   }
-  
+
   ClockProperty(ClockProperty other) {
     /* java.awt.Font, Color ともに immutable */
     this.font            = other.font;

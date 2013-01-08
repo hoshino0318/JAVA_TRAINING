@@ -8,12 +8,14 @@ import javax.swing.JMenuItem;
 class ClockMenuBar extends JMenuBar {
   private static final long serialVersionUID = -7749741919979618811L;
 
+  private DigitalClock parent;
   private JMenu menu;
   private JMenuItem propertyItem;
   private JMenuItem exitItem;
   private PropertyDialog dialog;
 
-  ClockMenuBar(PropertyDialog dialog) {
+  ClockMenuBar(DigitalClock parent, PropertyDialog dialog) {
+    this.parent = parent;
     this.dialog = dialog;
     menu = new JMenu("Menu");
     propertyItem = new JMenuItem("Property");
@@ -35,6 +37,7 @@ class ClockMenuBar extends JMenuBar {
       if (source == propertyItem) {
         dialog.setVisible(true);
       } else if (source == exitItem) {
+        parent.saveProperty();
         System.exit(0);
       }
     }

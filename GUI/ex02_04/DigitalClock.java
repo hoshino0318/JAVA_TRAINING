@@ -2,9 +2,11 @@ package ex02_04;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.prefs.*;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,15 +24,24 @@ class DigitalClock extends JFrame {
   private ClockProperty propertySnapshot = null;
   private PropertyDialog propertyDialog;
   private ClockMenuBar menuBar;
-
   private boolean isFontChanged; // フォントが変更されたかどうか
                                  // フォントの変更に合わせてウィンドウのサイズを変更するために必要
+  private Preferences prefs;
+
+  static final String PREFS_PROPERTY_KEY = "Propery.DigitalClock.Test";
+  static final String PREFS_LOCATION_KEY = "Location.DigitalClock.Test";
 
   DigitalClock() {
     super("DigitalClock");
     setSize(300, 200);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setLocationRelativeTo(null);
+
+    /* ウィンドウが閉じられた時 */
+    addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        saveProperty();
+        System.exit(0);
+      }
+    });
 
     isFontChanged = true;
 
@@ -39,9 +50,11 @@ class DigitalClock extends JFrame {
     timeZone = TimeZone.getTimeZone("Asia/Tokyo");
     sdf.setTimeZone(timeZone);
 
-    property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.BLACK, Color.WHITE);
+    prefs = Preferences.userNodeForPackage(getClass());
+    property = newProperty();
+    setLocation();
     propertyDialog = new PropertyDialog(this, property);
-    menuBar = new ClockMenuBar(propertyDialog);
+    menuBar = new ClockMenuBar(this, propertyDialog);
     setJMenuBar(menuBar);
 
     mainPanel = new MainPanel(getSize());
@@ -53,21 +66,67 @@ class DigitalClock extends JFrame {
 
     setVisible(true);
   }
-  
-  void snapshot() {
-    System.out.println("[Debug]: DigitalClock.snapshot()");
-    propertySnapshot = new ClockProperty(property);
+
+  void changeFont() {
+    isFontChanged = true;
   }
-  
+
   void rollback() {
     System.out.println("[Debug]: DigitalClock.rollback()");
     property = propertySnapshot;
     propertyDialog.setProperty(propertySnapshot);
     isFontChanged = true; // フォントの変更がもとに戻った際にウィンドウのサイズを調整必要がある
   }
-  
-  void changeFont() {
-    isFontChanged = true;
+
+  void saveProperty() {
+    try {
+      PrefObj.putObject(prefs, PREFS_PROPERTY_KEY, property);
+      PrefObj.putObject(prefs, PREFS_LOCATION_KEY, getLocation());
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (BackingStoreException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  void snapshot() {
+    System.out.println("[Debug]: DigitalClock.snapshot()");
+    propertySnapshot = new ClockProperty(property);
+  }
+
+  private ClockProperty newProperty() {
+    ClockProperty property = new ClockProperty(DEFAULT_CLOCK_FONT, Color.BLACK, Color.WHITE);
+    try {
+      Object obj = PrefObj.getObject(prefs, PREFS_PROPERTY_KEY);
+      if (obj != null) {
+        property = (ClockProperty)obj;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (BackingStoreException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    return property;
+  }
+
+  private void setLocation() {
+    setLocationRelativeTo(null);
+    try {
+      Object obj = PrefObj.getObject(prefs, PREFS_LOCATION_KEY);
+      if (obj != null) {
+        setLocation((Point)obj);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (BackingStoreException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   private class MainPanel extends JPanel {

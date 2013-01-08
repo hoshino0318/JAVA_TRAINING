@@ -104,7 +104,7 @@ class PropertyDialog extends JDialog {
     setLayout(layout);
     constraints = new GridBagConstraints();
     constraints.insets = new Insets(5, 5, 5, 5);
-    
+
     /* 列ごとにコンポーネントを追加していく */
     /* 一列目 */
     constraints.gridwidth = GridBagConstraints.RELATIVE;
@@ -129,16 +129,16 @@ class PropertyDialog extends JDialog {
     okButton.addActionListener(listener);
     cancelButton.addActionListener(listener);
   }
-  
+
   @Override
-  public void setVisible(boolean b) {    
-    /* ダイアログが表示された際には 
+  public void setVisible(boolean b) {
+    /* ダイアログが表示された際には
      * property 情報のスナップショットを取る */
     if (b)
       owner.snapshot();
     super.setVisible(b);
   }
-  
+
   void setProperty(ClockProperty property) {
     this.property = property;
   }
