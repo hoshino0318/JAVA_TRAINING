@@ -18,9 +18,11 @@ class ClockMenuBar extends JMenuBar {
     this.parent = parent;
     this.dialog = dialog;
     menu = new JMenu("Menu");
+    menu.setMnemonic('m');
     propertyItem = new JMenuItem("Property");
+    propertyItem.setMnemonic('p');
     exitItem = new JMenuItem("Exit");
-
+    exitItem.setMnemonic('e');
     add(menu);
     menu.add(propertyItem);
     menu.add(exitItem);
@@ -37,8 +39,7 @@ class ClockMenuBar extends JMenuBar {
       if (source == propertyItem) {
         dialog.setVisible(true);
       } else if (source == exitItem) {
-        parent.saveProperty();
-        System.exit(0);
+        parent.exitClock();
       }
     }
   }

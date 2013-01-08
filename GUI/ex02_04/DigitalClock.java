@@ -38,8 +38,7 @@ class DigitalClock extends JFrame {
     /* ウィンドウが閉じられた時 */
     addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        saveProperty();
-        System.exit(0);
+        exitClock();
       }
     });
 
@@ -64,6 +63,9 @@ class DigitalClock extends JFrame {
     Timer timer = new Timer(true);
     timer.schedule(new PaintTimer(), 0, 200);
 
+    /* ショートカットキー用のリスナーを登録 */
+    addKeyListener(new ClockKeyListener());
+
     setVisible(true);
   }
 
@@ -71,6 +73,7 @@ class DigitalClock extends JFrame {
     isFontChanged = true;
   }
 
+  /** 時計の状態をスナップショットを作成した時点まで戻す */
   void rollback() {
     System.out.println("[Debug]: DigitalClock.rollback()");
     property = propertySnapshot;
@@ -78,6 +81,7 @@ class DigitalClock extends JFrame {
     isFontChanged = true; // フォントの変更がもとに戻った際にウィンドウのサイズを調整必要がある
   }
 
+  /** 時計の設定をプリファレンスに書き出す */
   void saveProperty() {
     try {
       PrefObj.putObject(prefs, PREFS_PROPERTY_KEY, property);
@@ -91,6 +95,7 @@ class DigitalClock extends JFrame {
     }
   }
 
+  /** 時計の状態を保存 (rollback() と対) */
   void snapshot() {
     System.out.println("[Debug]: DigitalClock.snapshot()");
     propertySnapshot = new ClockProperty(property);
@@ -127,6 +132,12 @@ class DigitalClock extends JFrame {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+  /** 現在の状態を保存して時計を終了する */
+  void exitClock() {
+    saveProperty();
+    System.exit(0);
   }
 
   private class MainPanel extends JPanel {
@@ -198,6 +209,37 @@ class DigitalClock extends JFrame {
 
       private Color reverseColor(Color color) {
         return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Alt  + VK_ENTER : プロパティを開く
+   * Ctrl + VK_W     : 時計を終了する
+   */
+  private class ClockKeyListener extends KeyAdapter {
+    @Override
+    public void keyPressed(KeyEvent e) {
+      int keyCode   = e.getKeyCode();
+      int modiriers = e.getModifiers();
+      if (modiriers == InputEvent.ALT_MASK) {
+        switch (keyCode) {
+        case KeyEvent.VK_ENTER:
+          propertyDialog.setVisible(true);
+          break;
+        default:
+          // nothing to do
+          break;
+        }
+      } else if (modiriers == InputEvent.CTRL_MASK) {
+        switch (keyCode) {
+        case KeyEvent.VK_W:
+          exitClock();
+          break;
+        default:
+          // nothing to do
+          break;
+        }
       }
     }
   }
