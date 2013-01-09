@@ -12,24 +12,37 @@ class ClockMenuBar extends JMenuBar {
   private JMenu menu;
   private JMenuItem propertyItem;
   private JMenuItem exitItem;
-  private PropertyDialog dialog;
+  private JMenu help;
+  private JMenuItem keyShortCutsItem;
+  private PropertyDialog propertyDialog;
+  private HelpDialog helpDialog;
 
-  ClockMenuBar(DigitalClock parent, PropertyDialog dialog) {
-    this.parent = parent;
-    this.dialog = dialog;
-    menu = new JMenu("Menu");
-    menu.setMnemonic('m');
+  ClockMenuBar(DigitalClock parent, PropertyDialog propertyDialog, HelpDialog helpDialog) {
+    this.parent         = parent;
+    this.propertyDialog = propertyDialog;
+    this.helpDialog     = helpDialog;
+    menu         = new JMenu("Menu");
     propertyItem = new JMenuItem("Property");
+    exitItem     = new JMenuItem("Exit");
+    help             = new JMenu("Help");
+    keyShortCutsItem = new JMenuItem("Key Shortcuts");
+
+    menu.setMnemonic('m');
     propertyItem.setMnemonic('p');
-    exitItem = new JMenuItem("Exit");
     exitItem.setMnemonic('e');
-    add(menu);
+    help.setMnemonic('h');
+    keyShortCutsItem.setMnemonic('k');
+
     menu.add(propertyItem);
     menu.add(exitItem);
+    add(menu);
+    help.add(keyShortCutsItem);
+    add(help);
 
     MenuItemListener menuItemListener = new MenuItemListener();
     propertyItem.addActionListener(menuItemListener);
     exitItem.addActionListener(menuItemListener);
+    keyShortCutsItem.addActionListener(menuItemListener);
   }
 
   private class MenuItemListener implements ActionListener {
@@ -37,9 +50,11 @@ class ClockMenuBar extends JMenuBar {
     public void actionPerformed(ActionEvent e) {
       Object source = e.getSource();
       if (source == propertyItem) {
-        dialog.setVisible(true);
+        propertyDialog.setVisible(true);
       } else if (source == exitItem) {
         parent.exitClock();
+      } else if (source == keyShortCutsItem) {
+        helpDialog.setVisible(true);
       }
     }
   }

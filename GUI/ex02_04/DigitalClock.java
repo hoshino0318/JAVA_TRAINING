@@ -23,6 +23,7 @@ class DigitalClock extends JFrame {
   private ClockProperty property;
   private ClockProperty propertySnapshot = null;
   private PropertyDialog propertyDialog;
+  private HelpDialog helpDialog;
   private ClockMenuBar menuBar;
   private boolean isFontChanged; // フォントが変更されたかどうか
                                  // フォントの変更に合わせてウィンドウのサイズを変更するために必要
@@ -53,7 +54,8 @@ class DigitalClock extends JFrame {
     property = newProperty();
     setLocation();
     propertyDialog = new PropertyDialog(this, property);
-    menuBar = new ClockMenuBar(this, propertyDialog);
+    helpDialog = new HelpDialog();
+    menuBar = new ClockMenuBar(this, propertyDialog, helpDialog);
     setJMenuBar(menuBar);
 
     mainPanel = new MainPanel(getSize());
@@ -233,6 +235,9 @@ class DigitalClock extends JFrame {
         }
       } else if (modiriers == InputEvent.CTRL_MASK) {
         switch (keyCode) {
+        case KeyEvent.VK_H:
+          helpDialog.setVisible(true);
+          break;
         case KeyEvent.VK_W:
           exitClock();
           break;

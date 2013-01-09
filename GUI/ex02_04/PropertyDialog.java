@@ -128,6 +128,14 @@ class PropertyDialog extends JDialog {
     fontSizeBox.addActionListener(listener);
     okButton.addActionListener(listener);
     cancelButton.addActionListener(listener);
+
+    DialogKeyListener dialogKeyListener = new DialogKeyListener();
+    fontBox.addKeyListener(dialogKeyListener);
+    fontSizeBox.addKeyListener(dialogKeyListener);
+    fontColorTable.addKeyListener(dialogKeyListener);
+    backGroundTable.addKeyListener(dialogKeyListener);
+    okButton.addKeyListener(dialogKeyListener);
+    cancelButton.addKeyListener(dialogKeyListener);
   }
 
   @Override
@@ -163,6 +171,17 @@ class PropertyDialog extends JDialog {
     }
   }
 
+  private void cancelButton() {
+    owner.rollback();
+    setVisible(false);
+    System.out.println("[Info ]: Property change canceled");
+  }
+
+  private void okButton() {
+    setVisible(false);
+    System.out.println("[Info ]: Property changed");
+  }
+
   private class PropertyActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -176,12 +195,9 @@ class PropertyDialog extends JDialog {
         property.setFont(fontSize);
         owner.changeFont();
       } else if (source == okButton) {
-        PropertyDialog.this.setVisible(false);
-        System.out.println("[Info ]: Property changed");
+        okButton();
       } else if (source == cancelButton) {
-        owner.rollback();
-        PropertyDialog.this.setVisible(false);
-        System.out.println("[Info ]: Property change canceled");
+        cancelButton();
       }
     }
   }
@@ -201,6 +217,24 @@ class PropertyDialog extends JDialog {
       int selectedRow = backGroundTable.convertRowIndexToModel(backGroundTable.getSelectedRow());
       String colorName = (String)backGroundModel.getValueAt(selectedRow, 1);
       property.setBackGroundColor(colorName);
+    }
+  }
+
+  private class DialogKeyListener extends KeyAdapter {
+    @Override
+    public void keyPressed(KeyEvent e) {
+      int keyCode = e.getKeyCode();
+      switch (keyCode) {
+      case KeyEvent.VK_ENTER:
+        okButton();
+        break;
+      case KeyEvent.VK_ESCAPE:
+        cancelButton();
+        break;
+      default:
+        // nothing to do
+        break;
+      }
     }
   }
 }
